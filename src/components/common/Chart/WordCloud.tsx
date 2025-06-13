@@ -5,12 +5,8 @@ import * as echarts from 'echarts';
 import 'echarts-wordcloud';
 import ChartWrapper from './ChartWrapper';
 
-// Extend ECharts types to include wordCloud
-declare module 'echarts' {
-  interface SeriesOption {
-    type?: string;
-  }
-}
+// WordCloud series type is handled by echarts-wordcloud
+// Using 'as any' to bypass TypeScript strict checking for wordCloud type
 
 interface WordCloudData {
   name: string;
@@ -37,7 +33,7 @@ const WordCloud: React.FC<WordCloudProps> = ({
   onRetry,
 }) => {
   // Use option if provided, otherwise create from data
-  let chartOption: echarts.EChartsOption;
+  let chartOption: any; // Use 'any' to bypass strict type checking for wordCloud
 
   if (option) {
     chartOption = option;
@@ -51,14 +47,12 @@ const WordCloud: React.FC<WordCloudProps> = ({
       },
       series: [
         {
-          type: 'wordCloud' as any,
+          type: 'wordCloud',
           shape: 'circle',
           left: 'center',
           top: 'center',
           width: '90%',
           height: '90%',
-          right: null,
-          bottom: null,
           sizeRange: [12, 60],
           rotationRange: [-90, 90],
           rotationStep: 45,

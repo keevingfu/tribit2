@@ -39,7 +39,7 @@ const VirtualKOLTable: React.FC = () => {
     {
       key: 'name',
       header: 'KOL Name',
-      width: 200,
+      width: '200px',
       render: (value, item) => (
         <div className="font-medium text-gray-900">
           {value}
@@ -50,12 +50,12 @@ const VirtualKOLTable: React.FC = () => {
     {
       key: 'category',
       header: 'Category',
-      width: 150,
+      width: '150px',
     },
     {
       key: 'followers',
       header: 'Followers',
-      width: 120,
+      width: '120px',
       align: 'right',
       render: (value) => (
         <span className="text-sm">
@@ -69,7 +69,7 @@ const VirtualKOLTable: React.FC = () => {
     {
       key: 'avgViews',
       header: 'Avg Views',
-      width: 120,
+      width: '120px',
       align: 'right',
       render: (value) => (
         <span className="text-sm">
@@ -83,7 +83,7 @@ const VirtualKOLTable: React.FC = () => {
     {
       key: 'engagementRate',
       header: 'Engagement',
-      width: 100,
+      width: '100px',
       align: 'right',
       render: (value) => (
         <span className="text-sm">{((value as number) * 100).toFixed(2)}%</span>
@@ -92,7 +92,7 @@ const VirtualKOLTable: React.FC = () => {
     {
       key: 'cpm',
       header: 'CPM',
-      width: 100,
+      width: '100px',
       align: 'right',
       render: (value) => (
         <span className="text-sm font-medium text-green-600">
