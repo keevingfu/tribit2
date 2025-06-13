@@ -74,7 +74,7 @@ export default function Dashboard() {
   const searchStats = useMemo(() => {
     if (!searchData?.data) return null;
     
-    const validData = searchData.data.filter(item => item.search_volume > 0);
+    const validData = searchData.data.filter(item => item.search_volume !== null && item.search_volume > 0);
     const totalVolume = validData.reduce((sum, item) => sum + (item.search_volume || 0), 0);
     const avgVolume = totalVolume / validData.length || 0;
     const avgCPC = validData.reduce((sum, item) => sum + (item.cost_per_click || 0), 0) / validData.length || 0;

@@ -5,7 +5,7 @@ import VirtualTable from '@/components/common/Table/VirtualTable';
 import { useVirtualScroll } from '@/hooks/useVirtualScroll';
 import { Column } from '@/components/common/Table/DataTable';
 
-interface KOLData {
+interface KOLData extends Record<string, any> {
   id: number;
   name: string;
   platform: string;
@@ -127,14 +127,14 @@ const VirtualKOLTable: React.FC = () => {
       </div>
 
       <VirtualTable
-        columns={columns}
+        columns={columns as unknown as Column<Record<string, any>>[]}
         data={items}
         height={600}
         rowHeight={60}
         onLoadMore={loadMore}
         hasNextPage={hasMore}
         isNextPageLoading={isLoading}
-        onRowClick={handleRowClick}
+        onRowClick={handleRowClick as (item: Record<string, any>) => void}
         className="border border-gray-200"
       />
     </div>
