@@ -12,18 +12,27 @@ class DatabaseConnection {
     
     // 在生产环境中处理数据库文件缺失的情况
     try {
-      this.db = new Database(this.dbPath, { 
-        readonly: true,
-        fileMustExist: false, // 允许在文件不存在时创建
-        verbose: process.env.NODE_ENV === 'development' ? console.log : undefined
-      });
+      // Check if we're in Vercel environment
+      if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
+        console.log('Running in production/Vercel environment, using in-memory database');
+        this.db = new Database(':memory:', {
+          readonly: false
+        });
+        this.initializeInMemoryDatabase();
+      } else {
+        this.db = new Database(this.dbPath, { 
+          readonly: true,
+          fileMustExist: false,
+          verbose: process.env.NODE_ENV === 'development' ? console.log : undefined
+        });
+      }
     } catch (error) {
       console.error('Database connection error:', error);
       // 创建一个内存数据库作为后备
       this.db = new Database(':memory:', {
-        readonly: false,
-        verbose: process.env.NODE_ENV === 'development' ? console.log : undefined
+        readonly: false
       });
+      this.initializeInMemoryDatabase();
       console.warn('Using in-memory database as fallback');
     }
     
@@ -91,6 +100,49 @@ class DatabaseConnection {
     });
     
     insertMany(data);
+  }
+
+  // Initialize in-memory database with sample data
+  private initializeInMemoryDatabase(): void {
+    try {
+      // Create essential tables for the app to function
+      this.db.exec(`
+        CREATE TABLE IF NOT EXISTS kol_tribit_2024 (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          channel_name TEXT,
+          Youtuber TEXT,
+          video_count INTEGER,
+          total_views INTEGER,
+          avg_views INTEGER,
+          CPM REAL,
+          platform TEXT DEFAULT 'youtube'
+        );
+
+        CREATE TABLE IF NOT EXISTS insight_search (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          suggestion TEXT,
+          search_volume INTEGER,
+          competition TEXT,
+          competition_index INTEGER,
+          cost_per_click REAL,
+          bid_low REAL,
+          bid_high REAL
+        );
+
+        -- Insert sample data
+        INSERT INTO kol_tribit_2024 (channel_name, Youtuber, video_count, total_views, avg_views, CPM, platform) VALUES
+        ('Demo Channel 1', 'Demo Creator 1', 10, 100000, 10000, 5.0, 'youtube'),
+        ('Demo Channel 2', 'Demo Creator 2', 20, 200000, 10000, 6.0, 'youtube');
+
+        INSERT INTO insight_search (suggestion, search_volume, competition, competition_index, cost_per_click, bid_low, bid_high) VALUES
+        ('tribit speaker', 1000, 'MEDIUM', 50, 0.5, 0.3, 0.8),
+        ('bluetooth speaker', 5000, 'HIGH', 80, 1.2, 0.8, 1.8);
+      `);
+
+      console.log('In-memory database initialized with sample data');
+    } catch (error) {
+      console.error('Failed to initialize in-memory database:', error);
+    }
   }
 }
 
