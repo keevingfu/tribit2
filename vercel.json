@@ -9,8 +9,8 @@
     }
   },
   "env": {
-    "NEXT_PUBLIC_API_URL": "@next_public_api_url",
-    "DATABASE_URL": "@database_url"
+    "NEXT_PUBLIC_API_URL": "/api",
+    "DATABASE_URL": "file:./data/tribit.db"
   },
   "build": {
     "env": {
