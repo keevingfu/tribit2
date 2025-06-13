@@ -97,15 +97,14 @@ export default function Dashboard() {
   }, [platformData]);
 
   const topKOLChartData = useMemo(() => {
-    // Handle both array response and object with data property
-    const kolData = Array.isArray(topKOLs) ? topKOLs : topKOLs?.data;
-    if (!kolData || kolData.length === 0) return null;
+    // topKOLs is already an array
+    if (!topKOLs || topKOLs.length === 0) return null;
     
     return {
-      xAxis: kolData.slice(0, 5).map(kol => kol.channelName || kol.Youtuber || 'Unknown'),
+      xAxis: topKOLs.slice(0, 5).map(kol => kol.channelName || kol.Youtuber || 'Unknown'),
       series: [{
         name: 'Total Views',
-        data: kolData.slice(0, 5).map(kol => kol.totalViews || 0),
+        data: topKOLs.slice(0, 5).map(kol => kol.totalViews || 0),
         type: 'bar'
       }]
     };
