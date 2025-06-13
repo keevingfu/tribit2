@@ -1,0 +1,66 @@
+import React from 'react';
+import { Search, X } from 'lucide-react';
+import { Column } from './DataTable';
+
+interface TableFilterProps<T> {
+  columns: Column<T>[];
+  filters: Record<string, string>;
+  onFilterChange: (filters: Record<string, string>) => void;
+}
+
+const TableFilter = <T extends Record<string, any>>({
+  columns,
+  filters,
+  onFilterChange,
+}: TableFilterProps<T>) => {
+  const handleFilterChange = (key: string, value: string) => {
+    const newFilters = { ...filters };
+    if (value) {
+      newFilters[key] = value;
+    } else {
+      delete newFilters[key];
+    }
+    onFilterChange(newFilters);
+  };
+
+  const clearFilters = () => {
+    onFilterChange({});
+  };
+
+  const hasActiveFilters = Object.keys(filters).length > 0;
+
+  return (
+    <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-medium text-gray-700">[	aö</h3>
+        {hasActiveFilters && (
+          <button
+            onClick={clearFilters}
+            className="text-sm text-blue-600 hover:text-blue-700 flex items-center space-x-1"
+          >
+            <X className="w-4 h-4" />
+            <span>d[	</span>
+          </button>
+        )}
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {columns.map((column) => (
+          <div key={column.key} className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-4 w-4 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder={`" ${column.header}`}
+              value={filters[column.key] || ''}
+              onChange={(e) => handleFilterChange(column.key, e.target.value)}
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default TableFilter;

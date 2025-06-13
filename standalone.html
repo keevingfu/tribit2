@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUAgent - Tribit Content Marketing Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .navbar {
+            background-color: #1890ff;
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .card h3 {
+            color: #1890ff;
+            margin-bottom: 1rem;
+        }
+        .card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .hero {
+            background: white;
+            padding: 3rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .hero h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background-color: #1890ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 1rem;
+            transition: background-color 0.2s;
+        }
+        .btn:hover {
+            background-color: #40a9ff;
+        }
+        .features {
+            list-style: none;
+            text-align: left;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        .features li {
+            padding: 0.5rem 0;
+            color: #666;
+        }
+        .features li::before {
+            content: "✓ ";
+            color: #52c41a;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>BUAgent - Tribit Content Marketing Platform</h1>
+    </nav>
+    
+    <div class="container">
+        <div class="hero">
+            <h2>欢迎使用 Tribit 内容营销平台</h2>
+            <p>全方位的内容管理和分析解决方案</p>
+            <ul class="features">
+                <li>Content Insight - 消费者分析、搜索洞察、病毒视频分析</li>
+                <li>Content Testing - A/B测试、性能优化</li>
+                <li>Content for KOL - 网红合作与分析</li>
+                <li>Content for Ads - 广告优化和受众洞察</li>
+                <li>Content for Private - 私域分析（EDM、LinkedIn、Shopify、WhatsApp）</li>
+            </ul>
+            <a href="#" class="btn" onclick="alert('应用正在加载中...')">开始使用</a>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h3>📊 内容洞察</h3>
+                <p>深入了解消费者行为，分析搜索趋势，发现病毒式传播的内容模式。</p>
+            </div>
+            <div class="card">
+                <h3>🧪 内容测试</h3>
+                <p>通过 A/B 测试优化内容表现，提升转化率和用户参与度。</p>
+            </div>
+            <div class="card">
+                <h3>🌟 KOL 管理</h3>
+                <p>管理网红合作关系，追踪影响力指标，优化合作效果。</p>
+            </div>
+            <div class="card">
+                <h3>📢 广告优化</h3>
+                <p>精准定位目标受众，优化广告内容，提升投资回报率。</p>
+            </div>
+            <div class="card">
+                <h3>🔒 私域运营</h3>
+                <p>整合多渠道私域数据，提供全面的用户画像和行为分析。</p>
+            </div>
+            <div class="card">
+                <h3>🤖 智能自动化</h3>
+                <p>集成 Nanobrowser 浏览器自动化功能，提升工作效率。</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        console.log('BUAgent 应用已加载');
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成');
+        });
+    </script>
+</body>
+</html>
