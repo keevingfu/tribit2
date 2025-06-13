@@ -35,7 +35,10 @@ const AdsDashboard: React.FC = () => {
     useGetCampaignsQuery(filters);
   
   const { data: metricsData, isLoading: metricsLoading, refetch: refetchMetrics } = 
-    useGetMetricsQuery(filters.dateRange);
+    useGetMetricsQuery(filters.dateRange ? {
+      startDate: filters.dateRange.start,
+      endDate: filters.dateRange.end
+    } : undefined);
   
   const { data: platformData, isLoading: platformLoading, refetch: refetchPlatforms } = 
     useGetPlatformMetricsQuery();

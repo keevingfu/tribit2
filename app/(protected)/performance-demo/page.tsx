@@ -119,7 +119,7 @@ export default function PerformanceDemoPage() {
             <div className="bg-white p-4 rounded-lg shadow">
               <h3 className="text-lg font-medium mb-2">Category Breakdown</h3>
               <Suspense fallback={<div className="h-64 bg-gray-100 animate-pulse" />}>
-                <DynamicPieChart data={pieChartData} height={250} />
+                <DynamicPieChart data={pieChartData.series} height={250} />
               </Suspense>
             </div>
           </div>
