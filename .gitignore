@@ -31,9 +31,11 @@ dist-ssr
 .env.production.local
 
 # Database
-*.db
+# *.db  # Temporarily commented out for Vercel deployment
 *.sqlite
 *.sqlite3
+# Allow tribit.db for deployment
+!data/tribit.db
 
 # OS files
 .DS_Store

@@ -9,11 +9,23 @@ class DatabaseConnection {
   private constructor() {
     // 使用相对于项目根目录的路径
     this.dbPath = path.join(process.cwd(), 'data', 'tribit.db');
-    this.db = new Database(this.dbPath, { 
-      readonly: true,
-      fileMustExist: true,
-      verbose: process.env.NODE_ENV === 'development' ? console.log : undefined
-    });
+    
+    // 在生产环境中处理数据库文件缺失的情况
+    try {
+      this.db = new Database(this.dbPath, { 
+        readonly: true,
+        fileMustExist: false, // 允许在文件不存在时创建
+        verbose: process.env.NODE_ENV === 'development' ? console.log : undefined
+      });
+    } catch (error) {
+      console.error('Database connection error:', error);
+      // 创建一个内存数据库作为后备
+      this.db = new Database(':memory:', {
+        readonly: false,
+        verbose: process.env.NODE_ENV === 'development' ? console.log : undefined
+      });
+      console.warn('Using in-memory database as fallback');
+    }
     
     // 启用外键约束
     this.db.pragma('foreign_keys = ON');
