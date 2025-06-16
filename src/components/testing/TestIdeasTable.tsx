@@ -9,7 +9,7 @@ import {
   MoreVertical,
   Beaker
 } from 'lucide-react';
-import { TestIdea } from '@/services/database/TestingService';
+import { TestIdea } from '@/types/testing';
 
 interface TestIdeasTableProps {
   ideas: TestIdea[];

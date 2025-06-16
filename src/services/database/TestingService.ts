@@ -1,74 +1,14 @@
 import { BaseService } from './BaseService';
 import { PaginatedResult } from '@/types/database';
-
-export interface TestIdea {
-  id: string;
-  title: string;
-  description: string;
-  hypothesis: string;
-  status: 'draft' | 'ready' | 'running' | 'completed' | 'archived';
-  priority: 'high' | 'medium' | 'low';
-  created_at: string;
-  updated_at: string;
-  created_by: string;
-  category: string;
-  expected_impact: string;
-}
-
-export interface TestExecution {
-  id: string;
-  idea_id: string;
-  name: string;
-  type: 'ab' | 'multivariate' | 'split';
-  status: 'draft' | 'running' | 'paused' | 'completed';
-  variants: TestVariant[];
-  metrics: TestMetric[];
-  traffic_allocation: number; // percentage of traffic
-  start_date: string;
-  end_date?: string;
-  winner_variant_id?: string;
-  results?: TestResults;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface TestVariant {
-  id: string;
-  test_id: string;
-  name: string;
-  description: string;
-  traffic_percentage: number;
-  is_control: boolean;
-  configuration: Record<string, any>;
-}
-
-export interface TestMetric {
-  id: string;
-  name: string;
-  type: 'conversion' | 'revenue' | 'engagement' | 'custom';
-  goal_type: 'increase' | 'decrease';
-  primary: boolean;
-}
-
-export interface TestResults {
-  test_id: string;
-  total_participants: number;
-  confidence_level: number;
-  statistical_significance: boolean;
-  variant_results: VariantResult[];
-  updated_at: string;
-}
-
-export interface VariantResult {
-  variant_id: string;
-  variant_name: string;
-  participants: number;
-  conversions: number;
-  conversion_rate: number;
-  improvement: number; // percentage improvement over control
-  confidence_interval: [number, number];
-  is_winner: boolean;
-}
+import {
+  TestIdea,
+  TestExecution,
+  TestVariant,
+  TestMetric,
+  TestResults,
+  VariantResult,
+  TestStats
+} from '@/types/testing';
 
 export class TestingService extends BaseService<TestIdea> {
   constructor() {
@@ -374,12 +314,7 @@ export class TestingService extends BaseService<TestIdea> {
   }
 
   // Get test statistics
-  async getTestStats(): Promise<{
-    totalIdeas: number;
-    activeTests: number;
-    completedTests: number;
-    averageImprovement: number;
-  }> {
+  async getTestStats(): Promise<TestStats> {
     const ideas = await this.getTestIdeas();
     const executions = await this.getTestExecutions();
     

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { RootState } from '../index';
-import { TestIdea, TestExecution } from '@/services/database/TestingService';
+import { TestIdea, TestExecution, TestStats } from '@/types/testing';
 
 interface TestIdeasResponse {
   data: TestIdea[];

@@ -1,6 +1,6 @@
 import { useState, lazy, Suspense } from 'react';
 import { Play, Pause, TrendingUp, Users, BarChart3, CheckCircle2 } from 'lucide-react';
-import { TestExecution } from '@/services/database/TestingService';
+import { TestExecution } from '@/types/testing';
 
 // Dynamic import for chart
 const LineChart = lazy(() => import('@/components/common/Chart/LineChart'));

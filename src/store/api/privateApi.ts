@@ -5,18 +5,14 @@ import type {
   LinkedInMetrics, 
   ShopifyAnalytics, 
   CustomerLifecycle,
-  PrivateChannelStats 
-} from '@/services/database/PrivateService';
-
-interface PaginatedResponse<T> {
-  data: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
-}
+  PrivateChannelStats,
+  PaginatedResponse,
+  WhatsAppCampaign,
+  OfflineStore,
+  FunnelAnalysis,
+  TrendData,
+  PrivateStatsOverview
+} from '@/types/private';
 
 export interface PrivateQueryParams {
   page?: number;

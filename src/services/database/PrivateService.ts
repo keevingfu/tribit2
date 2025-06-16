@@ -1,93 +1,20 @@
 import { BaseService } from './BaseService';
-
-// Pagination types
-export interface PaginationParams {
-  page?: number;
-  limit?: number;
-}
-
-export interface PaginatedResponse<T> {
-  data: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
-}
-
-// Private domain data types
-export interface EDMCampaign {
-  id: number;
-  campaign_name: string;
-  sent_date: string;
-  total_sent: number;
-  opens: number;
-  clicks: number;
-  conversions: number;
-  open_rate: number;
-  click_rate: number;
-  conversion_rate: number;
-  revenue: number;
-}
-
-export interface LinkedInMetrics {
-  id: number;
-  post_date: string;
-  post_type: string;
-  impressions: number;
-  engagements: number;
-  likes: number;
-  comments: number;
-  shares: number;
-  engagement_rate: number;
-  follower_count: number;
-  follower_growth: number;
-}
-
-export interface ShopifyAnalytics {
-  id: number;
-  date: string;
-  store_name: string;
-  sessions: number;
-  unique_visitors: number;
-  page_views: number;
-  add_to_carts: number;
-  checkouts: number;
-  purchases: number;
-  conversion_rate: number;
-  average_order_value: number;
-  revenue: number;
-}
-
-export interface CustomerLifecycle {
-  id: number;
-  customer_segment: string;
-  total_customers: number;
-  new_customers: number;
-  active_customers: number;
-  at_risk_customers: number;
-  churned_customers: number;
-  retention_rate: number;
-  lifetime_value: number;
-}
-
-export interface PrivateChannelStats {
-  channel: string;
-  total_reach: number;
-  total_engagement: number;
-  total_conversions: number;
-  total_revenue: number;
-  growth_rate: number;
-}
-
-export interface PrivateFilterParams extends PaginationParams {
-  channel?: string;
-  dateFrom?: string;
-  dateTo?: string;
-  segment?: string;
-  campaign?: string;
-}
+import {
+  PaginationParams,
+  PaginatedResponse,
+  EDMCampaign,
+  LinkedInMetrics,
+  ShopifyAnalytics,
+  CustomerLifecycle,
+  PrivateChannelStats,
+  PrivateFilterParams,
+  WhatsAppCampaign,
+  OfflineStore,
+  FunnelStep,
+  FunnelAnalysis,
+  TrendData,
+  PrivateStatsOverview
+} from '@/types/private';
 
 export class PrivateService extends BaseService<any> {
   constructor() {
