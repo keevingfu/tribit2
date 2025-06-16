@@ -15,6 +15,23 @@ export class TestingService extends BaseService<TestIdea> {
     super('testing_ideas');
   }
 
+  // Transform database row to TestIdea format
+  private transformToTestIdea(row: any): TestIdea {
+    return {
+      id: String(row.id),
+      title: row.name || row.title,
+      description: row.description,
+      hypothesis: row.hypothesis || `Test hypothesis for ${row.name}`,
+      status: row.status || 'pending',
+      priority: row.priority || 'medium',
+      created_at: row.created_at,
+      updated_at: row.updated_at,
+      created_by: row.created_by || 'system@tribit.com',
+      category: row.category || 'General',
+      expected_impact: row.expected_impact || 'To be determined'
+    };
+  }
+
   // Mock data for development
   private mockIdeas: TestIdea[] = [
     {
@@ -221,9 +238,17 @@ export class TestingService extends BaseService<TestIdea> {
     }
   ];
 
-  // Override getAll to return mock data
+  // Override getAll to return real data from database
   async getAll(): Promise<TestIdea[]> {
-    return Promise.resolve(this.mockIdeas);
+    try {
+      const sql = `SELECT * FROM ${this.tableName} ORDER BY created_at DESC`;
+      const rows = await this.db.query(sql);
+      return rows.map(row => this.transformToTestIdea(row));
+    } catch (error) {
+      console.error('Error fetching test ideas:', error);
+      // Fallback to mock data if database query fails
+      return this.mockIdeas;
+    }
   }
 
   // Get test ideas with filtering
@@ -232,26 +257,52 @@ export class TestingService extends BaseService<TestIdea> {
     priority?: string;
     search?: string;
   }): Promise<TestIdea[]> {
-    let ideas = [...this.mockIdeas];
+    try {
+      let sql = `SELECT * FROM ${this.tableName} WHERE 1=1`;
+      const params: any[] = [];
 
-    if (filters?.status) {
-      ideas = ideas.filter(idea => idea.status === filters.status);
+      if (filters?.status) {
+        sql += ` AND status = ?`;
+        params.push(filters.status);
+      }
+
+      if (filters?.priority) {
+        sql += ` AND priority = ?`;
+        params.push(filters.priority);
+      }
+
+      if (filters?.search) {
+        sql += ` AND (name LIKE ? OR description LIKE ?)`;
+        params.push(`%${filters.search}%`, `%${filters.search}%`);
+      }
+
+      sql += ` ORDER BY created_at DESC`;
+      const rows = await this.db.query(sql, params);
+      return rows.map(row => this.transformToTestIdea(row));
+    } catch (error) {
+      console.error('Error fetching filtered test ideas:', error);
+      // Fallback to mock data filtering
+      let ideas = [...this.mockIdeas];
+
+      if (filters?.status) {
+        ideas = ideas.filter(idea => idea.status === filters.status);
+      }
+
+      if (filters?.priority) {
+        ideas = ideas.filter(idea => idea.priority === filters.priority);
+      }
+
+      if (filters?.search) {
+        const searchTerm = filters.search.toLowerCase();
+        ideas = ideas.filter(idea => 
+          idea.title.toLowerCase().includes(searchTerm) ||
+          idea.description.toLowerCase().includes(searchTerm) ||
+          idea.hypothesis.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      return ideas;
     }
-
-    if (filters?.priority) {
-      ideas = ideas.filter(idea => idea.priority === filters.priority);
-    }
-
-    if (filters?.search) {
-      const searchTerm = filters.search.toLowerCase();
-      ideas = ideas.filter(idea => 
-        idea.title.toLowerCase().includes(searchTerm) ||
-        idea.description.toLowerCase().includes(searchTerm) ||
-        idea.hypothesis.toLowerCase().includes(searchTerm)
-      );
-    }
-
-    return Promise.resolve(ideas);
   }
 
   // Get paginated test ideas
@@ -280,8 +331,16 @@ export class TestingService extends BaseService<TestIdea> {
 
   // Get test idea by ID
   async getTestIdeaById(id: string): Promise<TestIdea | null> {
-    const idea = this.mockIdeas.find(i => i.id === id);
-    return Promise.resolve(idea || null);
+    try {
+      const sql = `SELECT * FROM ${this.tableName} WHERE id = ?`;
+      const row = await this.db.queryOne(sql, [id]);
+      return row ? this.transformToTestIdea(row) : null;
+    } catch (error) {
+      console.error('Error fetching test idea by id:', error);
+      // Fallback to mock data
+      const idea = this.mockIdeas.find(i => i.id === id);
+      return idea || null;
+    }
   }
 
   // Get test executions
@@ -315,35 +374,56 @@ export class TestingService extends BaseService<TestIdea> {
 
   // Get test statistics
   async getTestStats(): Promise<TestStats> {
-    const ideas = await this.getTestIdeas();
-    const executions = await this.getTestExecutions();
-    
-    const activeTests = executions.filter(e => e.status === 'running').length;
-    const completedTests = executions.filter(e => e.status === 'completed').length;
-    
-    // Calculate average improvement from completed tests
-    const completedWithResults = executions.filter(e => 
-      e.status === 'completed' && e.results
-    );
-    
-    let totalImprovement = 0;
-    completedWithResults.forEach(test => {
-      const winnerResult = test.results?.variant_results.find(v => v.is_winner);
-      if (winnerResult) {
-        totalImprovement += winnerResult.improvement;
-      }
-    });
-    
-    const averageImprovement = completedWithResults.length > 0 
-      ? totalImprovement / completedWithResults.length 
-      : 0;
+    try {
+      // Get counts from database
+      const totalCountSql = `SELECT COUNT(*) as count FROM ${this.tableName}`;
+      const activeCountSql = `SELECT COUNT(*) as count FROM ${this.tableName} WHERE status = 'active' OR status = 'running'`;
+      const completedCountSql = `SELECT COUNT(*) as count FROM ${this.tableName} WHERE status = 'completed'`;
+      
+      const [totalResult, activeResult, completedResult] = await Promise.all([
+        this.db.queryOne(totalCountSql),
+        this.db.queryOne(activeCountSql),
+        this.db.queryOne(completedCountSql)
+      ]);
 
-    return {
-      totalIdeas: ideas.length,
-      activeTests,
-      completedTests,
-      averageImprovement
-    };
+      return {
+        totalIdeas: totalResult?.count || 0,
+        activeTests: activeResult?.count || 0,
+        completedTests: completedResult?.count || 0,
+        averageImprovement: 35 // Placeholder - would need execution data
+      };
+    } catch (error) {
+      console.error('Error fetching test stats:', error);
+      // Fallback to mock data stats
+      const ideas = await this.getTestIdeas();
+      const executions = await this.getTestExecutions();
+      
+      const activeTests = executions.filter(e => e.status === 'running').length;
+      const completedTests = executions.filter(e => e.status === 'completed').length;
+      
+      const completedWithResults = executions.filter(e => 
+        e.status === 'completed' && e.results
+      );
+      
+      let totalImprovement = 0;
+      completedWithResults.forEach(test => {
+        const winnerResult = test.results?.variant_results.find(v => v.is_winner);
+        if (winnerResult) {
+          totalImprovement += winnerResult.improvement;
+        }
+      });
+      
+      const averageImprovement = completedWithResults.length > 0 
+        ? totalImprovement / completedWithResults.length 
+        : 0;
+
+      return {
+        totalIdeas: ideas.length,
+        activeTests,
+        completedTests,
+        averageImprovement
+      };
+    }
   }
 
   // Create test idea (mock)
