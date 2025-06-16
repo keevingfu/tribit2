@@ -293,7 +293,7 @@ export default function PrivatePage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Private Domain Analytics</h1>
+          <h1 className="text-3xl font-bold">Content for Private</h1>
           <p className="text-muted-foreground mt-1">
             Comprehensive analytics for your private marketing channels
           </p>

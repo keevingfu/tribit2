@@ -9,13 +9,13 @@ interface TaskBoardProps {
 
 export const TaskBoard: React.FC<TaskBoardProps> = ({ campaign }) => {
   const taskColumns = {
-    'todo': { title: '待办', tasks: [] as Task[] },
-    'in-progress': { title: '进行中', tasks: [] as Task[] },
-    'review': { title: '审核中', tasks: [] as Task[] },
-    'completed': { title: '已完成', tasks: [] as Task[] }
+    'todo': { title: 'To Do', tasks: [] as Task[] },
+    'in-progress': { title: 'In Progress', tasks: [] as Task[] },
+    'review': { title: 'Review', tasks: [] as Task[] },
+    'completed': { title: 'Completed', tasks: [] as Task[] }
   };
 
-  // 将任务分组到对应的列
+  // Group tasks into corresponding columns
   campaign.tasks.forEach(task => {
     taskColumns[task.status].tasks.push(task);
   });
@@ -32,10 +32,10 @@ export const TaskBoard: React.FC<TaskBoardProps> = ({ campaign }) => {
 
   const getPriorityLabel = (priority: Task['priority']) => {
     switch (priority) {
-      case 'urgent': return '紧急';
-      case 'high': return '高';
-      case 'medium': return '中';
-      case 'low': return '低';
+      case 'urgent': return 'Urgent';
+      case 'high': return 'High';
+      case 'medium': return 'Medium';
+      case 'low': return 'Low';
       default: return priority;
     }
   };
@@ -43,8 +43,8 @@ export const TaskBoard: React.FC<TaskBoardProps> = ({ campaign }) => {
   return (
     <div className="bg-white rounded-lg shadow">
       <div className="p-6 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900">{campaign.name} - 任务看板</h3>
-        <p className="text-sm text-gray-600 mt-1">{campaign.tasks.length} 个任务</p>
+        <h3 className="text-lg font-semibold text-gray-900">{campaign.name} - Task Board</h3>
+        <p className="text-sm text-gray-600 mt-1">{campaign.tasks.length} tasks</p>
       </div>
       
       <div className="p-6">
@@ -79,7 +79,7 @@ export const TaskBoard: React.FC<TaskBoardProps> = ({ campaign }) => {
                         <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        {new Date(task.dueDate).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })}
+                        {new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </div>
                     </div>
                     
@@ -96,7 +96,7 @@ export const TaskBoard: React.FC<TaskBoardProps> = ({ campaign }) => {
                 
                 {column.tasks.length === 0 && (
                   <div className="text-center py-8 text-gray-400">
-                    <p className="text-sm">暂无任务</p>
+                    <p className="text-sm">No tasks</p>
                   </div>
                 )}
               </div>

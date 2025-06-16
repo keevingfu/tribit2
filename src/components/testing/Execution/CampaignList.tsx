@@ -27,11 +27,11 @@ export const CampaignList: React.FC<CampaignListProps> = ({
 
   const getStatusLabel = (status: Campaign['status']) => {
     switch (status) {
-      case 'draft': return '草稿';
-      case 'scheduled': return '已计划';
-      case 'running': return '进行中';
-      case 'completed': return '已完成';
-      case 'paused': return '已暂停';
+      case 'draft': return 'Draft';
+      case 'scheduled': return 'Scheduled';
+      case 'running': return 'Running';
+      case 'completed': return 'Completed';
+      case 'paused': return 'Paused';
       default: return status;
     }
   };
@@ -39,7 +39,7 @@ export const CampaignList: React.FC<CampaignListProps> = ({
   return (
     <div className="bg-white rounded-lg shadow">
       <div className="p-6 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900">活动列表</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Campaign List</h3>
       </div>
       
       <div className="divide-y divide-gray-200">
@@ -57,8 +57,8 @@ export const CampaignList: React.FC<CampaignListProps> = ({
               <div className="flex-1">
                 <h4 className="text-sm font-medium text-gray-900">{campaign.name}</h4>
                 <p className="text-xs text-gray-500 mt-1">
-                  {new Date(campaign.startDate).toLocaleDateString('zh-CN')} - 
-                  {new Date(campaign.endDate).toLocaleDateString('zh-CN')}
+                  {new Date(campaign.startDate).toLocaleDateString('en-US')} - 
+                  {new Date(campaign.endDate).toLocaleDateString('en-US')}
                 </p>
               </div>
               <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(campaign.status)}`}>
@@ -69,7 +69,7 @@ export const CampaignList: React.FC<CampaignListProps> = ({
             {/* Progress Bar */}
             <div className="mt-3">
               <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
-                <span>进度</span>
+                <span>Progress</span>
                 <span>{campaign.progress}%</span>
               </div>
               <div className="bg-gray-200 rounded-full h-2">
@@ -83,11 +83,11 @@ export const CampaignList: React.FC<CampaignListProps> = ({
             {/* Quick Stats */}
             <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
               <div className="text-gray-600">
-                任务: <span className="font-medium text-gray-900">{campaign.tasks.length}</span>
+                Tasks: <span className="font-medium text-gray-900">{campaign.tasks.length}</span>
               </div>
               <div className="text-gray-600">
-                类型: <span className="font-medium text-gray-900">
-                  {campaign.type === 'multi-channel' ? '多渠道' : campaign.type}
+                Type: <span className="font-medium text-gray-900">
+                  {campaign.type === 'multi-channel' ? 'Multi-channel' : campaign.type}
                 </span>
               </div>
             </div>

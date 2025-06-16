@@ -34,7 +34,7 @@ const PlatformDistributionChart: React.FC<PlatformDistributionChartProps> = ({
 
     return {
       title: {
-        text: '平台分布',
+        text: 'Platform Distribution',
         left: 'center',
         textStyle: {
           fontSize: 16,
@@ -49,11 +49,11 @@ const PlatformDistributionChart: React.FC<PlatformDistributionChartProps> = ({
             <div class="px-3 py-2">
               <div class="font-semibold">${params.name}</div>
               <div class="flex items-center justify-between mt-1">
-                <span>数量:</span>
+                <span>Count:</span>
                 <span class="ml-2 font-medium">${params.value}</span>
               </div>
               <div class="flex items-center justify-between">
-                <span>占比:</span>
+                <span>Percentage:</span>
                 <span class="ml-2 font-medium">${params.data.percentage.toFixed(1)}%</span>
               </div>
             </div>
@@ -73,7 +73,7 @@ const PlatformDistributionChart: React.FC<PlatformDistributionChartProps> = ({
       },
       series: [
         {
-          name: '平台分布',
+          name: 'Platform Distribution',
           type: 'pie',
           radius: ['40%', '70%'],
           center: ['40%', '50%'],
@@ -125,7 +125,7 @@ const PlatformDistributionChart: React.FC<PlatformDistributionChartProps> = ({
     return (
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <div className="h-[400px] flex items-center justify-center text-gray-500">
-          暂无数据
+          No data available
         </div>
       </div>
     );

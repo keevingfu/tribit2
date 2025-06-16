@@ -23,63 +23,63 @@ interface LayoutProps {
 
 const menuItems = [
   {
-    title: '仪表板',
+    title: 'Dashboard',
     icon: LayoutDashboard,
     href: '/dashboard',
   },
   {
-    title: '内容洞察',
+    title: 'Content Insights',
     icon: Search,
     href: '/insight',
     children: [
-      { title: '搜索洞察', href: '/insight/search' },
-      { title: '消费者之声', href: '/insight/consumer-voice' },
-      { title: '视频洞察', href: '/insight/videos' },
-      { title: '病毒式分析', href: '/insight/viral-analysis' },
+      { title: 'Search Insights', href: '/insight/search' },
+      { title: 'Consumer Voice', href: '/insight/consumer-voice' },
+      { title: 'Video Insights', href: '/insight/videos' },
+      { title: 'Viral Analysis', href: '/insight/viral-analysis' },
     ],
   },
   {
-    title: '内容测试',
+    title: 'Content Testing',
     icon: TestTube2,
     href: '/testing',
     children: [
-      { title: '创意构思', href: '/testing/ideation' },
-      { title: '测试执行', href: '/testing/execution' },
-      { title: '性能分析', href: '/testing/performance' },
-      { title: '优化改进', href: '/testing/refinement' },
+      { title: 'Ideation', href: '/testing/ideation' },
+      { title: 'Test Execution', href: '/testing/execution' },
+      { title: 'Performance Analysis', href: '/testing/performance' },
+      { title: 'Optimization', href: '/testing/refinement' },
     ],
   },
   {
-    title: 'KOL管理',
+    title: 'Content for KOL',
     icon: Users,
     href: '/kol',
     children: [
-      { title: 'KOL仪表板', href: '/kol/dashboard' },
-      { title: 'KOL概览', href: '/kol/overview' },
-      { title: '转化分析', href: '/kol/conversion' },
+      { title: 'KOL Dashboard', href: '/kol/dashboard' },
+      { title: 'KOL Overview', href: '/kol/overview' },
+      { title: 'Conversion Analysis', href: '/kol/conversion' },
     ],
   },
   {
-    title: '广告管理',
+    title: 'Content for Ads',
     icon: Megaphone,
     href: '/ads',
     children: [
-      { title: '受众分析', href: '/ads/audience' },
-      { title: '渠道分布', href: '/ads/distribution' },
-      { title: '优化建议', href: '/ads/optimization' },
-      { title: '效果追踪', href: '/ads/tracking' },
+      { title: 'Audience Analysis', href: '/ads/audience' },
+      { title: 'Channel Distribution', href: '/ads/distribution' },
+      { title: 'Optimization Suggestions', href: '/ads/optimization' },
+      { title: 'Performance Tracking', href: '/ads/tracking' },
     ],
   },
   {
-    title: '私域分析',
+    title: 'Content for Private',
     icon: Lock,
     href: '/private',
     children: [
-      { title: 'EDM分析', href: '/private/edm' },
+      { title: 'EDM Analysis', href: '/private/edm' },
       { title: 'LinkedIn', href: '/private/linkedin' },
       { title: 'Shopify', href: '/private/shopify' },
       { title: 'WhatsApp', href: '/private/whatsapp' },
-      { title: '线下门店', href: '/private/offline-stores' },
+      { title: 'Offline Stores', href: '/private/offline-stores' },
     ],
   },
 ];
@@ -222,7 +222,7 @@ export function Layout({ children }: LayoutProps) {
               className="flex w-full items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <LogOut className="h-5 w-5 mr-3" />
-              退出登录
+              Logout
             </button>
           </div>
         </div>

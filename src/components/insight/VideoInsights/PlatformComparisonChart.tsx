@@ -17,12 +17,12 @@ export const PlatformComparisonChart: React.FC<PlatformComparisonChartProps> = (
   const option: EChartsOption = useMemo(() => {
     const platforms = data.map(d => d.platform);
     
-    // 雷达图数据准备
+    // Prepare radar chart data
     const radarIndicator = [
-      { name: '总播放量', max: Math.max(...data.map(d => d.totalViews)) * 1.2 },
-      { name: '平均互动率', max: 25 },
-      { name: '增长率', max: 50 },
-      { name: '视频数量', max: Math.max(...data.map(d => d.topVideos.length)) * 1.5 }
+      { name: 'Total Views', max: Math.max(...data.map(d => d.totalViews)) * 1.2 },
+      { name: 'Avg Engagement', max: 25 },
+      { name: 'Growth Rate', max: 50 },
+      { name: 'Video Count', max: Math.max(...data.map(d => d.topVideos.length)) * 1.5 }
     ];
 
     const radarData = data.map(platform => ({
@@ -37,7 +37,7 @@ export const PlatformComparisonChart: React.FC<PlatformComparisonChartProps> = (
 
     return {
       title: {
-        text: '平台综合表现对比',
+        text: 'Platform Performance Comparison',
         left: 'center',
         top: 10
       },
@@ -50,10 +50,10 @@ export const PlatformComparisonChart: React.FC<PlatformComparisonChartProps> = (
               <div class="p-2">
                 <div class="font-semibold mb-2">${params.name}</div>
                 <div class="space-y-1 text-sm">
-                  <div>总播放量: ${(params.value[0] / 1000000).toFixed(1)}M</div>
-                  <div>平均互动率: ${params.value[1].toFixed(1)}%</div>
-                  <div>增长率: ${params.value[2].toFixed(1)}%</div>
-                  <div>热门视频数: ${params.value[3]}</div>
+                  <div>Total Views: ${(params.value[0] / 1000000).toFixed(1)}M</div>
+                  <div>Avg Engagement: ${params.value[1].toFixed(1)}%</div>
+                  <div>Growth Rate: ${params.value[2].toFixed(1)}%</div>
+                  <div>Popular Videos: ${params.value[3]}</div>
                 </div>
               </div>
             `;
@@ -117,7 +117,7 @@ export const PlatformComparisonChart: React.FC<PlatformComparisonChartProps> = (
     };
   }, [data]);
 
-  // 平台详细数据卡片
+  // Platform detail cards
   const renderPlatformCards = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
@@ -126,21 +126,21 @@ export const PlatformComparisonChart: React.FC<PlatformComparisonChartProps> = (
             <h4 className="font-semibold text-gray-900 mb-3">{platform.platform}</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">总播放量</span>
+                <span className="text-gray-600">Total Views</span>
                 <span className="font-medium">{(platform.totalViews / 1000000).toFixed(1)}M</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">平均互动率</span>
+                <span className="text-gray-600">Avg Engagement</span>
                 <span className="font-medium">{platform.avgEngagement.toFixed(1)}%</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">增长率</span>
+                <span className="text-gray-600">Growth Rate</span>
                 <span className={`font-medium ${platform.growthRate > 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {platform.growthRate > 0 ? '+' : ''}{platform.growthRate.toFixed(1)}%
                 </span>
               </div>
               <div className="pt-2 border-t border-gray-200">
-                <div className="text-gray-600 mb-1">热门内容类型</div>
+                <div className="text-gray-600 mb-1">Popular Content Types</div>
                 <div className="flex flex-wrap gap-1">
                   {Array.from(new Set(platform.topVideos.flatMap(v => v.tags))).slice(0, 3).map((tag, idx) => (
                     <span key={idx} className="px-2 py-0.5 bg-white rounded text-xs">

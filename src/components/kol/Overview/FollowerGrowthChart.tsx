@@ -14,7 +14,7 @@ interface FollowerGrowthChartProps {
 const FollowerGrowthChart: React.FC<FollowerGrowthChartProps> = ({ 
   data, 
   loading = false,
-  title = '粉丝增长趋势'
+  title = 'Follower Growth Trend'
 }) => {
 
   const option = useMemo(() => {
@@ -42,8 +42,8 @@ const FollowerGrowthChart: React.FC<FollowerGrowthChartProps> = ({
         },
         formatter: (params: any) => {
           const date = params[0].axisValue;
-          const followerData = params.find((p: any) => p.seriesName === '粉丝数');
-          const growthData = params.find((p: any) => p.seriesName === '增长率');
+          const followerData = params.find((p: any) => p.seriesName === 'Followers');
+          const growthData = params.find((p: any) => p.seriesName === 'Growth Rate');
           
           return `
             <div class="px-3 py-2">
@@ -52,7 +52,7 @@ const FollowerGrowthChart: React.FC<FollowerGrowthChartProps> = ({
                 <div class="flex items-center justify-between mb-1">
                   <span class="flex items-center">
                     <span class="w-3 h-3 rounded-full mr-2" style="background: ${followerData.color}"></span>
-                    <span>粉丝数:</span>
+                    <span>Followers:</span>
                   </span>
                   <span class="ml-4 font-medium">${formatNumber(followerData.value)}</span>
                 </div>
@@ -61,7 +61,7 @@ const FollowerGrowthChart: React.FC<FollowerGrowthChartProps> = ({
                 <div class="flex items-center justify-between">
                   <span class="flex items-center">
                     <span class="w-3 h-3 rounded-full mr-2" style="background: ${growthData.color}"></span>
-                    <span>增长率:</span>
+                    <span>Growth Rate:</span>
                   </span>
                   <span class="ml-4 font-medium">${growthData.value.toFixed(2)}%</span>
                 </div>
@@ -71,7 +71,7 @@ const FollowerGrowthChart: React.FC<FollowerGrowthChartProps> = ({
         }
       },
       legend: {
-        data: ['粉丝数', '增长率'],
+        data: ['Followers', 'Growth Rate'],
         bottom: 0,
         textStyle: {
           color: '#666'
@@ -104,7 +104,7 @@ const FollowerGrowthChart: React.FC<FollowerGrowthChartProps> = ({
       yAxis: [
         {
           type: 'value',
-          name: '粉丝数',
+          name: 'Followers',
           position: 'left',
           axisLine: {
             show: true,
@@ -124,7 +124,7 @@ const FollowerGrowthChart: React.FC<FollowerGrowthChartProps> = ({
         },
         {
           type: 'value',
-          name: '增长率 (%)',
+          name: 'Growth Rate (%)',
           position: 'right',
           axisLine: {
             show: true,
@@ -143,7 +143,7 @@ const FollowerGrowthChart: React.FC<FollowerGrowthChartProps> = ({
       ],
       series: [
         {
-          name: '粉丝数',
+          name: 'Followers',
           type: 'line',
           data: followers,
           smooth: true,
@@ -169,7 +169,7 @@ const FollowerGrowthChart: React.FC<FollowerGrowthChartProps> = ({
           }
         },
         {
-          name: '增长率',
+          name: 'Growth Rate',
           type: 'line',
           yAxisIndex: 1,
           data: growthRates,
@@ -201,7 +201,7 @@ const FollowerGrowthChart: React.FC<FollowerGrowthChartProps> = ({
     return (
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <div className="h-[400px] flex items-center justify-center text-gray-500">
-          暂无数据
+          No data available
         </div>
       </div>
     );
@@ -216,22 +216,22 @@ const FollowerGrowthChart: React.FC<FollowerGrowthChartProps> = ({
         lazyUpdate
       />
       
-      {/* 增长统计摘要 */}
+      {/* Growth statistics summary */}
       <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-100">
         <div>
-          <div className="text-sm text-gray-600">当前粉丝数</div>
+          <div className="text-sm text-gray-600">Current Followers</div>
           <div className="text-lg font-semibold text-gray-900 mt-1">
             {formatNumber(data[data.length - 1]?.followers || 0)}
           </div>
         </div>
         <div>
-          <div className="text-sm text-gray-600">总增长</div>
+          <div className="text-sm text-gray-600">Total Growth</div>
           <div className="text-lg font-semibold text-green-600 mt-1">
             +{formatNumber((data[data.length - 1]?.followers || 0) - (data[0]?.followers || 0))}
           </div>
         </div>
         <div>
-          <div className="text-sm text-gray-600">平均日增长</div>
+          <div className="text-sm text-gray-600">Avg Daily Growth</div>
           <div className="text-lg font-semibold text-blue-600 mt-1">
             +{formatNumber(
               data.reduce((sum, item) => sum + item.growth, 0) / data.length

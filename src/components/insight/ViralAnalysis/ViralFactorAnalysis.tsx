@@ -19,7 +19,7 @@ export const ViralFactorAnalysis: React.FC<ViralFactorAnalysisProps> = ({
       return {};
     }
 
-    const factors = ['内容质量', '传播潜力', '互动吸引力', '发布时机', '创作者影响力', '平台算法'];
+    const factors = ['Content Quality', 'Viral Potential', 'Engagement Appeal', 'Timing', 'Creator Influence', 'Algorithm'];
 
     const getFactorScores = (video?: VideoData) => {
       if (video) {
@@ -40,7 +40,7 @@ export const ViralFactorAnalysis: React.FC<ViralFactorAnalysisProps> = ({
 
     return {
       title: {
-        text: selectedVideo ? `${selectedVideo.title.slice(0, 30)}... - 病毒因子分析` : '整体病毒因子分析',
+        text: selectedVideo ? `${selectedVideo.title.slice(0, 30)}... - Viral Factor Analysis` : 'Overall Viral Factor Analysis',
         left: 'center',
         top: 10,
         textStyle: { fontSize: 14 }
@@ -58,7 +58,7 @@ export const ViralFactorAnalysis: React.FC<ViralFactorAnalysisProps> = ({
         type: 'radar',
         data: [{
           value: currentScores,
-          name: selectedVideo ? '当前视频' : '平均水平',
+          name: selectedVideo ? 'Current Video' : 'Average Level',
           areaStyle: { opacity: 0.3 }
         }]
       }]

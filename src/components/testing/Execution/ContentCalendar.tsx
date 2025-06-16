@@ -10,28 +10,28 @@ interface ContentCalendarProps {
 export const ContentCalendar: React.FC<ContentCalendarProps> = ({ campaigns }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  // 获取当前月份的天数
+  // Get the number of days in the month
   const getDaysInMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   };
 
-  // 获取月份第一天是星期几
+  // Get the first day of the month
   const getFirstDayOfMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
   };
 
-  // 生成日历数据
+  // Generate calendar data
   const generateCalendarDays = () => {
     const daysInMonth = getDaysInMonth(currentMonth);
     const firstDay = getFirstDayOfMonth(currentMonth);
     const days = [];
 
-    // 添加空白天数
+    // Add empty days
     for (let i = 0; i < firstDay; i++) {
       days.push(null);
     }
 
-    // 添加实际天数
+    // Add actual days
     for (let i = 1; i <= daysInMonth; i++) {
       days.push(i);
     }
@@ -39,7 +39,7 @@ export const ContentCalendar: React.FC<ContentCalendarProps> = ({ campaigns }) =
     return days;
   };
 
-  // 获取某一天的任务
+  // Get tasks for a specific day
   const getTasksForDay = (day: number) => {
     const tasks: any[] = [];
     const dayDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
@@ -64,18 +64,18 @@ export const ContentCalendar: React.FC<ContentCalendarProps> = ({ campaigns }) =
     return tasks;
   };
 
-  // 导航到上个月
+  // Navigate to previous month
   const goToPreviousMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
   };
 
-  // 导航到下个月
+  // Navigate to next month
   const goToNextMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
   };
 
   const calendarDays = generateCalendarDays();
-  const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   const getTaskColor = (type: string) => {
     switch (type) {
@@ -91,7 +91,7 @@ export const ContentCalendar: React.FC<ContentCalendarProps> = ({ campaigns }) =
     <div className="bg-white rounded-lg shadow">
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">内容日历</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Content Calendar</h3>
           <div className="flex items-center space-x-4">
             <button
               onClick={goToPreviousMonth}
@@ -102,7 +102,7 @@ export const ContentCalendar: React.FC<ContentCalendarProps> = ({ campaigns }) =
               </svg>
             </button>
             <span className="text-base font-medium text-gray-900">
-              {currentMonth.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' })}
+              {currentMonth.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
             </span>
             <button
               onClick={goToNextMonth}
@@ -117,7 +117,7 @@ export const ContentCalendar: React.FC<ContentCalendarProps> = ({ campaigns }) =
       </div>
 
       <div className="p-6">
-        {/* 星期标题 */}
+        {/* Week day headers */}
         <div className="grid grid-cols-7 gap-2 mb-2">
           {weekDays.map((day, index) => (
             <div key={index} className="text-center text-sm font-medium text-gray-500 py-2">
@@ -126,7 +126,7 @@ export const ContentCalendar: React.FC<ContentCalendarProps> = ({ campaigns }) =
           ))}
         </div>
 
-        {/* 日历天数 */}
+        {/* Calendar days */}
         <div className="grid grid-cols-7 gap-2">
           {calendarDays.map((day, index) => {
             const tasks = day ? getTasksForDay(day) : [];
@@ -161,7 +161,7 @@ export const ContentCalendar: React.FC<ContentCalendarProps> = ({ campaigns }) =
                       ))}
                       {tasks.length > 3 && (
                         <div className="text-xs text-gray-500 text-center">
-                          +{tasks.length - 3} 更多
+                          +{tasks.length - 3} more
                         </div>
                       )}
                     </div>
@@ -172,25 +172,25 @@ export const ContentCalendar: React.FC<ContentCalendarProps> = ({ campaigns }) =
           })}
         </div>
 
-        {/* 图例 */}
+        {/* Legend */}
         <div className="mt-6 flex items-center space-x-4 text-sm">
-          <span className="text-gray-600">类型：</span>
+          <span className="text-gray-600">Type:</span>
           <div className="flex items-center space-x-3">
             <div className="flex items-center">
               <div className="w-3 h-3 bg-purple-100 rounded mr-1"></div>
-              <span className="text-gray-600">视频</span>
+              <span className="text-gray-600">Video</span>
             </div>
             <div className="flex items-center">
               <div className="w-3 h-3 bg-blue-100 rounded mr-1"></div>
-              <span className="text-gray-600">博客</span>
+              <span className="text-gray-600">Blog</span>
             </div>
             <div className="flex items-center">
               <div className="w-3 h-3 bg-green-100 rounded mr-1"></div>
-              <span className="text-gray-600">社交</span>
+              <span className="text-gray-600">Social</span>
             </div>
             <div className="flex items-center">
               <div className="w-3 h-3 bg-orange-100 rounded mr-1"></div>
-              <span className="text-gray-600">多渠道</span>
+              <span className="text-gray-600">Multi-channel</span>
             </div>
           </div>
         </div>

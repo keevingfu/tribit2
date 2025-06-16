@@ -48,13 +48,32 @@ const customJestConfig = {
     '!app/**/not-found.{js,jsx,ts,tsx}',
   ],
 
-  // Coverage thresholds
+  // Coverage thresholds - Gradually increase as we add more tests
   coverageThreshold: {
     global: {
-      branches: 0,
-      functions: 0,
-      lines: 0,
-      statements: 0,
+      branches: 20,
+      functions: 25,
+      lines: 25,
+      statements: 25,
+    },
+    // Module-specific thresholds for critical paths
+    './src/services/database/*.ts': {
+      branches: 50,
+      functions: 60,
+      lines: 60,
+      statements: 60,
+    },
+    './src/store/slices/*.ts': {
+      branches: 70,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+    './app/api/**/*.ts': {
+      branches: 40,
+      functions: 50,
+      lines: 50,
+      statements: 50,
     },
   },
 

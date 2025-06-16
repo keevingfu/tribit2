@@ -46,7 +46,7 @@ export const ViralChart: React.FC<ViralChartProps> = ({ videos, timeRange }) => 
 
     return {
       title: {
-        text: '病毒传播增长曲线',
+        text: 'Viral Growth Curve',
         left: 'center',
         textStyle: { fontSize: 14 }
       },
@@ -77,7 +77,7 @@ export const ViralChart: React.FC<ViralChartProps> = ({ videos, timeRange }) => 
       },
       yAxis: {
         type: 'value',
-        name: '播放量',
+        name: 'Views',
         axisLabel: {
           formatter: (value: number) => {
             if (value >= 1000000) {

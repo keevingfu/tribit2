@@ -21,7 +21,7 @@ const KOLStatisticsCards: React.FC<KOLStatisticsCardsProps> = ({
 }) => {
   const cards = [
     {
-      title: 'KOL总数',
+      title: 'Total KOLs',
       value: statistics.totalKOLs,
       icon: Users,
       color: 'text-blue-500',
@@ -30,7 +30,7 @@ const KOLStatisticsCards: React.FC<KOLStatisticsCardsProps> = ({
       changeType: 'positive' as const
     },
     {
-      title: '平台数量',
+      title: 'Platforms',
       value: statistics.totalPlatforms,
       icon: Hash,
       color: 'text-purple-500',
@@ -39,7 +39,7 @@ const KOLStatisticsCards: React.FC<KOLStatisticsCardsProps> = ({
       changeType: 'positive' as const
     },
     {
-      title: '覆盖地区',
+      title: 'Regions Covered',
       value: statistics.totalRegions,
       icon: Globe,
       color: 'text-green-500',
@@ -48,7 +48,7 @@ const KOLStatisticsCards: React.FC<KOLStatisticsCardsProps> = ({
       changeType: 'positive' as const
     },
     {
-      title: '视频总数',
+      title: 'Total Videos',
       value: statistics.totalVideos,
       icon: PlayCircle,
       color: 'text-orange-500',
@@ -57,7 +57,7 @@ const KOLStatisticsCards: React.FC<KOLStatisticsCardsProps> = ({
       changeType: 'positive' as const
     },
     {
-      title: '总观看量',
+      title: 'Total Views',
       value: statistics.totalViews,
       icon: Eye,
       color: 'text-pink-500',
@@ -67,7 +67,7 @@ const KOLStatisticsCards: React.FC<KOLStatisticsCardsProps> = ({
       format: 'compact'
     },
     {
-      title: '平均互动率',
+      title: 'Avg Engagement',
       value: statistics.avgEngagementRate,
       icon: TrendingUp,
       color: 'text-indigo-500',

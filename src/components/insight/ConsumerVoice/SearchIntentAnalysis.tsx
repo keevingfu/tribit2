@@ -19,10 +19,10 @@ export const SearchIntentAnalysis: React.FC<SearchIntentAnalysisProps> = ({
       return {};
     }
     const intentLabels = {
-      'informational': '信息查询',
-      'transactional': '交易意图',
-      'navigational': '导航定位',
-      'commercial': '商业调研'
+      'informational': 'Information Search',
+      'transactional': 'Transaction Intent',
+      'navigational': 'Navigation',
+      'commercial': 'Commercial Research'
     };
 
     const colors = {
@@ -40,8 +40,8 @@ export const SearchIntentAnalysis: React.FC<SearchIntentAnalysisProps> = ({
           return `
             <div class="p-2">
               <div class="font-semibold">${params.name}</div>
-              <div class="text-sm mt-1">占比: ${params.value}%</div>
-              <div class="text-sm mt-2">相关关键词:</div>
+              <div class="text-sm mt-1">Percentage: ${params.value}%</div>
+              <div class="text-sm mt-2">Related Keywords:</div>
               <ul class="text-xs mt-1">
                 ${intent?.keywords.slice(0, 3).map(kw => `<li>• ${kw}</li>`).join('')}
               </ul>
@@ -56,7 +56,7 @@ export const SearchIntentAnalysis: React.FC<SearchIntentAnalysisProps> = ({
       },
       series: [
         {
-          name: '搜索意图',
+          name: 'Search Intent',
           type: 'pie',
           radius: ['40%', '70%'],
           avoidLabelOverlap: false,
@@ -113,7 +113,7 @@ export const SearchIntentAnalysis: React.FC<SearchIntentAnalysisProps> = ({
     };
   }, [data]);
 
-  // 关键词标签云
+  // Keyword tag cloud
   const renderKeywordTags = () => {
     if (!data || data.length === 0) {
       return null;
@@ -121,7 +121,7 @@ export const SearchIntentAnalysis: React.FC<SearchIntentAnalysisProps> = ({
     
     return (
       <div className="mt-6">
-        <h3 className="text-sm font-medium text-gray-700 mb-3">高频搜索关键词</h3>
+        <h3 className="text-sm font-medium text-gray-700 mb-3">High-frequency Search Keywords</h3>
         <div className="flex flex-wrap gap-2">
           {data.flatMap(d => d.keywords || []).map((keyword, index) => (
             <span 

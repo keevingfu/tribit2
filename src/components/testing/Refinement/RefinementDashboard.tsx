@@ -52,48 +52,48 @@ export interface ABTest {
 export const RefinementDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'feedback' | 'optimizer' | 'abtest' | 'suggestions'>('feedback');
 
-  // 生成示例反馈数据
+  // Generate sample feedback data
   const feedbackData: ContentFeedback[] = [
     {
       id: '1',
       contentId: 'c1',
-      contentTitle: 'Tribit StormBox Pro 评测',
+      contentTitle: 'Tribit StormBox Pro Review',
       source: 'comment',
       sentiment: 'positive',
-      category: '内容质量',
-      feedback: '评测很详细，特别是音质对比部分非常有帮助',
+      category: 'Content Quality',
+      feedback: 'Very detailed review, especially the sound quality comparison was very helpful',
       timestamp: '2024-06-10T10:30:00',
-      actionTaken: '已标记为精选评论'
+      actionTaken: 'Marked as featured comment'
     },
     {
       id: '2',
       contentId: 'c1',
-      contentTitle: 'Tribit StormBox Pro 评测',
+      contentTitle: 'Tribit StormBox Pro Review',
       source: 'analytics',
       sentiment: 'negative',
-      category: '用户体验',
-      feedback: '视频后半部分跳出率达到65%，可能内容过长',
+      category: 'User Experience',
+      feedback: 'Video has 65% bounce rate in the second half, possibly too long',
       timestamp: '2024-06-11T14:20:00',
-      actionTaken: '计划制作精简版'
+      actionTaken: 'Planning to create a shorter version'
     },
     {
       id: '3',
       contentId: 'c2',
-      contentTitle: '夏季音乐节必备音响推荐',
+      contentTitle: 'Summer Music Festival Speaker Recommendations',
       source: 'social',
       sentiment: 'neutral',
-      category: '内容建议',
-      feedback: '希望能加入防水性能的对比测试',
+      category: 'Content Suggestions',
+      feedback: 'Would like to see waterproof performance comparison tests',
       timestamp: '2024-06-12T09:15:00'
     }
   ];
 
-  // 生成优化任务数据
+  // Generate optimization task data
   const optimizationTasks: OptimizationTask[] = [
     {
       id: '1',
       contentId: 'c1',
-      contentTitle: 'Tribit StormBox Pro 评测',
+      contentTitle: 'Tribit StormBox Pro Review',
       type: 'thumbnail',
       currentValue: 'product-shot.jpg',
       suggestedValue: 'lifestyle-outdoor.jpg',
@@ -104,26 +104,26 @@ export const RefinementDashboard: React.FC = () => {
     {
       id: '2',
       contentId: 'c2',
-      contentTitle: '夏季音乐节必备音响推荐',
+      contentTitle: 'Summer Music Festival Speaker Recommendations',
       type: 'title',
-      currentValue: '夏季音乐节必备音响推荐',
-      suggestedValue: '2024夏季音乐节：5款户外音响终极对比',
+      currentValue: 'Summer Music Festival Speaker Recommendations',
+      suggestedValue: '2024 Summer Festival: Ultimate Comparison of 5 Outdoor Speakers',
       expectedImprovement: 15,
       status: 'pending',
       priority: 'medium'
     }
   ];
 
-  // 生成A/B测试数据
+  // Generate A/B test data
   const abTests: ABTest[] = [
     {
       id: '1',
       contentId: 'c1',
-      contentTitle: 'Tribit StormBox Pro 评测',
-      testName: '缩略图测试',
-      variantA: '产品图',
-      variantB: '使用场景图',
-      metric: '点击率',
+      contentTitle: 'Tribit StormBox Pro Review',
+      testName: 'Thumbnail Test',
+      variantA: 'Product Image',
+      variantB: 'Usage Scenario Image',
+      metric: 'Click-through Rate',
       startDate: '2024-06-01',
       endDate: '2024-06-08',
       status: 'completed',
@@ -137,11 +137,11 @@ export const RefinementDashboard: React.FC = () => {
     {
       id: '2',
       contentId: 'c3',
-      contentTitle: '便携音响选购指南',
-      testName: '标题优化测试',
-      variantA: '便携音响选购指南',
-      variantB: '2024最值得买的10款便携音响',
-      metric: '点击率',
+      contentTitle: 'Portable Speaker Buying Guide',
+      testName: 'Title Optimization Test',
+      variantA: 'Portable Speaker Buying Guide',
+      variantB: 'Top 10 Portable Speakers Worth Buying in 2024',
+      metric: 'Click-through Rate',
       startDate: '2024-06-10',
       status: 'running',
       results: {
@@ -153,10 +153,10 @@ export const RefinementDashboard: React.FC = () => {
   ];
 
   const tabs = [
-    { id: 'feedback' as const, label: '反馈分析', icon: '💬' },
-    { id: 'optimizer' as const, label: '内容优化', icon: '🎯' },
-    { id: 'abtest' as const, label: 'A/B 测试', icon: '🧪' },
-    { id: 'suggestions' as const, label: '优化建议', icon: '💡' }
+    { id: 'feedback' as const, label: 'Feedback Analysis', icon: '💬' },
+    { id: 'optimizer' as const, label: 'Content Optimization', icon: '🎯' },
+    { id: 'abtest' as const, label: 'A/B Testing', icon: '🧪' },
+    { id: 'suggestions' as const, label: 'Optimization Suggestions', icon: '💡' }
   ];
 
   return (
@@ -164,11 +164,11 @@ export const RefinementDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">内容优化与改进</h2>
-          <p className="text-gray-600 mt-1">基于反馈和数据持续优化内容质量</p>
+          <h2 className="text-2xl font-bold text-gray-900">Content Optimization & Refinement</h2>
+          <p className="text-gray-600 mt-1">Continuously improve content quality based on feedback and data</p>
         </div>
         <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-          生成优化报告
+          Generate Optimization Report
         </button>
       </div>
 

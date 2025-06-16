@@ -41,19 +41,19 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
   const processedData = useMemo(() => {
     let filtered = data;
 
-    // 搜索筛选
+    // Search filter
     if (searchTerm) {
       // kolName property doesn't exist in ConversionMetrics
       filtered = filtered;
     }
 
-    // 平台筛选
+    // Platform filter
     if (filterPlatform) {
       // platform property doesn't exist in ConversionMetrics
       filtered = filtered;
     }
 
-    // 排序
+    // Sort
     return [...filtered].sort((a, b) => {
       const aValue = a[sortField];
       const bValue = b[sortField];
@@ -113,7 +113,7 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
     );
   }
 
-  // 计算汇总数据
+  // Calculate summary data
   const totals = processedData.reduce((acc, item) => ({
     clicks: acc.clicks + item.totalClicks,
     conversions: acc.conversions + item.totalConversions,
@@ -129,22 +129,22 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
       {/* 表格头部 */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <h3 className="text-lg font-semibold text-gray-900">转化指标详情</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Conversion Metrics Details</h3>
           
           <div className="flex flex-col sm:flex-row gap-3">
-            {/* 搜索框 */}
+            {/* Search Box */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="搜索KOL..."
+                placeholder="Search KOL..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
 
-            {/* 平台筛选 */}
+            {/* Platform Filter */}
             <div className="relative">
               <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <select
@@ -152,48 +152,48 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
                 onChange={(e) => setFilterPlatform(e.target.value)}
                 className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
               >
-                <option value="">所有平台</option>
+                <option value="">All Platforms</option>
                 {platforms.map(platform => (
                   <option key={platform} value={platform}>{platform}</option>
                 ))}
               </select>
             </div>
 
-            {/* 导出按钮 */}
+            {/* Export Button */}
             {onExport && (
               <button
                 onClick={onExport}
                 className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <Download className="w-4 h-4" />
-                <span>导出</span>
+                <span>Export</span>
               </button>
             )}
           </div>
         </div>
 
-        {/* 汇总数据 */}
+        {/* Summary Data */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
           <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-600">总点击</div>
+            <div className="text-sm text-gray-600">Total Clicks</div>
             <div className="text-xl font-bold text-gray-900 mt-1">
               {formatNumber(totals.clicks)}
             </div>
           </div>
           <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-600">总转化</div>
+            <div className="text-sm text-gray-600">Total Conversions</div>
             <div className="text-xl font-bold text-gray-900 mt-1">
               {formatNumber(totals.conversions)}
             </div>
           </div>
           <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-600">总收入</div>
+            <div className="text-sm text-gray-600">Total Revenue</div>
             <div className="text-xl font-bold text-green-600 mt-1">
               {formatCurrency(totals.revenue)}
             </div>
           </div>
           <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-600">平均转化率</div>
+            <div className="text-sm text-gray-600">Average Conversion Rate</div>
             <div className="text-xl font-bold text-blue-600 mt-1">
               {avgConversionRate.toFixed(2)}%
             </div>
@@ -201,7 +201,7 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
         </div>
       </div>
 
-      {/* 表格内容 */}
+      {/* Table Content */}
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead className="bg-gray-50">
@@ -211,7 +211,7 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
                   onClick={() => handleSort('totalClicks')}
                   className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700"
                 >
-                  <span>KOL名称</span>
+                  <span>KOL Name</span>
                   <SortIcon field="totalClicks" />
                 </button>
               </th>
@@ -220,7 +220,7 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
                   onClick={() => handleSort('totalClicks')}
                   className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700"
                 >
-                  <span>平台</span>
+                  <span>Platform</span>
                   <SortIcon field="totalClicks" />
                 </button>
               </th>
@@ -229,7 +229,7 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
                   onClick={() => handleSort('totalClicks')}
                   className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700 ml-auto"
                 >
-                  <span>点击</span>
+                  <span>Clicks</span>
                   <SortIcon field="totalClicks" />
                 </button>
               </th>
@@ -238,7 +238,7 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
                   onClick={() => handleSort('totalConversions')}
                   className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700 ml-auto"
                 >
-                  <span>转化</span>
+                  <span>Conversions</span>
                   <SortIcon field="totalConversions" />
                 </button>
               </th>
@@ -247,7 +247,7 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
                   onClick={() => handleSort('conversionRate')}
                   className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700 ml-auto"
                 >
-                  <span>转化率</span>
+                  <span>Conversion Rate</span>
                   <SortIcon field="conversionRate" />
                 </button>
               </th>
@@ -256,7 +256,7 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
                   onClick={() => handleSort('totalRevenue')}
                   className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700 ml-auto"
                 >
-                  <span>收入</span>
+                  <span>Revenue</span>
                   <SortIcon field="totalRevenue" />
                 </button>
               </th>
@@ -265,7 +265,7 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
                   onClick={() => handleSort('avgOrderValue')}
                   className="flex items-center space-x-1 text-xs font-medium text-gray-500 uppercase tracking-wider hover:text-gray-700 ml-auto"
                 >
-                  <span>客单价</span>
+                  <span>Average Order Value</span>
                   <SortIcon field="avgOrderValue" />
                 </button>
               </th>
@@ -284,7 +284,7 @@ const ConversionMetricsTable: React.FC<ConversionMetricsTableProps> = ({
             {processedData.length === 0 ? (
               <tr>
                 <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
-                  暂无数据
+                  No data available
                 </td>
               </tr>
             ) : (

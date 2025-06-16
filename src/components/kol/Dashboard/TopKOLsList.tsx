@@ -23,7 +23,7 @@ const TopKOLsList: React.FC<TopKOLsListProps> = ({ kols, loading = false }) => {
     return (
       <div className="bg-white rounded-lg shadow-sm">
         <div className="p-6 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">顶级KOL榜单</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Top KOL Rankings</h3>
         </div>
         <div className="p-6">
           {[...Array(5)].map((_, index) => (
@@ -45,12 +45,12 @@ const TopKOLsList: React.FC<TopKOLsListProps> = ({ kols, loading = false }) => {
     <div className="bg-white rounded-lg shadow-sm">
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">顶级KOL榜单</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Top KOL Rankings</h3>
           <Link 
             href="/kol/overview" 
             className="text-sm text-blue-600 hover:text-blue-700 font-medium"
           >
-            查看全部
+            View All
           </Link>
         </div>
       </div>
@@ -59,7 +59,7 @@ const TopKOLsList: React.FC<TopKOLsListProps> = ({ kols, loading = false }) => {
         {kols.map((kol) => (
           <div key={kol.profile.id} className="p-6 hover:bg-gray-50 transition-colors">
             <div className="flex items-start space-x-4">
-              {/* 排名和头像 */}
+              {/* Ranking and Avatar */}
               <div className="flex items-center space-x-3">
                 <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold ${
                   (kol.rank || 0) <= 3 
@@ -82,7 +82,7 @@ const TopKOLsList: React.FC<TopKOLsListProps> = ({ kols, loading = false }) => {
                 </div>
               </div>
 
-              {/* KOL信息 */}
+              {/* KOL Information */}
               <div className="flex-1">
                 <div className="flex items-center space-x-2">
                   <Link 
@@ -108,16 +108,16 @@ const TopKOLsList: React.FC<TopKOLsListProps> = ({ kols, loading = false }) => {
                   </span>
                   <span className="flex items-center space-x-1">
                     <Users className="w-4 h-4" />
-                    <span>{formatNumber(kol.profile.followers)} 粉丝</span>
+                    <span>{formatNumber(kol.profile.followers)} followers</span>
                   </span>
                 </div>
 
-                {/* 表现指标 */}
+                {/* Performance Metrics */}
                 <div className="grid grid-cols-4 gap-4 mt-3">
                   <div>
                     <div className="flex items-center space-x-1 text-gray-500">
                       <Eye className="w-4 h-4" />
-                      <span className="text-xs">观看</span>
+                      <span className="text-xs">Views</span>
                     </div>
                     <div className="text-sm font-semibold text-gray-900 mt-1">
                       {formatNumber(kol.performance.totalViews)}
@@ -126,7 +126,7 @@ const TopKOLsList: React.FC<TopKOLsListProps> = ({ kols, loading = false }) => {
                   <div>
                     <div className="flex items-center space-x-1 text-gray-500">
                       <Heart className="w-4 h-4" />
-                      <span className="text-xs">点赞</span>
+                      <span className="text-xs">Likes</span>
                     </div>
                     <div className="text-sm font-semibold text-gray-900 mt-1">
                       {formatNumber(kol.performance.totalLikes)}
@@ -135,7 +135,7 @@ const TopKOLsList: React.FC<TopKOLsListProps> = ({ kols, loading = false }) => {
                   <div>
                     <div className="flex items-center space-x-1 text-gray-500">
                       <MessageCircle className="w-4 h-4" />
-                      <span className="text-xs">评论</span>
+                      <span className="text-xs">Comments</span>
                     </div>
                     <div className="text-sm font-semibold text-gray-900 mt-1">
                       {formatNumber(kol.performance.totalComments)}
@@ -144,7 +144,7 @@ const TopKOLsList: React.FC<TopKOLsListProps> = ({ kols, loading = false }) => {
                   <div>
                     <div className="flex items-center space-x-1 text-gray-500">
                       <TrendingUp className="w-4 h-4" />
-                      <span className="text-xs">互动率</span>
+                      <span className="text-xs">Engagement</span>
                     </div>
                     <div className="text-sm font-semibold text-gray-900 mt-1">
                       {kol.performance.avgEngagementRate.toFixed(2)}%
@@ -153,10 +153,10 @@ const TopKOLsList: React.FC<TopKOLsListProps> = ({ kols, loading = false }) => {
                 </div>
               </div>
 
-              {/* 收入 */}
+              {/* Revenue */}
               {kol.revenue && (
                 <div className="text-right">
-                  <div className="text-xs text-gray-500 mb-1">预估收入</div>
+                  <div className="text-xs text-gray-500 mb-1">Est. Revenue</div>
                   <div className="text-lg font-bold text-green-600">
                     ${formatNumber(kol.revenue)}
                   </div>

@@ -39,7 +39,7 @@ const DataTable = <T extends Record<string, any>>({
   showPagination = true,
   showFilter = false,
   loading = false,
-  emptyMessage = '暂无数据',
+  emptyMessage = 'No data available',
   onRowClick,
   rowKey = (item) => item.id,
   striped = true,
@@ -119,7 +119,7 @@ const DataTable = <T extends Record<string, any>>({
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
         <div className="flex items-center justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span className="ml-3 text-gray-600">加载中...</span>
+          <span className="ml-3 text-gray-600">Loading...</span>
         </div>
       </div>
     );

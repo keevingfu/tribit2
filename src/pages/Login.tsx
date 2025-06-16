@@ -21,7 +21,7 @@ const Login: React.FC = () => {
       await login({ email, password });
       router.push('/' as any);
     } catch (err) {
-      setError('登录失败，请检查邮箱和密码');
+      setError('Login failed, please check your email and password');
     }
   };
 
@@ -31,7 +31,7 @@ const Login: React.FC = () => {
       await login({ email: 'demo@example.com', password: 'demo123' });
       router.push('/' as any);
     } catch (err) {
-      setError('演示账户登录失败');
+      setError('Demo account login failed');
     }
   };
 
@@ -44,15 +44,15 @@ const Login: React.FC = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            登录到 Tribit 平台
+            Sign in to Tribit Platform
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            或{' '}
+            Or{' '}
             <button
               onClick={handleDemoLogin}
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-              使用演示账户登录
+              Sign in with demo account
             </button>
           </p>
         </div>
@@ -67,7 +67,7 @@ const Login: React.FC = () => {
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="email" className="sr-only">
-                邮箱地址
+                Email address
               </label>
               <input
                 id="email"
@@ -78,12 +78,12 @@ const Login: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="邮箱地址"
+                placeholder="Email address"
               />
             </div>
             <div>
               <label htmlFor="password" className="sr-only">
-                密码
+                Password
               </label>
               <input
                 id="password"
@@ -94,7 +94,7 @@ const Login: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="密码"
+                placeholder="Password"
               />
             </div>
           </div>
@@ -107,7 +107,7 @@ const Login: React.FC = () => {
               fullWidth
               disabled={loading}
             >
-              登录
+              Sign In
             </Button>
           </div>
         </form>

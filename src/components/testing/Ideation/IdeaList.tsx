@@ -51,15 +51,15 @@ export const IdeaList: React.FC<IdeaListProps> = ({ ideas }) => {
   return (
     <div className="bg-white rounded-lg shadow">
       <div className="p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">创意列表</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Idea List</h3>
         
         {ideas.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
             <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
-            <p>暂无创意内容</p>
-            <p className="text-sm mt-2">使用左侧的AI创意生成器开始创建</p>
+            <p>No ideas yet</p>
+            <p className="text-sm mt-2">Use the AI Idea Generator on the left to get started</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -71,7 +71,7 @@ export const IdeaList: React.FC<IdeaListProps> = ({ ideas }) => {
                       <div className="text-gray-500">{getContentTypeIcon(idea.contentType)}</div>
                       <h4 className="text-lg font-medium text-gray-900">{idea.title}</h4>
                       {idea.trending && (
-                        <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">热门</span>
+                        <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">Trending</span>
                       )}
                     </div>
                     
@@ -79,10 +79,10 @@ export const IdeaList: React.FC<IdeaListProps> = ({ ideas }) => {
                     
                     <div className="flex items-center space-x-4 text-sm">
                       <span className="text-gray-500">{idea.category}</span>
-                      <span className="text-gray-500">预估触达: {(idea.estimatedReach / 1000).toFixed(0)}K</span>
-                      <span className="text-gray-500">互动分: {idea.engagementScore.toFixed(1)}</span>
+                      <span className="text-gray-500">Est. Reach: {(idea.estimatedReach / 1000).toFixed(0)}K</span>
+                      <span className="text-gray-500">Engagement: {idea.engagementScore.toFixed(1)}</span>
                       <span className={`px-2 py-1 rounded text-xs ${getDifficultyColor(idea.difficulty)}`}>
-                        {idea.difficulty === 'easy' ? '简单' : idea.difficulty === 'medium' ? '中等' : '困难'}
+                        {idea.difficulty === 'easy' ? 'Easy' : idea.difficulty === 'medium' ? 'Medium' : 'Hard'}
                       </span>
                     </div>
                     
@@ -97,10 +97,10 @@ export const IdeaList: React.FC<IdeaListProps> = ({ ideas }) => {
                   
                   <div className="ml-4 flex flex-col space-y-2">
                     <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
-                      开始创作
+                      Start Creating
                     </button>
                     <button className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors">
-                      查看详情
+                      View Details
                     </button>
                   </div>
                 </div>

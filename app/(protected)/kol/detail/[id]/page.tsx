@@ -69,14 +69,14 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">KOL不存在</h2>
-          <p className="text-gray-600 mb-4">找不到该KOL的信息</p>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-2">KOL Not Found</h2>
+          <p className="text-gray-600 mb-4">Cannot find information for this KOL</p>
           <Link
             href="/kol/overview"
             className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>返回KOL列表</span>
+            <span>Back to KOL List</span>
           </Link>
         </div>
       </div>
@@ -96,7 +96,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
             className="inline-flex items-center space-x-2 px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm text-white rounded-lg hover:bg-opacity-30 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>返回</span>
+            <span>Back</span>
           </Link>
         </div>
 
@@ -160,7 +160,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
                   </span>
                   <span className="flex items-center space-x-1">
                     <Calendar className="w-4 h-4" />
-                    <span>加入于 2020年</span>
+                    <span>Joined in 2020</span>
                   </span>
                 </div>
 
@@ -170,31 +170,31 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
                     <div className="text-2xl font-bold text-gray-900">
                       {formatNumber(kolDetail.followers)}
                     </div>
-                    <div className="text-sm text-gray-600">粉丝</div>
+                    <div className="text-sm text-gray-600">Followers</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-gray-900">
                       {formatNumber(kolDetail.posts)}
                     </div>
-                    <div className="text-sm text-gray-600">作品</div>
+                    <div className="text-sm text-gray-600">Works</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-gray-900">
                       {formatNumber(kolDetail.avgViews)}
                     </div>
-                    <div className="text-sm text-gray-600">平均观看</div>
+                    <div className="text-sm text-gray-600">Avg Views</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-gray-900">
                       {kolDetail.engagementRate.toFixed(1)}%
                     </div>
-                    <div className="text-sm text-gray-600">互动率</div>
+                    <div className="text-sm text-gray-600">Engagement</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-gray-900">
                       {formatNumber(kolDetail.statistics.totalViews)}
                     </div>
-                    <div className="text-sm text-gray-600">总观看</div>
+                    <div className="text-sm text-gray-600">Total Views</div>
                   </div>
                 </div>
               </div>
@@ -214,7 +214,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
                     : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                视频作品
+                Video Works
               </button>
               <button
                 onClick={() => setActiveTab('analytics')}
@@ -224,7 +224,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
                     : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                数据分析
+                Data Analytics
               </button>
               <button
                 onClick={() => setActiveTab('audience')}
@@ -234,7 +234,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
                     : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                受众分析
+                Audience Analysis
               </button>
             </nav>
           </div>
@@ -270,7 +270,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
                       </span>
                     </div>
                     <div className="mt-2 text-xs text-gray-500">
-                      {video.published_date ? formatDate(video.published_date) : '未知日期'}
+                      {video.published_date ? formatDate(video.published_date) : 'Unknown Date'}
                     </div>
                   </div>
                 </div>
@@ -287,10 +287,10 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
                   onChange={(e) => setTimeRange(e.target.value as TimeRange)}
                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="7d">最近7天</option>
-                  <option value="30d">最近30天</option>
-                  <option value="90d">最近90天</option>
-                  <option value="1y">最近1年</option>
+                  <option value="7d">Last 7 days</option>
+                  <option value="30d">Last 30 days</option>
+                  <option value="90d">Last 90 days</option>
+                  <option value="1y">Last 1 year</option>
                 </select>
               </div>
 
@@ -304,11 +304,11 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* 性别分布 */}
               <div className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">性别分布</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Gender Distribution</h3>
                 <div className="space-y-3">
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-gray-600">男性</span>
+                      <span className="text-sm text-gray-600">Male</span>
                       <span className="text-sm font-medium">55%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -320,7 +320,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
                   </div>
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-gray-600">女性</span>
+                      <span className="text-sm text-gray-600">Female</span>
                       <span className="text-sm font-medium">40%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -332,7 +332,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
                   </div>
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-gray-600">其他</span>
+                      <span className="text-sm text-gray-600">Other</span>
                       <span className="text-sm font-medium">5%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -347,7 +347,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
 
               {/* 年龄分布 */}
               <div className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">年龄分布</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Age Distribution</h3>
                 <div className="space-y-3">
                   {[].map((group: any, index) => (
                     <div key={index}>
@@ -368,7 +368,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ params }) => {
 
               {/* 地区分布 */}
               <div className="bg-white rounded-lg p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">地区分布</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Regional Distribution</h3>
                 <div className="space-y-3">
                   {[].map((location: any, index) => (
                     <div key={index} className="flex items-center justify-between">

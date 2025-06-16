@@ -6,7 +6,7 @@ import type { EChartsOption } from 'echarts';
 
 export const TrendAnalysis: React.FC = () => {
   const option: EChartsOption = useMemo(() => {
-    const categories = ['产品评测', '使用场景', '开箱体验', '技术分享', '用户故事'];
+    const categories = ['Product Reviews', 'Use Cases', 'Unboxing', 'Tech Tutorials', 'User Stories'];
     const dates = Array.from({ length: 7 }, (_, i) => {
       const date = new Date();
       date.setDate(date.getDate() - (6 - i));
@@ -19,7 +19,7 @@ export const TrendAnalysis: React.FC = () => {
 
     return {
       title: {
-        text: '内容趋势分析',
+        text: 'Content Trend Analysis',
         left: 'center',
         textStyle: { fontSize: 14 }
       },
@@ -50,7 +50,7 @@ export const TrendAnalysis: React.FC = () => {
       },
       yAxis: {
         type: 'value',
-        name: '热度指数'
+        name: 'Popularity Index'
       },
       series: categories.map((category, index) => ({
         name: category,
@@ -66,15 +66,15 @@ export const TrendAnalysis: React.FC = () => {
   }, []);
 
   const trendInsights = [
-    { category: '产品评测', trend: 'up', change: '+23%', description: '用户对深度评测内容的需求持续增长' },
-    { category: '使用场景', trend: 'up', change: '+15%', description: '户外场景相关内容受到更多关注' },
-    { category: '开箱体验', trend: 'stable', change: '+2%', description: '保持稳定的观看率和互动率' },
-    { category: '技术分享', trend: 'down', change: '-8%', description: '技术类内容需要更通俗的表达方式' }
+    { category: 'Product Reviews', trend: 'up', change: '+23%', description: 'Continuous growth in demand for in-depth review content' },
+    { category: 'Use Cases', trend: 'up', change: '+15%', description: 'Outdoor scenario content gaining more attention' },
+    { category: 'Unboxing', trend: 'stable', change: '+2%', description: 'Maintaining stable view and engagement rates' },
+    { category: 'Tech Tutorials', trend: 'down', change: '-8%', description: 'Technical content needs more accessible presentation' }
   ];
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">内容趋势分析</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">Content Trend Analysis</h3>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
@@ -82,7 +82,7 @@ export const TrendAnalysis: React.FC = () => {
         </div>
         
         <div>
-          <h4 className="text-sm font-medium text-gray-700 mb-3">趋势洞察</h4>
+          <h4 className="text-sm font-medium text-gray-700 mb-3">Trend Insights</h4>
           <div className="space-y-3">
             {trendInsights.map((insight, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">

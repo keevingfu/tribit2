@@ -10,7 +10,7 @@ import type { KOL } from '@/store/api/kolApi';
 
 // 平台选项
 const PLATFORM_OPTIONS = [
-  { value: '', label: '全部平台' },
+  { value: '', label: 'All Platforms' },
   { value: 'YouTube', label: 'YouTube' },
   { value: 'TikTok', label: 'TikTok' },
   { value: 'Instagram', label: 'Instagram' },
@@ -20,17 +20,17 @@ const PLATFORM_OPTIONS = [
 
 // 地区选项
 const REGION_OPTIONS = [
-  { value: '', label: '全部地区' },
-  { value: 'USA', label: '美国' },
-  { value: 'UK', label: '英国' },
-  { value: 'Japan', label: '日本' },
-  { value: 'Korea', label: '韩国' },
-  { value: 'China', label: '中国' },
-  { value: 'India', label: '印度' },
-  { value: 'Singapore', label: '新加坡' },
-  { value: 'Malaysia', label: '马来西亚' },
-  { value: 'Thailand', label: '泰国' },
-  { value: 'Indonesia', label: '印度尼西亚' },
+  { value: '', label: 'All Regions' },
+  { value: 'USA', label: 'United States' },
+  { value: 'UK', label: 'United Kingdom' },
+  { value: 'Japan', label: 'Japan' },
+  { value: 'Korea', label: 'South Korea' },
+  { value: 'China', label: 'China' },
+  { value: 'India', label: 'India' },
+  { value: 'Singapore', label: 'Singapore' },
+  { value: 'Malaysia', label: 'Malaysia' },
+  { value: 'Thailand', label: 'Thailand' },
+  { value: 'Indonesia', label: 'Indonesia' },
 ];
 
 export default function ListPage() {

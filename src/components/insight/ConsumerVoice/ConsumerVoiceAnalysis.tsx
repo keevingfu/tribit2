@@ -9,67 +9,67 @@ import type { UserNeed, SearchIntent, VoiceInsight } from '@/types/insight';
 const ConsumerVoiceAnalysis: React.FC = () => {
   const [selectedTimeRange, setSelectedTimeRange] = useState('7d');
 
-  // 示例数据
+  // Sample data
   const generateUserNeeds = (): UserNeed[] => {
     return [
       { 
-        category: '音质', 
+        category: 'Sound Quality', 
         frequency: 150, 
         sentiment: 'positive',
-        examples: ['音质清晰', '低音震撼', '声音饱满']
+        examples: ['Clear sound', 'Deep bass', 'Rich audio']
       },
       { 
-        category: '便携性', 
+        category: 'Portability', 
         frequency: 120, 
         sentiment: 'positive',
-        examples: ['体积小巧', '方便携带', '轻便']
+        examples: ['Compact size', 'Easy to carry', 'Lightweight']
       },
       { 
-        category: '电池续航', 
+        category: 'Battery Life', 
         frequency: 100, 
         sentiment: 'neutral',
-        examples: ['续航时间长', '充电快', '电池耐用']
+        examples: ['Long battery life', 'Fast charging', 'Durable battery']
       },
       { 
-        category: '连接稳定性', 
+        category: 'Connection Stability', 
         frequency: 80, 
         sentiment: 'neutral',
-        examples: ['蓝牙连接稳定', '不断连', '配对简单']
+        examples: ['Stable Bluetooth', 'No disconnections', 'Easy pairing']
       },
       { 
-        category: '价格', 
+        category: 'Price', 
         frequency: 90, 
         sentiment: 'positive',
-        examples: ['性价比高', '物超所值', '价格合理']
+        examples: ['Good value', 'Worth the money', 'Reasonable price']
       },
       { 
-        category: '外观设计', 
+        category: 'Design', 
         frequency: 65, 
         sentiment: 'positive',
-        examples: ['颜值高', '设计时尚', '做工精致']
+        examples: ['Attractive design', 'Stylish look', 'Quality build']
       },
       { 
-        category: '防水性能', 
+        category: 'Water Resistance', 
         frequency: 45, 
         sentiment: 'positive',
-        examples: ['IPX7防水', '户外使用', '防水效果好']
+        examples: ['IPX7 waterproof', 'Outdoor use', 'Good water protection']
       },
       { 
-        category: '售后服务', 
+        category: 'Customer Service', 
         frequency: 30, 
         sentiment: 'negative',
-        examples: ['客服响应慢', '保修政策', '退换货']
+        examples: ['Slow response', 'Warranty policy', 'Returns/exchanges']
       }
     ];
   };
 
   const generateSearchIntents = (): SearchIntent[] => {
     return [
-      { intent: 'commercial', percentage: 35, keywords: ['怎么样', '值得买吗', '评测'] },
-      { intent: 'informational', percentage: 25, keywords: ['对比', 'vs', '哪个好'] },
-      { intent: 'informational', percentage: 20, keywords: ['怎么用', '说明书', '配对'] },
-      { intent: 'transactional', percentage: 15, keywords: ['无法连接', '没声音', '故障'] },
-      { intent: 'commercial', percentage: 5, keywords: ['多少钱', '价格', '优惠'] }
+      { intent: 'commercial', percentage: 35, keywords: ['how is it', 'worth buying', 'review'] },
+      { intent: 'informational', percentage: 25, keywords: ['compare', 'vs', 'which is better'] },
+      { intent: 'informational', percentage: 20, keywords: ['how to use', 'manual', 'pairing'] },
+      { intent: 'transactional', percentage: 15, keywords: ['cannot connect', 'no sound', 'malfunction'] },
+      { intent: 'commercial', percentage: 5, keywords: ['how much', 'price', 'discount'] }
     ];
   };
 
@@ -77,58 +77,58 @@ const ConsumerVoiceAnalysis: React.FC = () => {
     return [
       {
         id: '1',
-        title: '音质成为消费者最关注的产品特性',
-        description: '超过60%的用户评论提到音质，且正面评价占比达85%',
-        category: '产品特性',
+        title: 'Sound quality is the most important feature for consumers',
+        description: 'Over 60% of user reviews mention sound quality, with 85% positive ratings',
+        category: 'Product Features',
         impact: 'high',
         confidence: 0.85,
         actionItems: [
-          '重点突出音质优势在产品宣传中',
-          '收集更多音质相关的用户反馈',
-          '考虑推出音质升级版本产品',
-          '与音频技术供应商加强合作'
+          'Highlight sound quality advantages in product marketing',
+          'Collect more user feedback on sound quality',
+          'Consider launching sound quality upgraded products',
+          'Strengthen cooperation with audio technology suppliers'
         ]
       },
       {
         id: '2',
-        title: '便携性需求显著增长',
-        description: '户外使用场景增多，用户对产品便携性的关注度提升30%',
-        category: '使用场景',
+        title: 'Portability demand grows significantly',
+        description: 'Outdoor usage scenarios increase, user attention to portability up 30%',
+        category: 'Usage Scenarios',
         impact: 'medium',
         confidence: 0.78,
         actionItems: [
-          '优化产品外形设计，提升便携性',
-          '开发户外使用场景的营销内容',
-          '推出便携版本或配件',
-          '与户外运动品牌进行跨界合作'
+          'Optimize product design to improve portability',
+          'Develop marketing content for outdoor use scenarios',
+          'Launch portable versions or accessories',
+          'Cross-brand cooperation with outdoor sports brands'
         ]
       },
       {
         id: '3',
-        title: '售后服务成为改进重点',
-        description: '约20%的负面反馈与售后服务相关，需要重点关注',
-        category: '服务体验',
+        title: 'After-sales service becomes improvement focus',
+        description: 'About 20% of negative feedback relates to after-sales service, needs attention',
+        category: 'Service Experience',
         impact: 'high',
         confidence: 0.92,
         actionItems: [
-          '加强客服团队培训',
-          '优化售后服务流程',
-          '建立更快速的问题反馈机制',
-          '推出延保服务以提升用户信心'
+          'Strengthen customer service team training',
+          'Optimize after-sales service processes',
+          'Establish faster problem feedback mechanism',
+          'Launch extended warranty service to boost confidence'
         ]
       },
       {
         id: '4',
-        title: '防水功能受到户外用户青睐',
-        description: 'IPX7防水等级产品的搜索量增长45%',
-        category: '功能需求',
+        title: 'Water resistance feature favored by outdoor users',
+        description: 'Search volume for IPX7 waterproof products increased by 45%',
+        category: 'Feature Requirements',
         impact: 'medium',
         confidence: 0.74,
         actionItems: [
-          '在营销中突出防水功能',
-          '创建防水测试演示视频',
-          '针对户外运动场景制定推广策略',
-          '考虑推出更高防水等级的产品'
+          'Highlight waterproof features in marketing',
+          'Create waterproof test demonstration videos',
+          'Develop promotion strategies for outdoor sports scenarios',
+          'Consider launching products with higher waterproof ratings'
         ]
       }
     ];
@@ -142,15 +142,15 @@ const ConsumerVoiceAnalysis: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">消费者声音分析</h2>
+        <h2 className="text-2xl font-bold text-gray-900">Consumer Voice Analysis</h2>
         <select
           value={selectedTimeRange}
           onChange={(e) => setSelectedTimeRange(e.target.value)}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="7d">最近7天</option>
-          <option value="30d">最近30天</option>
-          <option value="90d">最近90天</option>
+          <option value="7d">Last 7 days</option>
+          <option value="30d">Last 30 days</option>
+          <option value="90d">Last 90 days</option>
         </select>
       </div>
 
@@ -161,35 +161,35 @@ const ConsumerVoiceAnalysis: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* User Needs Heatmap */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">用户需求热力图</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">User Needs Heatmap</h3>
           <UserNeedsHeatmap data={userNeeds} />
         </div>
 
         {/* Search Intent Analysis */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">搜索意图分析</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Search Intent Analysis</h3>
           <SearchIntentAnalysis data={searchIntents} />
         </div>
       </div>
 
       {/* Detailed Analysis */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">需求详细分析</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Detailed Needs Analysis</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  需求类别
+                  Need Category
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  提及频率
+                  Mention Frequency
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  情感倾向
+                  Sentiment
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  典型表述
+                  Typical Expressions
                 </th>
               </tr>
             </thead>
@@ -217,14 +217,14 @@ const ConsumerVoiceAnalysis: React.FC = () => {
                       ${need.sentiment === 'neutral' ? 'bg-gray-100 text-gray-800' : ''}
                       ${(need.sentiment as any) === 'mixed' ? 'bg-yellow-100 text-yellow-800' : ''}
                     `}>
-                      {need.sentiment === 'positive' ? '积极' : ''}
-                      {need.sentiment === 'negative' ? '消极' : ''}
-                      {need.sentiment === 'neutral' ? '中性' : ''}
-                      {(need.sentiment as any) === 'mixed' ? '混合' : ''}
+                      {need.sentiment === 'positive' ? 'Positive' : ''}
+                      {need.sentiment === 'negative' ? 'Negative' : ''}
+                      {need.sentiment === 'neutral' ? 'Neutral' : ''}
+                      {(need.sentiment as any) === 'mixed' ? 'Mixed' : ''}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">
-                    {need.examples.join('、')}
+                    {need.examples.join(', ')}
                   </td>
                 </tr>
               ))}

@@ -30,8 +30,8 @@ export const MetricsOverview: React.FC<MetricsOverviewProps> = ({ metrics }) => 
   };
 
   const formatValue = (metric: PerformanceMetric) => {
-    if (metric.name.includes('率') || metric.name.includes('时间')) {
-      return metric.name.includes('时间') ? `${metric.value}秒` : `${metric.value}%`;
+    if (metric.name.includes('Engagement') || metric.name.includes('Time')) {
+      return metric.name.includes('Time') ? `${metric.value}s` : `${metric.value}%`;
     }
     return metric.value.toLocaleString();
   };

@@ -26,11 +26,11 @@ export const VoiceInsightCards: React.FC<VoiceInsightCardsProps> = ({
   const getImpactLabel = (impact: string) => {
     switch (impact) {
       case 'high':
-        return '高优先级';
+        return 'High Priority';
       case 'medium':
-        return '中优先级';
+        return 'Medium Priority';
       case 'low':
-        return '低优先级';
+        return 'Low Priority';
       default:
         return impact;
     }
@@ -50,7 +50,7 @@ export const VoiceInsightCards: React.FC<VoiceInsightCardsProps> = ({
           className={`border-l-4 rounded-lg p-6 cursor-pointer transition-all hover:shadow-lg ${getImpactColor(insight.impact)}`}
           onClick={() => onInsightClick?.(insight)}
         >
-          {/* 头部信息 */}
+          {/* Header Information */}
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -70,23 +70,23 @@ export const VoiceInsightCards: React.FC<VoiceInsightCardsProps> = ({
               </span>
               {insight.confidence !== undefined && (
                 <div className={`text-sm mt-2 ${getConfidenceColor(insight.confidence)}`}>
-                  置信度: {(insight.confidence * 100).toFixed(0)}%
+                  Confidence: {(insight.confidence * 100).toFixed(0)}%
                 </div>
               )}
             </div>
           </div>
 
-          {/* 分类标签 */}
+          {/* Category Tags */}
           <div className="mb-4">
             <span className="inline-block px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-full">
               {insight.category}
             </span>
           </div>
 
-          {/* 行动建议 */}
+          {/* Action Suggestions */}
           {insight.actionItems && insight.actionItems.length > 0 && (
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-2">建议行动</h4>
+              <h4 className="text-sm font-medium text-gray-700 mb-2">Suggested Actions</h4>
               <ul className="space-y-1">
                 {insight.actionItems.map((item, index) => (
                   <li key={index} className="flex items-start text-sm text-gray-600">
@@ -110,10 +110,10 @@ export const VoiceInsightCards: React.FC<VoiceInsightCardsProps> = ({
             </div>
           )}
 
-          {/* 查看详情按钮 */}
+          {/* View Details Button */}
           <div className="mt-4 flex justify-end">
             <button className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center">
-              查看详情
+              View Details
               <svg 
                 className="w-4 h-4 ml-1" 
                 fill="none" 

@@ -13,13 +13,14 @@ class DatabaseConnection {
     // 在生产环境中处理数据库文件缺失的情况
     try {
       // Check if we're in Vercel environment
-      if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
-        console.log('Running in production/Vercel environment, using in-memory database');
+      if (process.env.VERCEL) {
+        console.log('Running in Vercel environment, using in-memory database');
         this.db = new Database(':memory:', {
           readonly: false
         });
         this.initializeInMemoryDatabase();
       } else {
+        // In development or non-Vercel production, use the actual database
         this.db = new Database(this.dbPath, { 
           readonly: true,
           fileMustExist: false,

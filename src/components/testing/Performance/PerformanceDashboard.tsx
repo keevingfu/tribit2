@@ -32,11 +32,11 @@ export const PerformanceDashboard: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
   const [selectedMetric, setSelectedMetric] = useState<'views' | 'engagement' | 'conversions'>('views');
 
-  // 生成示例数据
+  // Generate sample data
   const performanceData: ContentPerformance[] = [
     {
       id: '1',
-      title: 'Tribit StormBox Pro 评测：户外音响的新标杆',
+      title: 'Tribit StormBox Pro Review: New Benchmark for Outdoor Speakers',
       type: 'video',
       platform: 'YouTube',
       publishDate: '2024-05-15',
@@ -50,7 +50,7 @@ export const PerformanceDashboard: React.FC = () => {
     },
     {
       id: '2',
-      title: '夏季音乐节必备：5款便携音响推荐',
+      title: 'Summer Music Festival Essentials: Top 5 Portable Speakers',
       type: 'article',
       platform: 'Blog',
       publishDate: '2024-05-20',
@@ -64,7 +64,7 @@ export const PerformanceDashboard: React.FC = () => {
     },
     {
       id: '3',
-      title: 'Tribit MaxSound Plus 开箱体验',
+      title: 'Tribit MaxSound Plus Unboxing Experience',
       type: 'social',
       platform: 'Instagram',
       publishDate: '2024-05-25',
@@ -78,7 +78,7 @@ export const PerformanceDashboard: React.FC = () => {
     },
     {
       id: '4',
-      title: '便携音响选购指南',
+      title: 'Portable Speaker Buying Guide',
       type: 'infographic',
       platform: 'Pinterest',
       publishDate: '2024-05-28',
@@ -93,23 +93,23 @@ export const PerformanceDashboard: React.FC = () => {
   ];
 
   const metrics: PerformanceMetric[] = [
-    { name: '总浏览量', value: 171220, change: 12.5, period: '较上期' },
-    { name: '平均互动率', value: 10.7, change: 5.3, period: '较上期' },
-    { name: '总转化数', value: 1714, change: -2.1, period: '较上期' },
-    { name: '平均停留时间', value: 185, change: 8.7, period: '较上期' }
+    { name: 'Total Views', value: 171220, change: 12.5, period: 'vs last period' },
+    { name: 'Avg Engagement', value: 10.7, change: 5.3, period: 'vs last period' },
+    { name: 'Total Conversions', value: 1714, change: -2.1, period: 'vs last period' },
+    { name: 'Avg Time Spent', value: 185, change: 8.7, period: 'vs last period' }
   ];
 
   const periodOptions = [
-    { value: '7d' as const, label: '最近7天' },
-    { value: '30d' as const, label: '最近30天' },
-    { value: '90d' as const, label: '最近90天' },
-    { value: '1y' as const, label: '最近1年' }
+    { value: '7d' as const, label: 'Last 7 days' },
+    { value: '30d' as const, label: 'Last 30 days' },
+    { value: '90d' as const, label: 'Last 90 days' },
+    { value: '1y' as const, label: 'Last 1 year' }
   ];
 
   const metricOptions = [
-    { value: 'views' as const, label: '浏览量' },
-    { value: 'engagement' as const, label: '互动率' },
-    { value: 'conversions' as const, label: '转化率' }
+    { value: 'views' as const, label: 'Views' },
+    { value: 'engagement' as const, label: 'Engagement' },
+    { value: 'conversions' as const, label: 'Conversions' }
   ];
 
   return (
@@ -117,8 +117,8 @@ export const PerformanceDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">内容效果分析</h2>
-          <p className="text-gray-600 mt-1">监控和分析内容营销的整体表现</p>
+          <h2 className="text-2xl font-bold text-gray-900">Content Performance Analysis</h2>
+          <p className="text-gray-600 mt-1">Monitor and analyze overall content marketing performance</p>
         </div>
         <div className="flex space-x-4">
           <select
@@ -133,7 +133,7 @@ export const PerformanceDashboard: React.FC = () => {
             ))}
           </select>
           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            导出报告
+            Export Report
           </button>
         </div>
       </div>
@@ -144,7 +144,7 @@ export const PerformanceDashboard: React.FC = () => {
       {/* Performance Chart */}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">效果趋势</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Performance Trends</h3>
           <div className="flex space-x-2">
             {metricOptions.map(option => (
               <button

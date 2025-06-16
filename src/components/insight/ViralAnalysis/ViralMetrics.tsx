@@ -16,25 +16,25 @@ export const ViralMetrics: React.FC<ViralMetricsProps> = ({ videos }) => {
 
   const metrics = [
     {
-      title: '病毒视频数',
+      title: 'Viral Videos',
       value: viralVideoCount,
-      unit: '个',
+      unit: '',
       change: '+12.5%'
     },
     {
-      title: '总传播量',
+      title: 'Total Reach',
       value: Math.floor(totalViews / 1000000 * 10) / 10,
       unit: 'M',
       change: '+45.8%'
     },
     {
-      title: '平均互动率',
+      title: 'Avg Engagement',
       value: avgEngagementRate.toFixed(1),
       unit: '%',
       change: '+8.2%'
     },
     {
-      title: '病毒系数',
+      title: 'Viral Coefficient',
       value: (totalShares / totalViews * 100).toFixed(3),
       unit: '%',
       change: '+2.1%'

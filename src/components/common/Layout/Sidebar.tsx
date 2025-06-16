@@ -44,36 +44,36 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed }) => {
   const menuItems: MenuItem[] = [
     {
       id: 'dashboard',
-      title: '�h�',
+      title: 'Dashboard',
       icon: <LayoutDashboard className="w-5 h-5" />,
       path: '/dashboard',
     },
     {
       id: 'insight',
-      title: '���',
+      title: 'Consumer Insights',
       icon: <Search className="w-5 h-5" />,
       children: [
         {
           id: 'consumer-voice',
-          title: '�9��',
+          title: 'Consumer Voice',
           icon: <BarChart3 className="w-4 h-4" />,
           path: '/insight/consumer-voice',
         },
         {
           id: 'search-insights',
-          title: '"�',
+          title: 'Search Insights',
           icon: <Search className="w-4 h-4" />,
           path: '/insight/search',
         },
         {
           id: 'viral-videos',
-          title: '>Ƒ',
+          title: 'Viral Videos',
           icon: <VideoIcon className="w-4 h-4" />,
           path: '/insight/videos',
         },
         {
           id: 'viral-analysis',
-          title: '>�',
+          title: 'Viral Analysis',
           icon: <TrendingUp className="w-4 h-4" />,
           path: '/insight/viral',
         },
@@ -81,36 +81,36 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed }) => {
     },
     {
       id: 'testing',
-      title: '��K�',
+      title: 'A/B Testing',
       icon: <TestTube className="w-5 h-5" />,
       path: '/testing',
     },
     {
       id: 'kol',
-      title: 'KOL��',
+      title: 'Content for KOL',
       icon: <Users className="w-5 h-5" />,
       children: [
         {
           id: 'kol-dashboard',
-          title: ';�',
+          title: 'KOL Dashboard',
           icon: <LayoutDashboard className="w-4 h-4" />,
           path: '/kol/dashboard',
         },
         {
           id: 'kol-overview',
-          title: 'KOL��',
+          title: 'KOL Overview',
           icon: <UserCheck className="w-4 h-4" />,
           path: '/kol/overview',
         },
         {
           id: 'kol-reach',
-          title: ' ��',
+          title: 'Reach Analysis',
           icon: <Share2 className="w-4 h-4" />,
           path: '/kol/reach',
         },
         {
           id: 'kol-conversion',
-          title: 'l�',
+          title: 'Conversion',
           icon: <DollarSign className="w-4 h-4" />,
           path: '/kol/conversion',
         },
@@ -118,13 +118,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed }) => {
     },
     {
       id: 'ads',
-      title: 'J��',
+      title: 'Content for Ads',
       icon: <Megaphone className="w-5 h-5" />,
       path: '/ads',
     },
     {
       id: 'private',
-      title: '�߅�',
+      title: 'Content for Private',
       icon: <Lock className="w-5 h-5" />,
       children: [
         {
@@ -153,7 +153,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed }) => {
         },
         {
           id: 'offline',
-          title: '��',
+          title: 'Offline',
           icon: <Store className="w-4 h-4" />,
           path: '/private/offline',
         },

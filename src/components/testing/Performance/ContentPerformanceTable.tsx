@@ -97,7 +97,7 @@ export const ContentPerformanceTable: React.FC<ContentPerformanceTableProps> = (
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <div className="p-6 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900">内容效果详情</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Content Performance Details</h3>
       </div>
       
       <div className="overflow-x-auto">
@@ -105,14 +105,14 @@ export const ContentPerformanceTable: React.FC<ContentPerformanceTableProps> = (
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                内容
+                Content
               </th>
               <th 
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                 onClick={() => handleSort('views')}
               >
                 <div className="flex items-center space-x-1">
-                  <span>浏览量</span>
+                  <span>Views</span>
                   <SortIcon field="views" />
                 </div>
               </th>
@@ -121,7 +121,7 @@ export const ContentPerformanceTable: React.FC<ContentPerformanceTableProps> = (
                 onClick={() => handleSort('engagement')}
               >
                 <div className="flex items-center space-x-1">
-                  <span>互动率</span>
+                  <span>Engagement</span>
                   <SortIcon field="engagement" />
                 </div>
               </th>
@@ -130,15 +130,15 @@ export const ContentPerformanceTable: React.FC<ContentPerformanceTableProps> = (
                 onClick={() => handleSort('conversions')}
               >
                 <div className="flex items-center space-x-1">
-                  <span>转化数</span>
+                  <span>Conversions</span>
                   <SortIcon field="conversions" />
                 </div>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                平均停留
+                Avg Time
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                趋势
+                Trend
               </th>
             </tr>
           </thead>
@@ -164,7 +164,7 @@ export const ContentPerformanceTable: React.FC<ContentPerformanceTableProps> = (
                   {item.conversions.toLocaleString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {Math.floor(item.avgTimeSpent / 60)}分{item.avgTimeSpent % 60}秒
+                  {Math.floor(item.avgTimeSpent / 60)}m {item.avgTimeSpent % 60}s
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {getTrendIcon(item.trend)}

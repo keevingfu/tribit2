@@ -9,7 +9,7 @@ interface RefinementSuggestionsProps {
 }
 
 export const RefinementSuggestions: React.FC<RefinementSuggestionsProps> = ({ feedback, tests }) => {
-  // 分析反馈生成建议
+  // Analyze feedback to generate suggestions
   const generateSuggestions = () => {
     const negativeFeedback = feedback.filter(f => f.sentiment === 'negative');
     const completedTests = tests.filter(t => t.status === 'completed' && t.results?.winner);
@@ -19,56 +19,56 @@ export const RefinementSuggestions: React.FC<RefinementSuggestionsProps> = ({ fe
         id: '1',
         type: 'content',
         priority: 'high',
-        title: '优化视频长度',
-        description: '基于用户反馈，65%的观众在视频后半部分流失。建议将视频长度控制在5-8分钟内。',
-        impact: '预计可提升完播率30%',
-        effort: '中等',
+        title: 'Optimize Video Length',
+        description: 'Based on user feedback, 65% of viewers drop off in the second half. Recommend keeping videos between 5-8 minutes.',
+        impact: 'Expected to improve completion rate by 30%',
+        effort: 'Medium',
         actionItems: [
-          '分析高流失时间点的内容',
-          '删减重复或冗余片段',
-          '将详细内容制作成系列视频'
+          'Analyze content at high drop-off points',
+          'Remove repetitive or redundant segments',
+          'Create detailed content as a video series'
         ]
       },
       {
         id: '2',
         type: 'format',
         priority: 'medium',
-        title: '增加互动元素',
-        description: '互动率较高的内容获得了更多正面反馈。建议在内容中增加问答、投票等互动环节。',
-        impact: '预计可提升互动率40%',
-        effort: '低',
+        title: 'Add Interactive Elements',
+        description: 'Content with higher engagement received more positive feedback. Recommend adding Q&A, polls, and other interactive elements.',
+        impact: 'Expected to improve engagement rate by 40%',
+        effort: 'Low',
         actionItems: [
-          '在视频开头提出问题',
-          '中间设置投票环节',
-          '结尾引导评论互动'
+          'Ask questions at the beginning',
+          'Add polls in the middle',
+          'Encourage comments at the end'
         ]
       },
       {
         id: '3',
         type: 'seo',
         priority: 'high',
-        title: '优化标题和缩略图',
-        description: 'A/B测试显示，使用场景图的缩略图点击率提升50%。建议统一更新所有内容的缩略图策略。',
-        impact: '预计可提升点击率35%',
-        effort: '低',
+        title: 'Optimize Titles and Thumbnails',
+        description: 'A/B tests show thumbnails with usage scenarios increased CTR by 50%. Recommend updating thumbnail strategy for all content.',
+        impact: 'Expected to improve CTR by 35%',
+        effort: 'Low',
         actionItems: [
-          '使用真实使用场景替代产品图',
-          '标题中加入具体数字和年份',
-          '缩略图增加文字说明'
+          'Use real usage scenarios instead of product shots',
+          'Include specific numbers and years in titles',
+          'Add text overlay to thumbnails'
         ]
       },
       {
         id: '4',
         type: 'distribution',
         priority: 'medium',
-        title: '优化发布时间',
-        description: '数据显示周二和周四晚上8-10点的内容表现最佳。建议调整发布计划。',
-        impact: '预计可提升初始曝光20%',
-        effort: '低',
+        title: 'Optimize Publishing Time',
+        description: 'Data shows content performs best on Tuesday and Thursday 8-10 PM. Recommend adjusting publishing schedule.',
+        impact: 'Expected to improve initial exposure by 20%',
+        effort: 'Low',
         actionItems: [
-          '制定固定发布时间表',
-          '提前准备内容避免延期',
-          '针对不同平台优化发布时间'
+          'Create a fixed publishing schedule',
+          'Prepare content in advance to avoid delays',
+          'Optimize publishing times for different platforms'
         ]
       }
     ];
@@ -108,11 +108,11 @@ export const RefinementSuggestions: React.FC<RefinementSuggestionsProps> = ({ fe
 
   const getEffortColor = (effort: string) => {
     switch (effort) {
-      case '低':
+      case 'Low':
         return 'text-green-600';
-      case '中等':
+      case 'Medium':
         return 'text-yellow-600';
-      case '高':
+      case 'High':
         return 'text-red-600';
       default:
         return 'text-gray-600';
@@ -121,16 +121,16 @@ export const RefinementSuggestions: React.FC<RefinementSuggestionsProps> = ({ fe
 
   return (
     <div className="space-y-6">
-      {/* 优化建议概览 */}
+      {/* Optimization Suggestions Overview */}
       <div className="bg-blue-50 rounded-lg p-6">
-        <h3 className="text-lg font-medium text-blue-900 mb-2">优化建议总结</h3>
+        <h3 className="text-lg font-medium text-blue-900 mb-2">Optimization Suggestions Summary</h3>
         <p className="text-blue-700">
-          基于 {feedback.length} 条用户反馈和 {tests.filter(t => t.status === 'completed').length} 个完成的A/B测试，
-          我们为您生成了 {suggestions.length} 条优化建议。实施这些建议预计可以整体提升内容效果 25-40%。
+          Based on {feedback.length} user feedback and {tests.filter(t => t.status === 'completed').length} completed A/B tests,
+          we've generated {suggestions.length} optimization suggestions. Implementing these suggestions is expected to improve overall content performance by 25-40%.
         </p>
       </div>
 
-      {/* 建议列表 */}
+      {/* Suggestions List */}
       <div className="space-y-4">
         {suggestions.map((suggestion) => (
           <div key={suggestion.id} className="bg-white rounded-lg shadow p-6">
@@ -143,31 +143,31 @@ export const RefinementSuggestions: React.FC<RefinementSuggestionsProps> = ({ fe
                 </div>
               </div>
               <span className={`px-3 py-1 text-xs rounded-full ${getPriorityColor(suggestion.priority)}`}>
-                {suggestion.priority === 'high' ? '高优先级' : suggestion.priority === 'medium' ? '中优先级' : '低优先级'}
+                {suggestion.priority === 'high' ? 'High Priority' : suggestion.priority === 'medium' ? 'Medium Priority' : 'Low Priority'}
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs text-gray-500 mb-1">预期效果</p>
+                <p className="text-xs text-gray-500 mb-1">Expected Impact</p>
                 <p className="text-sm font-medium text-gray-900">{suggestion.impact}</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs text-gray-500 mb-1">实施难度</p>
+                <p className="text-xs text-gray-500 mb-1">Implementation Effort</p>
                 <p className={`text-sm font-medium ${getEffortColor(suggestion.effort)}`}>{suggestion.effort}</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-3">
-                <p className="text-xs text-gray-500 mb-1">建议类型</p>
+                <p className="text-xs text-gray-500 mb-1">Suggestion Type</p>
                 <p className="text-sm font-medium text-gray-900">
-                  {suggestion.type === 'content' ? '内容优化' :
-                   suggestion.type === 'format' ? '格式优化' :
-                   suggestion.type === 'seo' ? 'SEO优化' : '分发优化'}
+                  {suggestion.type === 'content' ? 'Content Optimization' :
+                   suggestion.type === 'format' ? 'Format Optimization' :
+                   suggestion.type === 'seo' ? 'SEO Optimization' : 'Distribution Optimization'}
                 </p>
               </div>
             </div>
 
             <div className="border-t pt-4">
-              <h5 className="text-sm font-medium text-gray-900 mb-2">行动计划</h5>
+              <h5 className="text-sm font-medium text-gray-900 mb-2">Action Plan</h5>
               <ul className="space-y-1">
                 {suggestion.actionItems.map((item, index) => (
                   <li key={index} className="flex items-start text-sm text-gray-600">
@@ -182,27 +182,27 @@ export const RefinementSuggestions: React.FC<RefinementSuggestionsProps> = ({ fe
 
             <div className="flex justify-end mt-4 space-x-2">
               <button className="px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                查看详情
+                View Details
               </button>
               <button className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                开始实施
+                Start Implementation
               </button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* 实施路线图 */}
+      {/* Implementation Roadmap */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">优化实施路线图</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Optimization Implementation Roadmap</h3>
         <div className="space-y-3">
           <div className="flex items-center">
             <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
               <span className="text-red-600 font-medium">1</span>
             </div>
             <div className="ml-4 flex-1">
-              <p className="text-sm font-medium text-gray-900">第一周：高优先级快速优化</p>
-              <p className="text-xs text-gray-600">实施标题、缩略图和发布时间优化</p>
+              <p className="text-sm font-medium text-gray-900">Week 1: High Priority Quick Wins</p>
+              <p className="text-xs text-gray-600">Implement title, thumbnail, and publishing time optimizations</p>
             </div>
           </div>
           <div className="flex items-center">
@@ -210,8 +210,8 @@ export const RefinementSuggestions: React.FC<RefinementSuggestionsProps> = ({ fe
               <span className="text-yellow-600 font-medium">2</span>
             </div>
             <div className="ml-4 flex-1">
-              <p className="text-sm font-medium text-gray-900">第二周：内容格式调整</p>
-              <p className="text-xs text-gray-600">优化视频长度，增加互动元素</p>
+              <p className="text-sm font-medium text-gray-900">Week 2: Content Format Adjustments</p>
+              <p className="text-xs text-gray-600">Optimize video length and add interactive elements</p>
             </div>
           </div>
           <div className="flex items-center">
@@ -219,8 +219,8 @@ export const RefinementSuggestions: React.FC<RefinementSuggestionsProps> = ({ fe
               <span className="text-green-600 font-medium">3</span>
             </div>
             <div className="ml-4 flex-1">
-              <p className="text-sm font-medium text-gray-900">第三周：效果评估与迭代</p>
-              <p className="text-xs text-gray-600">分析优化效果，持续改进</p>
+              <p className="text-sm font-medium text-gray-900">Week 3: Performance Evaluation & Iteration</p>
+              <p className="text-xs text-gray-600">Analyze optimization results and continuously improve</p>
             </div>
           </div>
         </div>

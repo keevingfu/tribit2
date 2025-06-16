@@ -33,14 +33,8 @@ const PieChart: React.FC<PieChartProps> = ({
   donut = false,
   roseType,
 }) => {
-  // Ensure data is valid
-  if (!data || data.length === 0) {
-    return (
-      <div className={`flex items-center justify-center ${className}`} style={{ height }}>
-        <p className="text-gray-500">No data available</p>
-      </div>
-    );
-  }
+  // Ensure data is valid - let ChartWrapper handle empty state
+  const validData = data && data.length > 0 ? data : [];
 
   const option: echarts.EChartsOption = {
     title: title ? {
@@ -58,7 +52,7 @@ const PieChart: React.FC<PieChartProps> = ({
     legend: showLegend ? {
       orient: 'vertical',
       left: 'left',
-      data: data.map((item) => item.name),
+      data: validData.map((item) => item.name),
     } : undefined,
     series: [
       {
@@ -67,7 +61,7 @@ const PieChart: React.FC<PieChartProps> = ({
         radius: donut ? ['40%', '70%'] : '70%',
         center: ['50%', '50%'],
         roseType: roseType,
-        data: data.map((item) => ({
+        data: validData.map((item) => ({
           name: item.name,
           value: item.value,
           itemStyle: item.color ? {

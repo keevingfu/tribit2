@@ -8,7 +8,7 @@ interface PerformanceInsightsProps {
 }
 
 export const PerformanceInsights: React.FC<PerformanceInsightsProps> = ({ data }) => {
-  // 计算洞察数据
+  // Calculate insights data
   const calculateInsights = () => {
     const totalViews = data.reduce((sum, item) => sum + item.views, 0);
     const avgEngagement = data.reduce((sum, item) => sum + item.engagement, 0) / data.length;
@@ -47,27 +47,27 @@ export const PerformanceInsights: React.FC<PerformanceInsightsProps> = ({ data }
       insights: [
         {
           type: 'success',
-          title: '最佳表现内容',
-          description: `"${bestPerformer.title}" 获得了 ${bestPerformer.views.toLocaleString()} 次浏览，是本期表现最好的内容。`,
-          recommendation: '建议创作更多类似主题的内容，并分析其成功要素。'
+          title: 'Best Performing Content',
+          description: `"${bestPerformer.title}" achieved ${bestPerformer.views.toLocaleString()} views, the best performing content this period.`,
+          recommendation: 'Consider creating more content on similar topics and analyze its success factors.'
         },
         {
           type: 'info',
-          title: '互动率分析',
-          description: `"${highestEngagement.title}" 的互动率达到 ${highestEngagement.engagement}%，显著高于平均水平。`,
-          recommendation: '研究该内容的互动元素，并应用到其他内容中。'
+          title: 'Engagement Analysis',
+          description: `"${highestEngagement.title}" achieved ${highestEngagement.engagement}% engagement rate, significantly above average.`,
+          recommendation: 'Study the engagement elements and apply them to other content.'
         },
         {
           type: 'warning',
-          title: '内容类型表现',
-          description: `${bestType.type === 'video' ? '视频' : bestType.type === 'article' ? '文章' : bestType.type === 'social' ? '社交媒体' : '信息图'}内容平均表现最佳。`,
-          recommendation: '考虑增加该类型内容的产出比例。'
+          title: 'Content Type Performance',
+          description: `${bestType.type === 'video' ? 'Video' : bestType.type === 'article' ? 'Article' : bestType.type === 'social' ? 'Social Media' : 'Infographic'} content performs best on average.`,
+          recommendation: 'Consider increasing the proportion of this content type.'
         },
         {
           type: 'tip',
-          title: '优化建议',
-          description: `当前平均跳出率较高的内容需要优化，特别是停留时间低于1分钟的内容。`,
-          recommendation: '改进内容开头的吸引力，增加互动元素。'
+          title: 'Optimization Suggestions',
+          description: `Content with high bounce rates needs optimization, especially those with time spent under 1 minute.`,
+          recommendation: 'Improve the appeal of content openings and add interactive elements.'
         }
       ]
     };
@@ -114,7 +114,7 @@ export const PerformanceInsights: React.FC<PerformanceInsightsProps> = ({ data }
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-6">效果洞察与建议</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-6">Performance Insights & Recommendations</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {insights.insights.map((insight, index) => (
@@ -124,27 +124,27 @@ export const PerformanceInsights: React.FC<PerformanceInsightsProps> = ({ data }
               <h4 className="text-sm font-medium text-gray-900 mb-1">{insight.title}</h4>
               <p className="text-sm text-gray-600 mb-2">{insight.description}</p>
               <p className="text-xs text-gray-500">
-                <span className="font-medium">建议：</span> {insight.recommendation}
+                <span className="font-medium">Recommendation:</span> {insight.recommendation}
               </p>
             </div>
           </div>
         ))}
       </div>
       
-      {/* 关键指标总结 */}
+      {/* Key Metrics Summary */}
       <div className="mt-6 pt-6 border-t border-gray-200">
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
             <p className="text-2xl font-bold text-gray-900">{insights.totalViews.toLocaleString()}</p>
-            <p className="text-sm text-gray-500">总浏览量</p>
+            <p className="text-sm text-gray-500">Total Views</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-gray-900">{insights.avgEngagement}%</p>
-            <p className="text-sm text-gray-500">平均互动率</p>
+            <p className="text-sm text-gray-500">Average Engagement</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-gray-900">{insights.totalConversions.toLocaleString()}</p>
-            <p className="text-sm text-gray-500">总转化数</p>
+            <p className="text-sm text-gray-500">Total Conversions</p>
           </div>
         </div>
       </div>

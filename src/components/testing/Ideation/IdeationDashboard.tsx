@@ -25,15 +25,15 @@ export const IdeationDashboard: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedContentType, setSelectedContentType] = useState('all');
 
-  // 生成初始创意数据
+  // Generate initial idea data
   React.useEffect(() => {
     const initialIdeas: ContentIdea[] = [
       {
         id: '1',
-        title: 'Tribit音响 vs 竞品大对比',
-        description: '深度对比测试Tribit与其他主流品牌音响，从音质、续航、防水等多维度进行评测',
-        category: '产品评测',
-        keywords: ['音响对比', 'Tribit测评', '音质测试'],
+        title: 'Tribit Speaker vs Competitor Comparison',
+        description: 'In-depth comparison test of Tribit and other mainstream brand speakers, evaluating from multiple dimensions such as sound quality, battery life, and waterproofing',
+        category: 'Product Reviews',
+        keywords: ['speaker comparison', 'Tribit review', 'sound quality test'],
         estimatedReach: 85000,
         engagementScore: 8.5,
         difficulty: 'medium',
@@ -43,10 +43,10 @@ export const IdeationDashboard: React.FC = () => {
       },
       {
         id: '2',
-        title: '户外露营音响选购指南',
-        description: '针对户外爱好者的音响选购建议，重点介绍防水、续航、便携性等关键特性',
-        category: '使用场景',
-        keywords: ['户外音响', '露营装备', '防水音响'],
+        title: 'Outdoor Camping Speaker Buying Guide',
+        description: 'Speaker purchasing recommendations for outdoor enthusiasts, focusing on key features such as waterproofing, battery life, and portability',
+        category: 'Use Cases',
+        keywords: ['outdoor speaker', 'camping gear', 'waterproof speaker'],
         estimatedReach: 62000,
         engagementScore: 7.8,
         difficulty: 'easy',
@@ -56,10 +56,10 @@ export const IdeationDashboard: React.FC = () => {
       },
       {
         id: '3',
-        title: '音响开箱初体验',
-        description: '记录Tribit音响开箱全过程，展示产品细节和初次使用感受',
-        category: '开箱体验',
-        keywords: ['开箱', '初体验', 'Tribit'],
+        title: 'Speaker Unboxing First Experience',
+        description: 'Recording the complete Tribit speaker unboxing process, showcasing product details and first impressions',
+        category: 'Unboxing',
+        keywords: ['unboxing', 'first experience', 'Tribit'],
         estimatedReach: 45000,
         engagementScore: 7.2,
         difficulty: 'easy',
@@ -86,8 +86,8 @@ export const IdeationDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">内容创意中心</h2>
-          <p className="text-gray-600 mt-1">AI驱动的内容创意生成和管理平台</p>
+          <h2 className="text-2xl font-bold text-gray-900">Content Ideation Center</h2>
+          <p className="text-gray-600 mt-1">AI-powered content ideation generation and management platform</p>
         </div>
         <div className="flex space-x-4">
           <select
@@ -95,22 +95,22 @@ export const IdeationDashboard: React.FC = () => {
             onChange={(e) => setSelectedCategory(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="all">所有分类</option>
-            <option value="产品评测">产品评测</option>
-            <option value="使用场景">使用场景</option>
-            <option value="开箱体验">开箱体验</option>
-            <option value="技术分享">技术分享</option>
+            <option value="all">All Categories</option>
+            <option value="Product Reviews">Product Reviews</option>
+            <option value="Use Cases">Use Cases</option>
+            <option value="Unboxing">Unboxing</option>
+            <option value="Tech Tutorials">Tech Tutorials</option>
           </select>
           <select
             value={selectedContentType}
             onChange={(e) => setSelectedContentType(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="all">所有类型</option>
-            <option value="video">视频</option>
-            <option value="blog">博客</option>
-            <option value="social">社交媒体</option>
-            <option value="infographic">信息图</option>
+            <option value="all">All Types</option>
+            <option value="video">Video</option>
+            <option value="blog">Blog</option>
+            <option value="social">Social Media</option>
+            <option value="infographic">Infographic</option>
           </select>
         </div>
       </div>

@@ -66,7 +66,7 @@ const ConversionAnalysis: React.FC = () => {
       if (metrics) {
         const totalRevenue = metrics.totalRevenue;
         const totalConversions = metrics.totalConversions;
-        const estimatedInvestment = totalRevenue * 0.3; // 假设投资占收入的30%
+        const estimatedInvestment = totalRevenue * 0.3; // Assume investment is 30% of revenue
         
         const defaultROI = await kolClientService.calculateROI({
           investment: estimatedInvestment,
@@ -93,73 +93,73 @@ const ConversionAnalysis: React.FC = () => {
   };
 
   const handleExportData = () => {
-    // 实现数据导出功能
+    // Implement data export functionality
     console.log('Exporting conversion data...');
     
-    // 创建CSV数据
+    // Create CSV data
     const csvData = conversionMetrics.map(metric => ({
-      '总点击数': metric.totalClicks,
-      '总转化数': metric.totalConversions,
-      '转化率(%)': metric.conversionRate.toFixed(2),
-      '总收入($)': metric.totalRevenue,
-      '平均订单价值($)': metric.avgOrderValue
+      'Total Clicks': metric.totalClicks,
+      'Total Conversions': metric.totalConversions,
+      'Conversion Rate (%)': metric.conversionRate.toFixed(2),
+      'Total Revenue ($)': metric.totalRevenue,
+      'Average Order Value ($)': metric.avgOrderValue
     }));
 
-    // 这里可以使用第三方库如 papaparse 来生成CSV
+    // You can use a third-party library like papaparse to generate CSV here
     console.log('CSV Data:', csvData);
   };
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和操作 */}
+      {/* Page Title and Actions */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">转化分析</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Conversion Analysis</h1>
           <p className="text-gray-600 mt-1">
-            深入分析KOL营销的投资回报和转化效果
+            In-depth analysis of ROI and conversion performance for KOL marketing
           </p>
         </div>
         
         <div className="flex items-center space-x-3">
-          {/* 时间范围选择 */}
+          {/* Time Range Selection */}
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value as TimeRange)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-            <option value="7d">最近7天</option>
-            <option value="30d">最近30天</option>
-            <option value="90d">最近90天</option>
-            <option value="1y">最近1年</option>
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+            <option value="90d">Last 90 days</option>
+            <option value="1y">Last year</option>
           </select>
 
-          {/* 刷新按钮 */}
+          {/* Refresh Button */}
           <button
             onClick={handleRefresh}
             disabled={refreshing}
             className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
           >
             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-            <span>刷新</span>
+            <span>Refresh</span>
           </button>
 
-          {/* 导出按钮 */}
+          {/* Export Button */}
           <button
             onClick={handleExportData}
             className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Download className="w-4 h-4" />
-            <span>导出报告</span>
+            <span>Export Report</span>
           </button>
         </div>
       </div>
 
-      {/* ROI概览卡片 */}
+      {/* ROI Overview Cards */}
       {roiCalculation && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-white rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-600">总投资</span>
+              <span className="text-sm text-gray-600">Total Investment</span>
               <DollarSign className="w-5 h-5 text-gray-400" />
             </div>
             <div className="text-2xl font-bold text-gray-900">
@@ -169,7 +169,7 @@ const ConversionAnalysis: React.FC = () => {
           
           <div className="bg-white rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-600">总收入</span>
+              <span className="text-sm text-gray-600">Total Revenue</span>
               <TrendingUp className="w-5 h-5 text-green-500" />
             </div>
             <div className="text-2xl font-bold text-green-600">
@@ -193,7 +193,7 @@ const ConversionAnalysis: React.FC = () => {
           
           <div className="bg-white rounded-lg p-6 shadow-sm">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-600">转化成本</span>
+              <span className="text-sm text-gray-600">Cost per Conversion</span>
               <Users className="w-5 h-5 text-purple-500" />
             </div>
             <div className="text-2xl font-bold text-purple-600">
@@ -203,9 +203,9 @@ const ConversionAnalysis: React.FC = () => {
         </div>
       )}
 
-      {/* 主要内容区域 */}
+      {/* Main Content Area */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* ROI计算器 */}
+        {/* ROI Calculator */}
         <ROICalculator 
           onCalculate={handleROICalculate}
           initialValues={roiCalculation ? {
@@ -215,20 +215,20 @@ const ConversionAnalysis: React.FC = () => {
           } : undefined}
         />
 
-        {/* 销售漏斗 */}
+        {/* Sales Funnel */}
         <SalesFunnelChart 
           data={salesFunnel} 
           loading={loading}
         />
       </div>
 
-      {/* 收入归因分析 */}
+      {/* Revenue Attribution Analysis */}
       <RevenueAttributionChart 
         data={revenueAttribution} 
         loading={loading}
       />
 
-      {/* 转化指标表格 */}
+      {/* Conversion Metrics Table */}
       <ConversionMetricsTable 
         data={conversionMetrics} 
         loading={loading}

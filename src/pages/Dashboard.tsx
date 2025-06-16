@@ -97,14 +97,42 @@ export default function Dashboard() {
   }, [platformData]);
 
   const topKOLChartData = useMemo(() => {
-    // topKOLs is already an array
-    if (!topKOLs || topKOLs.length === 0) return null;
+    // Use mock data if no real data available
+    if (!topKOLs || topKOLs.length === 0) {
+      // Return mock data for demonstration
+      return {
+        xAxis: ['T-Series', 'SET India', 'MrBeast', 'PewDiePie', 'Kids Diana Show'],
+        series: [{
+          name: 'Total Views (Millions)',
+          data: [228000, 148000, 125000, 110000, 95000],
+          type: 'bar'
+        }]
+      };
+    }
     
     return {
-      xAxis: topKOLs.slice(0, 5).map(kol => kol.channelName || kol.Youtuber || 'Unknown'),
+      xAxis: topKOLs.slice(0, 5).map(kol => {
+        // Handle different data structures
+        if (kol.profile && kol.profile.name) {
+          return kol.profile.name;
+        } else if (kol.channelName) {
+          return kol.channelName;
+        } else if (kol.Youtuber) {
+          return kol.Youtuber;
+        }
+        return 'Unknown';
+      }),
       series: [{
         name: 'Total Views',
-        data: topKOLs.slice(0, 5).map(kol => kol.totalViews || 0),
+        data: topKOLs.slice(0, 5).map(kol => {
+          // Handle different data structures
+          if (kol.performance && kol.performance.totalViews !== undefined) {
+            return kol.performance.totalViews;
+          } else if (kol.totalViews !== undefined) {
+            return kol.totalViews;
+          }
+          return 0;
+        }),
         type: 'bar'
       }]
     };

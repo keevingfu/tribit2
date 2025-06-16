@@ -21,12 +21,12 @@ export const UserNeedsHeatmap: React.FC<UserNeedsHeatmapProps> = ({
       return {};
     }
     
-    // 转换数据为热力图格式
+    // Convert data to heatmap format
     const categories = data.map(d => d.category);
     const sentiments = ['positive', 'neutral', 'negative'];
-    const sentimentLabels = ['正面', '中性', '负面'];
+    const sentimentLabels = ['Positive', 'Neutral', 'Negative'];
     
-    // 创建热力图数据
+    // Create heatmap data
     const heatmapData: number[][] = [];
     categories.forEach((category, categoryIndex) => {
       const need = data.find(d => d.category === category);
@@ -46,8 +46,8 @@ export const UserNeedsHeatmap: React.FC<UserNeedsHeatmapProps> = ({
           return `
             <div class="p-2">
               <div class="font-semibold">${category}</div>
-              <div class="text-sm mt-1">情感: ${sentiment}</div>
-              <div class="text-sm">频率: ${value}</div>
+              <div class="text-sm mt-1">Sentiment: ${sentiment}</div>
+              <div class="text-sm">Frequency: ${value}</div>
             </div>
           `;
         }
@@ -90,7 +90,7 @@ export const UserNeedsHeatmap: React.FC<UserNeedsHeatmapProps> = ({
         }
       },
       series: [{
-        name: '用户需求',
+        name: 'User Needs',
         type: 'heatmap',
         data: heatmapData,
         label: {

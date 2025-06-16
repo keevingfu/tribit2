@@ -19,25 +19,25 @@ const Footer: React.FC = () => {
               href="#privacy"
               className="text-gray-600 hover:text-blue-600 transition-colors"
             >
-              隐私政策
+              Privacy Policy
             </a>
             <a
               href="#terms"
               className="text-gray-600 hover:text-blue-600 transition-colors"
             >
-              服务条款
+              Terms of Service
             </a>
             <a
               href="#contact"
               className="text-gray-600 hover:text-blue-600 transition-colors"
             >
-              联系我们
+              Contact Us
             </a>
             <a
               href="#help"
               className="text-gray-600 hover:text-blue-600 transition-colors flex items-center space-x-1"
             >
-              <span>帮助中心</span>
+              <span>Help Center</span>
               <ExternalLink className="w-3 h-3" />
             </a>
           </div>

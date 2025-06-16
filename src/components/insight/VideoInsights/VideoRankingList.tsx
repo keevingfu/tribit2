@@ -60,22 +60,22 @@ export const VideoRankingList: React.FC<VideoRankingListProps> = ({
         <thead className="bg-gray-50">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              排名
+              Rank
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              视频信息
+              Video Info
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              创作者
+              Creator
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              播放量
+              Views
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              互动率
+              Engagement
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              发布时间
+              Published
             </th>
           </tr>
         </thead>
@@ -125,7 +125,7 @@ export const VideoRankingList: React.FC<VideoRankingListProps> = ({
                   />
                   <div className="ml-3">
                     <div className="text-sm font-medium text-gray-900">{video.creator.name}</div>
-                    <div className="text-xs text-gray-500">{formatNumber(video.creator.followers)} 粉丝</div>
+                    <div className="text-xs text-gray-500">{formatNumber(video.creator.followers)} followers</div>
                   </div>
                 </div>
               </td>
@@ -141,13 +141,13 @@ export const VideoRankingList: React.FC<VideoRankingListProps> = ({
                   <div className="text-sm font-semibold text-gray-900">{video.engagementRate.toFixed(1)}%</div>
                   {video.engagementRate > 15 && (
                     <span className="ml-2 px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded-full">
-                      优秀
+                      Excellent
                     </span>
                   )}
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {new Date(video.publishDate).toLocaleDateString('zh-CN')}
+                {new Date(video.publishDate).toLocaleDateString('en-US')}
               </td>
             </tr>
           ))}

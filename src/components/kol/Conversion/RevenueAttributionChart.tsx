@@ -14,7 +14,7 @@ interface RevenueAttributionChartProps {
 const RevenueAttributionChart: React.FC<RevenueAttributionChartProps> = ({ 
   data, 
   loading = false,
-  title = '收入归因分析'
+  title = 'Revenue Attribution Analysis'
 }) => {
 
   const option = useMemo(() => {
@@ -49,19 +49,19 @@ const RevenueAttributionChart: React.FC<RevenueAttributionChartProps> = ({
             <div class="px-3 py-2">
               <div class="font-semibold mb-2">${item.channel}</div>
               <div class="flex items-center justify-between mb-1">
-                <span>收入:</span>
+                <span>Revenue:</span>
                 <span class="ml-4 font-medium">${formatCurrency(item.revenue)}</span>
               </div>
               <div class="flex items-center justify-between mb-1">
-                <span>占比:</span>
+                <span>Percentage:</span>
                 <span class="ml-4 font-medium">${item.percentage.toFixed(1)}%</span>
               </div>
               <div class="flex items-center justify-between">
-                <span>转化数:</span>
+                <span>Conversions:</span>
                 <span class="ml-4 font-medium">${formatNumber(item.conversions)}</span>
               </div>
               <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-200">
-                <span>平均订单:</span>
+                <span>Average Order:</span>
                 <span class="ml-4 font-medium text-green-600">
                   ${formatNumber(item.revenue / item.conversions)}
                 </span>
@@ -71,7 +71,7 @@ const RevenueAttributionChart: React.FC<RevenueAttributionChartProps> = ({
         }
       },
       legend: {
-        data: ['收入', '转化数'],
+        data: ['Revenue', 'Conversions'],
         bottom: 0,
         textStyle: {
           color: '#666'
@@ -100,7 +100,7 @@ const RevenueAttributionChart: React.FC<RevenueAttributionChartProps> = ({
       yAxis: [
         {
           type: 'value',
-          name: '收入 ($)',
+          name: 'Revenue ($)',
           position: 'left',
           axisLine: {
             show: true,
@@ -120,7 +120,7 @@ const RevenueAttributionChart: React.FC<RevenueAttributionChartProps> = ({
         },
         {
           type: 'value',
-          name: '转化数',
+          name: 'Conversions',
           position: 'right',
           axisLine: {
             show: true,
@@ -139,7 +139,7 @@ const RevenueAttributionChart: React.FC<RevenueAttributionChartProps> = ({
       ],
       series: [
         {
-          name: '收入',
+          name: 'Revenue',
           type: 'bar',
           data: revenues,
           itemStyle: {
@@ -158,7 +158,7 @@ const RevenueAttributionChart: React.FC<RevenueAttributionChartProps> = ({
           }
         },
         {
-          name: '转化数',
+          name: 'Conversions',
           type: 'line',
           yAxisIndex: 1,
           data: conversions,
@@ -191,18 +191,18 @@ const RevenueAttributionChart: React.FC<RevenueAttributionChartProps> = ({
     return (
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <div className="h-[400px] flex items-center justify-center text-gray-500">
-          暂无数据
+          No data available
         </div>
       </div>
     );
   }
 
-  // 计算汇总数据
+  // Calculate summary data
   const totalRevenue = data.reduce((sum, item) => sum + item.revenue, 0);
   const totalConversions = data.reduce((sum, item) => sum + item.conversions, 0);
   const avgOrderValue = totalRevenue / totalConversions;
 
-  // 找出最佳渠道
+  // Find best channel
   const bestSource = data.reduce((best, item) => 
     item.revenue > best.revenue ? item : best
   , data[0]);
@@ -222,34 +222,34 @@ const RevenueAttributionChart: React.FC<RevenueAttributionChartProps> = ({
         lazyUpdate
       />
       
-      {/* 归因分析摘要 */}
+      {/* Attribution Analysis Summary */}
       <div className="mt-6 pt-6 border-t border-gray-100">
-        <h4 className="text-sm font-semibold text-gray-700 mb-4">归因分析摘要</h4>
+        <h4 className="text-sm font-semibold text-gray-700 mb-4">Attribution Analysis Summary</h4>
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="p-4 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-600 mb-1">总收入</div>
+            <div className="text-sm text-gray-600 mb-1">Total Revenue</div>
             <div className="text-xl font-bold text-gray-900">
               {formatCurrency(totalRevenue)}
             </div>
           </div>
           
           <div className="p-4 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-600 mb-1">总转化</div>
+            <div className="text-sm text-gray-600 mb-1">Total Conversions</div>
             <div className="text-xl font-bold text-gray-900">
               {formatNumber(totalConversions)}
             </div>
           </div>
           
           <div className="p-4 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-600 mb-1">平均订单价值</div>
+            <div className="text-sm text-gray-600 mb-1">Average Order Value</div>
             <div className="text-xl font-bold text-green-600">
               {formatCurrency(avgOrderValue)}
             </div>
           </div>
           
           <div className="p-4 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-600 mb-1">最佳渠道</div>
+            <div className="text-sm text-gray-600 mb-1">Best Channel</div>
             <div className="text-lg font-semibold text-blue-600">
               {bestSource.channel}
             </div>
@@ -259,9 +259,9 @@ const RevenueAttributionChart: React.FC<RevenueAttributionChartProps> = ({
           </div>
         </div>
 
-        {/* 渠道效率分析 */}
+        {/* Channel Efficiency Analysis */}
         <div className="mt-6">
-          <h5 className="text-sm font-semibold text-gray-700 mb-3">渠道效率排名</h5>
+          <h5 className="text-sm font-semibold text-gray-700 mb-3">Channel Efficiency Ranking</h5>
           <div className="space-y-3">
             {data
               .sort((a, b) => (b.revenue / b.conversions) - (a.revenue / a.conversions))
@@ -278,7 +278,7 @@ const RevenueAttributionChart: React.FC<RevenueAttributionChartProps> = ({
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-medium text-gray-900">{item.channel}</span>
                         <span className="text-sm text-gray-600">
-                          {formatCurrency(avgValue)}/单
+                          {formatCurrency(avgValue)}/order
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
@@ -297,22 +297,22 @@ const RevenueAttributionChart: React.FC<RevenueAttributionChartProps> = ({
           </div>
         </div>
 
-        {/* 优化建议 */}
+        {/* Optimization Suggestions */}
         <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <h5 className="text-sm font-semibold text-blue-900 mb-2">优化建议</h5>
+          <h5 className="text-sm font-semibold text-blue-900 mb-2">Optimization Suggestions</h5>
           <div className="text-sm text-blue-800 space-y-2">
             <p>
-              • "{mostEfficientSource.channel}" 渠道的平均订单价值最高
-              （{formatCurrency(mostEfficientSource.revenue / mostEfficientSource.conversions)}），
-              建议增加该渠道的投入。
+              • "{mostEfficientSource.channel}" channel has the highest average order value
+              ({formatCurrency(mostEfficientSource.revenue / mostEfficientSource.conversions)}),
+              suggest increasing investment in this channel.
             </p>
             {data.some(item => item.percentage < 10) && (
               <p>
-                • 考虑优化或调整占比低于10%的渠道策略，集中资源在高效渠道上。
+                • Consider optimizing or adjusting channels with less than 10% share, focus resources on high-efficiency channels.
               </p>
             )}
             <p>
-              • 持续监控各渠道的转化效率，定期调整预算分配以最大化ROI。
+              • Continuously monitor conversion efficiency of each channel, regularly adjust budget allocation to maximize ROI.
             </p>
           </div>
         </div>

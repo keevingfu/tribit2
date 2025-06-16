@@ -14,7 +14,7 @@ interface ContentPerformanceChartProps {
 const ContentPerformanceChart: React.FC<ContentPerformanceChartProps> = ({ 
   data, 
   loading = false,
-  title = '内容表现分析'
+  title = 'Content Performance Analysis'
 }) => {
 
   const option = useMemo(() => {
@@ -53,7 +53,7 @@ const ContentPerformanceChart: React.FC<ContentPerformanceChartProps> = ({
                     <span>${item.seriesName}:</span>
                   </span>
                   <span class="ml-4 font-medium">
-                    ${item.seriesName === '互动率' 
+                    ${item.seriesName === 'Engagement Rate' 
                       ? `${item.value.toFixed(2)}%` 
                       : formatNumber(item.value)
                     }
@@ -65,7 +65,7 @@ const ContentPerformanceChart: React.FC<ContentPerformanceChartProps> = ({
         }
       },
       legend: {
-        data: ['观看', '点赞', '评论', '分享', '互动率'],
+        data: ['Views', 'Likes', 'Comments', 'Shares', 'Engagement Rate'],
         bottom: 0,
         textStyle: {
           color: '#666'
@@ -97,7 +97,7 @@ const ContentPerformanceChart: React.FC<ContentPerformanceChartProps> = ({
       yAxis: [
         {
           type: 'value',
-          name: '数量',
+          name: 'Count',
           position: 'left',
           axisLine: {
             show: true,
@@ -117,7 +117,7 @@ const ContentPerformanceChart: React.FC<ContentPerformanceChartProps> = ({
         },
         {
           type: 'value',
-          name: '互动率 (%)',
+          name: 'Engagement Rate (%)',
           position: 'right',
           min: 0,
           max: Math.ceil(Math.max(...engagementRates) * 1.2),
@@ -138,7 +138,7 @@ const ContentPerformanceChart: React.FC<ContentPerformanceChartProps> = ({
       ],
       series: [
         {
-          name: '观看',
+          name: 'Views',
           type: 'bar',
           stack: 'total',
           data: views,
@@ -147,7 +147,7 @@ const ContentPerformanceChart: React.FC<ContentPerformanceChartProps> = ({
           }
         },
         {
-          name: '点赞',
+          name: 'Likes',
           type: 'bar',
           stack: 'interaction',
           data: likes,
@@ -156,7 +156,7 @@ const ContentPerformanceChart: React.FC<ContentPerformanceChartProps> = ({
           }
         },
         {
-          name: '评论',
+          name: 'Comments',
           type: 'bar',
           stack: 'interaction',
           data: comments,
@@ -165,7 +165,7 @@ const ContentPerformanceChart: React.FC<ContentPerformanceChartProps> = ({
           }
         },
         {
-          name: '分享',
+          name: 'Shares',
           type: 'bar',
           stack: 'interaction',
           data: shares,
@@ -174,7 +174,7 @@ const ContentPerformanceChart: React.FC<ContentPerformanceChartProps> = ({
           }
         },
         {
-          name: '互动率',
+          name: 'Engagement Rate',
           type: 'line',
           yAxisIndex: 1,
           data: engagementRates,
@@ -207,13 +207,13 @@ const ContentPerformanceChart: React.FC<ContentPerformanceChartProps> = ({
     return (
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <div className="h-[400px] flex items-center justify-center text-gray-500">
-          暂无数据
+          No data available
         </div>
       </div>
     );
   }
 
-  // 计算汇总数据
+  // Calculate summary data
   const totalViews = data.reduce((sum, item) => sum + item.views, 0);
   const totalLikes = data.reduce((sum, item) => sum + item.likes, 0);
   const totalComments = data.reduce((sum, item) => sum + item.comments, 0);
@@ -229,34 +229,34 @@ const ContentPerformanceChart: React.FC<ContentPerformanceChartProps> = ({
         lazyUpdate
       />
       
-      {/* 表现指标摘要 */}
+      {/* Performance metrics summary */}
       <div className="grid grid-cols-5 gap-4 mt-6 pt-6 border-t border-gray-100">
         <div className="text-center">
-          <div className="text-sm text-gray-600">总观看</div>
+          <div className="text-sm text-gray-600">Total Views</div>
           <div className="text-lg font-semibold text-gray-900 mt-1">
             {formatNumber(totalViews)}
           </div>
         </div>
         <div className="text-center">
-          <div className="text-sm text-gray-600">总点赞</div>
+          <div className="text-sm text-gray-600">Total Likes</div>
           <div className="text-lg font-semibold text-gray-900 mt-1">
             {formatNumber(totalLikes)}
           </div>
         </div>
         <div className="text-center">
-          <div className="text-sm text-gray-600">总评论</div>
+          <div className="text-sm text-gray-600">Total Comments</div>
           <div className="text-lg font-semibold text-gray-900 mt-1">
             {formatNumber(totalComments)}
           </div>
         </div>
         <div className="text-center">
-          <div className="text-sm text-gray-600">总分享</div>
+          <div className="text-sm text-gray-600">Total Shares</div>
           <div className="text-lg font-semibold text-gray-900 mt-1">
             {formatNumber(totalShares)}
           </div>
         </div>
         <div className="text-center">
-          <div className="text-sm text-gray-600">平均互动率</div>
+          <div className="text-sm text-gray-600">Avg Engagement Rate</div>
           <div className="text-lg font-semibold text-orange-600 mt-1">
             {avgEngagementRate.toFixed(2)}%
           </div>

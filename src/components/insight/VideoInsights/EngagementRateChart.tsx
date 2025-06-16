@@ -21,7 +21,7 @@ export const EngagementRateChart: React.FC<EngagementRateChartProps> = ({
     
     return {
       title: {
-        text: selectedVideo ? `${selectedVideo.title} 互动趋势` : '整体互动趋势',
+        text: selectedVideo ? `${selectedVideo.title} Engagement Trend` : 'Overall Engagement Trend',
         left: 'center',
         textStyle: {
           fontSize: 14
@@ -42,11 +42,11 @@ export const EngagementRateChart: React.FC<EngagementRateChartProps> = ({
           if (dataPoint) {
             tooltip += `
               <div class="space-y-1">
-                <div>播放量: ${dataPoint.views.toLocaleString()}</div>
-                <div>点赞数: ${dataPoint.likes.toLocaleString()}</div>
-                <div>评论数: ${dataPoint.comments.toLocaleString()}</div>
-                <div>分享数: ${dataPoint.shares.toLocaleString()}</div>
-                <div class="font-semibold pt-1 border-t">互动率: ${dataPoint.engagementRate.toFixed(2)}%</div>
+                <div>Views: ${dataPoint.views.toLocaleString()}</div>
+                <div>Likes: ${dataPoint.likes.toLocaleString()}</div>
+                <div>Comments: ${dataPoint.comments.toLocaleString()}</div>
+                <div>Shares: ${dataPoint.shares.toLocaleString()}</div>
+                <div class="font-semibold pt-1 border-t">Engagement Rate: ${dataPoint.engagementRate.toFixed(2)}%</div>
               </div>
             `;
           }
@@ -55,7 +55,7 @@ export const EngagementRateChart: React.FC<EngagementRateChartProps> = ({
         }
       },
       legend: {
-        data: ['点赞', '评论', '分享', '互动率'],
+        data: ['Likes', 'Comments', 'Shares', 'Engagement Rate'],
         bottom: 0
       },
       grid: {
@@ -79,7 +79,7 @@ export const EngagementRateChart: React.FC<EngagementRateChartProps> = ({
       yAxis: [
         {
           type: 'value',
-          name: '互动数',
+          name: 'Interactions',
           position: 'left',
           axisLabel: {
             formatter: (value: number) => {
@@ -92,7 +92,7 @@ export const EngagementRateChart: React.FC<EngagementRateChartProps> = ({
         },
         {
           type: 'value',
-          name: '互动率 (%)',
+          name: 'Engagement Rate (%)',
           position: 'right',
           axisLabel: {
             formatter: '{value}%'
@@ -101,7 +101,7 @@ export const EngagementRateChart: React.FC<EngagementRateChartProps> = ({
       ],
       series: [
         {
-          name: '点赞',
+          name: 'Likes',
           type: 'line',
           smooth: true,
           data: data.map(d => d.likes),
@@ -113,7 +113,7 @@ export const EngagementRateChart: React.FC<EngagementRateChartProps> = ({
           }
         },
         {
-          name: '评论',
+          name: 'Comments',
           type: 'line',
           smooth: true,
           data: data.map(d => d.comments),
@@ -125,7 +125,7 @@ export const EngagementRateChart: React.FC<EngagementRateChartProps> = ({
           }
         },
         {
-          name: '分享',
+          name: 'Shares',
           type: 'line',
           smooth: true,
           data: data.map(d => d.shares),
@@ -137,7 +137,7 @@ export const EngagementRateChart: React.FC<EngagementRateChartProps> = ({
           }
         },
         {
-          name: '互动率',
+          name: 'Engagement Rate',
           type: 'line',
           smooth: true,
           yAxisIndex: 1,
@@ -151,13 +151,13 @@ export const EngagementRateChart: React.FC<EngagementRateChartProps> = ({
           },
           markPoint: {
             data: [
-              { type: 'max', name: '最高' },
-              { type: 'min', name: '最低' }
+              { type: 'max', name: 'Max' },
+              { type: 'min', name: 'Min' }
             ]
           },
           markLine: {
             data: [
-              { type: 'average', name: '平均值' }
+              { type: 'average', name: 'Average' }
             ]
           }
         }

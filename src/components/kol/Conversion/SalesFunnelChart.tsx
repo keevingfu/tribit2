@@ -14,14 +14,14 @@ interface SalesFunnelChartProps {
 const SalesFunnelChart: React.FC<SalesFunnelChartProps> = ({ 
   data, 
   loading = false,
-  title = '销售漏斗分析'
+  title = 'Sales Funnel Analysis'
 }) => {
 
   const option = useMemo(() => {
     const stages = data.map(item => item.stage);
     const values = data.map(item => item.count);
 
-    // 计算漏斗颜色渐变
+    // Calculate funnel color gradient
     const colors = [
       '#5470c6',
       '#66b3ff',
@@ -50,16 +50,16 @@ const SalesFunnelChart: React.FC<SalesFunnelChartProps> = ({
             <div class="px-3 py-2">
               <div class="font-semibold mb-2">${params.name}</div>
               <div class="flex items-center justify-between mb-1">
-                <span>数量:</span>
+                <span>Count:</span>
                 <span class="ml-4 font-medium">${formatNumber(params.value)}</span>
               </div>
               <div class="flex items-center justify-between mb-1">
-                <span>占比:</span>
+                <span>Percentage:</span>
                 <span class="ml-4 font-medium">${params.data.percentage}%</span>
               </div>
               ${conversionRate !== undefined ? `
                 <div class="flex items-center justify-between pt-2 border-t border-gray-200">
-                  <span>转化率:</span>
+                  <span>Conversion Rate:</span>
                   <span class="ml-4 font-medium text-green-600">${conversionRate}%</span>
                 </div>
               ` : ''}
@@ -69,7 +69,7 @@ const SalesFunnelChart: React.FC<SalesFunnelChartProps> = ({
       },
       series: [
         {
-          name: '销售漏斗',
+          name: 'Sales Funnel',
           type: 'funnel',
           left: '10%',
           top: 60,
@@ -136,13 +136,13 @@ const SalesFunnelChart: React.FC<SalesFunnelChartProps> = ({
     return (
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <div className="h-[400px] flex items-center justify-center text-gray-500">
-          暂无数据
+          No data available
         </div>
       </div>
     );
   }
 
-  // 计算总体转化率
+  // Calculate overall conversion rate
   const overallConversionRate = data.length > 0 && data[0].count > 0
     ? ((data[data.length - 1].count / data[0].count) * 100).toFixed(2)
     : '0.00';
@@ -156,23 +156,23 @@ const SalesFunnelChart: React.FC<SalesFunnelChartProps> = ({
         lazyUpdate
       />
       
-      {/* 转化率分析 */}
+      {/* Conversion Rate Analysis */}
       <div className="mt-6 pt-6 border-t border-gray-100">
-        <h4 className="text-sm font-semibold text-gray-700 mb-4">转化率分析</h4>
+        <h4 className="text-sm font-semibold text-gray-700 mb-4">Conversion Rate Analysis</h4>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-600 mb-1">总体转化率</div>
+            <div className="text-sm text-gray-600 mb-1">Overall Conversion Rate</div>
             <div className="text-2xl font-bold text-blue-600">
               {overallConversionRate}%
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              从访问到购买
+              From visit to purchase
             </div>
           </div>
           
           <div className="p-4 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-600 mb-1">最大流失环节</div>
+            <div className="text-sm text-gray-600 mb-1">Biggest Drop-off Point</div>
             <div className="text-lg font-semibold text-red-600">
               {data.reduce((max, item, index) => {
                 if (index === 0) return max;
@@ -183,7 +183,7 @@ const SalesFunnelChart: React.FC<SalesFunnelChartProps> = ({
               }, { stage: '', rate: 0 }).stage}
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              流失率 {data.reduce((max, item, index) => {
+              Drop-off rate: {data.reduce((max, item, index) => {
                 if (index === 0) return 0;
                 const prevCount = data[index - 1].count;
                 const loss = prevCount - item.count;
@@ -194,21 +194,21 @@ const SalesFunnelChart: React.FC<SalesFunnelChartProps> = ({
           </div>
           
           <div className="p-4 bg-gray-50 rounded-lg">
-            <div className="text-sm text-gray-600 mb-1">平均转化率</div>
+            <div className="text-sm text-gray-600 mb-1">Average Conversion Rate</div>
             <div className="text-2xl font-bold text-green-600">
               {(data.filter(d => d.conversionRate).reduce((sum, item) => 
                 sum + (typeof item.conversionRate === 'string' ? parseFloat(item.conversionRate) : 0), 0
               ) / data.filter(d => d.conversionRate).length || 0).toFixed(1)}%
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              各环节平均
+              Average across stages
             </div>
           </div>
         </div>
 
-        {/* 优化建议 */}
+        {/* Optimization Suggestions */}
         <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <h5 className="text-sm font-semibold text-blue-900 mb-2">优化建议</h5>
+          <h5 className="text-sm font-semibold text-blue-900 mb-2">Optimization Suggestions</h5>
           <ul className="text-sm text-blue-800 space-y-1">
             {data.map((item, index) => {
               if (index === 0 || !item.conversionRate) return null;
@@ -220,7 +220,7 @@ const SalesFunnelChart: React.FC<SalesFunnelChartProps> = ({
                     <span className="text-blue-600 mr-2">•</span>
                     <span>
                       {data[index - 1].stage} → {item.stage} 
-                      转化率较低（{typeof item.conversionRate === 'string' ? item.conversionRate : item.conversionRate}%），建议优化该环节的用户体验
+                      has low conversion rate ({typeof item.conversionRate === 'string' ? item.conversionRate : item.conversionRate}%), suggest optimizing user experience at this stage
                     </span>
                   </li>
                 );

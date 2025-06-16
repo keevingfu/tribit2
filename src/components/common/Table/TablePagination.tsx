@@ -67,14 +67,14 @@ const TablePagination: React.FC<TablePaginationProps> = ({
             className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             
-上一页
+Previous
           </button>
           <button
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
             className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            下一页
+            Next
           </button>
         </div>
       )}
@@ -83,9 +83,9 @@ const TablePagination: React.FC<TablePaginationProps> = ({
         {showSummary && (
           <div>
             <p className="text-sm text-gray-700">
-              显示 <span className="font-medium">{startItem}</span> 到{' '}
+              Showing <span className="font-medium">{startItem}</span> to{' '}
               <span className="font-medium">{endItem}</span> yq{' '}
-              <span className="font-medium">{totalItems}</span> 项
+              <span className="font-medium">{totalItems}</span> items
             </p>
           </div>
         )}

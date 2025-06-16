@@ -5,10 +5,10 @@ import React from 'react';
 export default function LoadingSkeleton() {
   return (
     <div className="animate-pulse">
-      {/* 表格头部 */}
+      {/* Table Header */}
       <div className="bg-gray-100 h-12 rounded-t-lg"></div>
       
-      {/* 表格行 */}
+      {/* Table Rows */}
       {[...Array(5)].map((_, index) => (
         <div key={index} className="border-b border-gray-200">
           <div className="flex items-center space-x-4 p-4">

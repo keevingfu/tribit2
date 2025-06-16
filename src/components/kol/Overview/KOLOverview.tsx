@@ -57,7 +57,7 @@ const KOLOverview: React.FC = () => {
       const profiles = topKOLs.map(kol => kol.profile);
       setKols(profiles);
       
-      // 默认选择第一个KOL
+      // Select the first KOL by default
       if (profiles.length > 0 && !selectedKOL) {
         setSelectedKOL(profiles[0]);
       }
@@ -90,7 +90,7 @@ const KOLOverview: React.FC = () => {
   };
 
   const handleExport = () => {
-    // 处理导出功能
+    // Handle export functionality
     console.log('Exporting data...');
   };
 
@@ -112,12 +112,12 @@ const KOLOverview: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 页面标题和操作 */}
+      {/* Page title and actions */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">KOL概览</h1>
+          <h1 className="text-2xl font-bold text-gray-900">KOL Overview</h1>
           <p className="text-gray-600 mt-1">
-            深入了解KOL画像、粉丝增长和内容表现
+            In-depth insights into KOL profiles, follower growth, and content performance
           </p>
         </div>
         <div className="flex items-center space-x-3">
@@ -126,12 +126,12 @@ const KOLOverview: React.FC = () => {
             className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <Download className="w-4 h-4" />
-            <span>导出报告</span>
+            <span>Export Report</span>
           </button>
         </div>
       </div>
 
-      {/* 搜索和筛选 */}
+      {/* Search and filter */}
       <div className="bg-white rounded-lg p-4 shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex-1 max-w-md">
@@ -139,7 +139,7 @@ const KOLOverview: React.FC = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="搜索KOL名称..."
+                placeholder="Search KOL name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -148,19 +148,19 @@ const KOLOverview: React.FC = () => {
           </div>
           
           <div className="flex items-center space-x-3">
-            {/* 时间范围选择 */}
+            {/* Time range selection */}
             <select
               value={timeRange}
               onChange={(e) => setTimeRange(e.target.value as TimeRange)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="7d">最近7天</option>
-              <option value="30d">最近30天</option>
-              <option value="90d">最近90天</option>
-              <option value="1y">最近1年</option>
+              <option value="7d">Last 7 days</option>
+              <option value="30d">Last 30 days</option>
+              <option value="90d">Last 90 days</option>
+              <option value="1y">Last 1 year</option>
             </select>
 
-            {/* 视图切换 */}
+            {/* View toggle */}
             <div className="flex items-center bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setViewMode('grid')}
@@ -184,21 +184,21 @@ const KOLOverview: React.FC = () => {
               </button>
             </div>
 
-            {/* 高级筛选 */}
+            {/* Advanced filter */}
             <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
               <SlidersHorizontal className="w-4 h-4" />
-              <span>筛选</span>
+              <span>Filter</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* 主要内容区域 */}
+      {/* Main content area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* KOL列表 */}
+        {/* KOL list */}
         <div className="lg:col-span-1">
           <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">KOL列表</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">KOL List</h3>
             
             {loading ? (
               <div className="space-y-4">
@@ -235,14 +235,14 @@ const KOLOverview: React.FC = () => {
                           {kol.name}
                         </h4>
                         <p className="text-sm text-gray-600">
-                          {kol.platform} · {formatNumber(kol.followers)} 粉丝
+                          {kol.platform} · {formatNumber(kol.followers)} followers
                         </p>
                       </div>
                       <div className="text-right">
                         <div className="text-sm font-medium text-green-600">
                           {kol.engagementRate.toFixed(1)}%
                         </div>
-                        <div className="text-xs text-gray-500">互动率</div>
+                        <div className="text-xs text-gray-500">Engagement Rate</div>
                       </div>
                     </div>
                   </div>
@@ -252,20 +252,20 @@ const KOLOverview: React.FC = () => {
           </div>
         </div>
 
-        {/* 图表区域 */}
+        {/* Charts area */}
         <div className="lg:col-span-2 space-y-6">
           {selectedKOL ? (
             <>
-              {/* 选中的KOL卡片 */}
+              {/* Selected KOL card */}
               <KOLProfileCard profile={selectedKOL} />
               
-              {/* 粉丝增长图表 */}
+              {/* Follower growth chart */}
               <FollowerGrowthChart 
                 data={followerGrowth} 
                 loading={chartsLoading}
               />
               
-              {/* 内容表现图表 */}
+              {/* Content performance chart */}
               <ContentPerformanceChart 
                 data={contentPerformance} 
                 loading={chartsLoading}
@@ -273,7 +273,7 @@ const KOLOverview: React.FC = () => {
             </>
           ) : (
             <div className="bg-white rounded-lg p-12 text-center text-gray-500">
-              请选择一个KOL查看详细数据
+              Please select a KOL to view detailed data
             </div>
           )}
         </div>

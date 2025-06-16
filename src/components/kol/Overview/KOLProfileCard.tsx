@@ -40,21 +40,21 @@ const KOLProfileCard: React.FC<KOLProfileCardProps> = ({
       className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer"
       onClick={handleClick}
     >
-      {/* 头部 */}
+      {/* Header */}
       <div className="relative h-32 bg-gradient-to-br from-blue-400 to-purple-500 rounded-t-lg">
         <div className="absolute top-4 right-4">
           <button 
             className="p-1 bg-white bg-opacity-20 rounded-full hover:bg-opacity-30 transition-colors"
             onClick={(e) => {
               e.stopPropagation();
-              // 处理更多操作
+              // Handle more actions
             }}
           >
             <MoreVertical className="w-5 h-5 text-white" />
           </button>
         </div>
         
-        {/* 平台标识 */}
+        {/* Platform badge */}
         <div className="absolute top-4 left-4">
           <span className={`px-3 py-1 text-xs font-medium text-white rounded-full ${
             platformColors[profile.platform] || 'bg-gray-500'
@@ -64,7 +64,7 @@ const KOLProfileCard: React.FC<KOLProfileCardProps> = ({
         </div>
       </div>
 
-      {/* 头像 */}
+      {/* Avatar */}
       <div className="relative -mt-12 px-6">
         <div className="relative inline-block">
           <div className="w-24 h-24 bg-white rounded-full p-1">
@@ -90,9 +90,9 @@ const KOLProfileCard: React.FC<KOLProfileCardProps> = ({
         </div>
       </div>
 
-      {/* 信息区域 */}
+      {/* Information area */}
       <div className="px-6 pb-6">
-        {/* 名称和链接 */}
+        {/* Name and link */}
         <div className="mt-4">
           <div className="flex items-center justify-between">
             <Link 
@@ -115,7 +115,7 @@ const KOLProfileCard: React.FC<KOLProfileCardProps> = ({
           <p className="text-sm text-gray-600 mt-1">@{profile.account}</p>
         </div>
 
-        {/* 地区和分类 */}
+        {/* Region and categories */}
         <div className="flex items-center space-x-4 mt-3 text-sm text-gray-600">
           <span className="flex items-center space-x-1">
             <MapPin className="w-4 h-4" />
@@ -131,50 +131,50 @@ const KOLProfileCard: React.FC<KOLProfileCardProps> = ({
           )}
         </div>
 
-        {/* 简介 */}
+        {/* Description */}
         {profile.description && (
           <p className="text-sm text-gray-600 mt-3 line-clamp-2">
             {profile.description}
           </p>
         )}
 
-        {/* 统计数据 */}
+        {/* Statistics */}
         <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-100">
           <div className="text-center">
             <div className="text-lg font-semibold text-gray-900">
               {formatNumber(profile.followers)}
             </div>
-            <div className="text-xs text-gray-600 mt-1">粉丝</div>
+            <div className="text-xs text-gray-600 mt-1">Followers</div>
           </div>
           <div className="text-center">
             <div className="text-lg font-semibold text-gray-900">
               {formatNumber(profile.avgViews)}
             </div>
-            <div className="text-xs text-gray-600 mt-1">平均观看</div>
+            <div className="text-xs text-gray-600 mt-1">Avg Views</div>
           </div>
           <div className="text-center">
             <div className="text-lg font-semibold text-gray-900">
               {profile.engagementRate.toFixed(1)}%
             </div>
-            <div className="text-xs text-gray-600 mt-1">互动率</div>
+            <div className="text-xs text-gray-600 mt-1">Engagement</div>
           </div>
         </div>
 
-        {/* 标签 */}
+        {/* Tags */}
         <div className="flex flex-wrap gap-2 mt-4">
           {profile.posts > 100 && (
             <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
-              活跃创作者
+              Active Creator
             </span>
           )}
           {profile.engagementRate > 5 && (
             <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
-              高互动率
+              High Engagement
             </span>
           )}
           {profile.followers > 100000 && (
             <span className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-700 rounded-full">
-              大V
+              Top Influencer
             </span>
           )}
         </div>

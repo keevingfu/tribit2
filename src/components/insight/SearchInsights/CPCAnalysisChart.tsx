@@ -17,14 +17,14 @@ export const CPCAnalysisChart: React.FC<CPCAnalysisChartProps> = ({
   loading = false 
 }) => {
   const option: EChartsOption = useMemo(() => {
-    // 如果有选中的关键词，只显示该关键词的详细数据
+    // If a keyword is selected, only show detailed data for that keyword
     if (selectedKeyword) {
       const selectedData = data.find(d => d.keyword === selectedKeyword);
       if (!selectedData) return {};
 
       return {
         title: {
-          text: `${selectedKeyword} CPC趋势`,
+          text: `${selectedKeyword} CPC Trend`,
           left: 'center'
         },
         tooltip: {
@@ -34,7 +34,7 @@ export const CPCAnalysisChart: React.FC<CPCAnalysisChartProps> = ({
             return `
               <div class="p-2">
                 <div class="font-semibold">${param.name}</div>
-                <div class="mt-1">CPC: ¥${param.value.toFixed(2)}</div>
+                <div class="mt-1">CPC: $${param.value.toFixed(2)}</div>
               </div>
             `;
           }
@@ -55,7 +55,7 @@ export const CPCAnalysisChart: React.FC<CPCAnalysisChartProps> = ({
         yAxis: {
           type: 'value',
           axisLabel: {
-            formatter: '¥{value}'
+            formatter: '${value}'
           }
         },
         series: [{
@@ -74,16 +74,16 @@ export const CPCAnalysisChart: React.FC<CPCAnalysisChartProps> = ({
           },
           markLine: {
             data: [
-              { type: 'average', name: '平均值' },
-              { type: 'max', name: '最大值' },
-              { type: 'min', name: '最小值' }
+              { type: 'average', name: 'Average' },
+              { type: 'max', name: 'Maximum' },
+              { type: 'min', name: 'Minimum' }
             ]
           }
         }]
       };
     }
 
-    // 默认显示所有关键词的CPC对比
+    // Default: show CPC comparison for all keywords
     return {
       tooltip: {
         trigger: 'axis',
@@ -96,19 +96,19 @@ export const CPCAnalysisChart: React.FC<CPCAnalysisChartProps> = ({
           return `
             <div class="p-2">
               <div class="font-semibold">${param.name}</div>
-              <div class="mt-1">平均CPC: ¥${item?.avgCPC.toFixed(2)}</div>
-              <div>最低CPC: ¥${item?.minCPC.toFixed(2)}</div>
-              <div>最高CPC: ¥${item?.maxCPC.toFixed(2)}</div>
-              <div>趋势: ${
-                item?.trend === 'increasing' ? '上升' :
-                item?.trend === 'decreasing' ? '下降' : '稳定'
+              <div class="mt-1">Average CPC: $${item?.avgCPC.toFixed(2)}</div>
+              <div>Min CPC: $${item?.minCPC.toFixed(2)}</div>
+              <div>Max CPC: $${item?.maxCPC.toFixed(2)}</div>
+              <div>Trend: ${
+                item?.trend === 'increasing' ? 'Increasing' :
+                item?.trend === 'decreasing' ? 'Decreasing' : 'Stable'
               }</div>
             </div>
           `;
         }
       },
       legend: {
-        data: ['最低CPC', '平均CPC', '最高CPC'],
+        data: ['Min CPC', 'Average CPC', 'Max CPC'],
         bottom: 0
       },
       grid: {
@@ -128,12 +128,12 @@ export const CPCAnalysisChart: React.FC<CPCAnalysisChartProps> = ({
       yAxis: {
         type: 'value',
         axisLabel: {
-          formatter: '¥{value}'
+          formatter: '${value}'
         }
       },
       series: [
         {
-          name: '最低CPC',
+          name: 'Min CPC',
           type: 'bar',
           stack: 'cpc',
           itemStyle: {
@@ -142,7 +142,7 @@ export const CPCAnalysisChart: React.FC<CPCAnalysisChartProps> = ({
           data: data.map(d => d.minCPC)
         },
         {
-          name: '平均CPC',
+          name: 'Average CPC',
           type: 'bar',
           stack: 'cpc',
           itemStyle: {
@@ -151,7 +151,7 @@ export const CPCAnalysisChart: React.FC<CPCAnalysisChartProps> = ({
           data: data.map(d => d.avgCPC - d.minCPC)
         },
         {
-          name: '最高CPC',
+          name: 'Max CPC',
           type: 'bar',
           stack: 'cpc',
           itemStyle: {

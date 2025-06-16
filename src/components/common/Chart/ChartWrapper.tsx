@@ -54,7 +54,7 @@ const ChartWrapper: React.FC<ChartWrapperProps> = ({
         chartInstance.setOption(option, true);
       } catch (err) {
         console.error('ECharts setOption error:', err);
-        setLocalError(`图表配置错误: ${err instanceof Error ? err.message : String(err)}`);
+        setLocalError(`Chart configuration error: ${err instanceof Error ? err.message : String(err)}`);
       }
     }
   }, [chartInstance, option, loading, error]);
@@ -68,7 +68,7 @@ const ChartWrapper: React.FC<ChartWrapperProps> = ({
       >
         <div className="text-center">
           <Loader2 className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-2" />
-          <p className="text-sm text-gray-600">加载中...</p>
+          <p className="text-sm text-gray-600">Loading...</p>
         </div>
       </div>
     );
@@ -91,7 +91,7 @@ const ChartWrapper: React.FC<ChartWrapperProps> = ({
               className="inline-flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
             >
               <RefreshCw className="w-4 h-4" />
-              <span>重试</span>
+              <span>Retry</span>
             </button>
           )}
         </div>
@@ -104,7 +104,7 @@ const ChartWrapper: React.FC<ChartWrapperProps> = ({
     <div
       ref={chartRef}
       className={`w-full ${className}`}
-      style={{ height }}
+      style={{ height: typeof height === 'number' ? `${height}px` : height }}
     />
   );
 };

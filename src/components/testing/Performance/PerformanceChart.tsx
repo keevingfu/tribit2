@@ -16,7 +16,7 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({ metric, peri
 
     const chart = echarts.init(chartRef.current);
 
-    // 根据时间段生成日期数据
+    // Generate date data based on time period
     const generateDates = () => {
       const dates = [];
       const days = period === '7d' ? 7 : period === '30d' ? 30 : period === '90d' ? 90 : 365;
@@ -25,13 +25,13 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({ metric, peri
       for (let i = days - 1; i >= 0; i--) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
-        dates.push(date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' }));
+        dates.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
       }
 
       return dates;
     };
 
-    // 生成模拟数据
+    // Generate simulated data
     const generateData = () => {
       const days = period === '7d' ? 7 : period === '30d' ? 30 : period === '90d' ? 90 : 365;
       const baseValue = metric === 'views' ? 5000 : metric === 'engagement' ? 10 : 100;
@@ -39,7 +39,7 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({ metric, peri
 
       for (let i = 0; i < days; i++) {
         const randomFactor = 0.8 + Math.random() * 0.4;
-        const trendFactor = 1 + (i / days) * 0.2; // 增长趋势
+        const trendFactor = 1 + (i / days) * 0.2; // Growth trend
         data.push(Math.round(baseValue * randomFactor * trendFactor));
       }
 
@@ -54,7 +54,7 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({ metric, peri
         trigger: 'axis',
         formatter: (params: any) => {
           const param = params[0];
-          const unit = metric === 'views' ? '' : metric === 'engagement' ? '%' : '个';
+          const unit = metric === 'views' ? '' : metric === 'engagement' ? '%' : '';
           return `${param.name}<br/>${param.seriesName}: ${param.value}${unit}`;
         }
       },
@@ -84,7 +84,7 @@ export const PerformanceChart: React.FC<PerformanceChartProps> = ({ metric, peri
       },
       series: [
         {
-          name: metric === 'views' ? '浏览量' : metric === 'engagement' ? '互动率' : '转化数',
+          name: metric === 'views' ? 'Views' : metric === 'engagement' ? 'Engagement' : 'Conversions',
           type: 'line',
           smooth: true,
           data: data,

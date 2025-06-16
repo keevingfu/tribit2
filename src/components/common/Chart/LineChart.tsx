@@ -39,14 +39,11 @@ const LineChart: React.FC<LineChartProps> = ({
   yAxisLabel = '',
   xAxisLabel = '',
 }) => {
-  // Ensure data is valid
-  if (!data || !data.series || !data.xAxis) {
-    return (
-      <div className={`flex items-center justify-center ${className}`} style={{ height }}>
-        <p className="text-gray-500">No data available</p>
-      </div>
-    );
-  }
+  // Ensure data is valid - let ChartWrapper handle empty state
+  const validData = {
+    xAxis: data?.xAxis || [],
+    series: data?.series || []
+  };
 
   const option: echarts.EChartsOption = {
     title: title ? {
@@ -67,7 +64,7 @@ const LineChart: React.FC<LineChartProps> = ({
       },
     },
     legend: showLegend ? {
-      data: data.series.map((s) => s.name),
+      data: validData.series.map((s) => s.name),
       bottom: 0,
     } : undefined,
     grid: {
@@ -80,12 +77,12 @@ const LineChart: React.FC<LineChartProps> = ({
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: data.xAxis,
+      data: validData.xAxis,
       name: xAxisLabel,
       nameLocation: 'middle',
       nameGap: 30,
       axisLabel: {
-        rotate: data.xAxis.length > 10 ? 45 : 0,
+        rotate: validData.xAxis.length > 10 ? 45 : 0,
       },
     },
     yAxis: {
@@ -94,7 +91,7 @@ const LineChart: React.FC<LineChartProps> = ({
       nameLocation: 'middle',
       nameGap: 50,
     },
-    series: data.series.map((series) => ({
+    series: validData.series.map((series) => ({
       name: series.name,
       type: 'line',
       smooth: series.smooth !== false,

@@ -1,8 +1,8 @@
 import React from 'react';
-import { KOLOverview } from '@/components/kol/Overview';
+import KOLOverviewEnhanced from '@/components/kol/Overview/KOLOverviewEnhanced';
 
 const OverviewPage: React.FC = () => {
-  return <KOLOverview />;
+  return <KOLOverviewEnhanced />;
 };
 
 export default OverviewPage;

@@ -8,7 +8,7 @@ interface PerformanceMetricsProps {
 }
 
 export const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ campaigns }) => {
-  // 计算总体指标
+  // Calculate overall metrics
   const totalMetrics = campaigns.reduce((acc, campaign) => {
     return {
       views: acc.views + campaign.metrics.views,
@@ -23,7 +23,7 @@ export const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ campaign
 
   const metrics = [
     {
-      title: '总浏览量',
+      title: 'Total Views',
       value: totalMetrics.views.toLocaleString(),
       change: '+12.5%',
       trend: 'up',
@@ -35,7 +35,7 @@ export const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ campaign
       )
     },
     {
-      title: '平均互动率',
+      title: 'Average Engagement',
       value: `${avgEngagement}%`,
       change: '+5.3%',
       trend: 'up',
@@ -46,7 +46,7 @@ export const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ campaign
       )
     },
     {
-      title: '总转化数',
+      title: 'Total Conversions',
       value: totalMetrics.conversions.toLocaleString(),
       change: '+8.7%',
       trend: 'up',
@@ -57,7 +57,7 @@ export const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ campaign
       )
     },
     {
-      title: '平均 ROI',
+      title: 'Average ROI',
       value: `${avgROI}x`,
       change: '-2.1%',
       trend: 'down',

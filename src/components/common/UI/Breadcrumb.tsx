@@ -19,38 +19,39 @@ const getBreadcrumbs = (pathname: string): BreadcrumbItem[] => {
   
   // Build breadcrumb items
   const breadcrumbs: BreadcrumbItem[] = [
-    { label: '首页', path: '/' }
+    { label: 'Home', path: '/' }
   ];
   
   // Path to label mapping
   const labelMap: Record<string, string> = {
-    insight: '内容洞察',
-    kol: 'KOL营销',
-    testing: 'A/B测试',
-    ads: '广告优化',
-    private: '私域运营',
-    dashboard: '仪表板',
-    overview: '概览',
-    conversion: '转化分析',
-    reach: '触达分析',
-    detail: '详情',
-    ideation: '创意策划',
-    execution: '执行管理',
-    performance: '效果分析',
-    refinement: '优化迭代',
-    audience: '受众分析',
-    distribution: '分布分析',
-    optimization: '优化建议',
-    tracking: '效果追踪',
-    edm: 'EDM营销',
+    insight: 'Content Insights',
+    kol: 'KOL Marketing',
+    testing: 'A/B Testing',
+    ads: 'Advertisement',
+    private: 'Private Domain',
+    dashboard: 'Dashboard',
+    overview: 'Overview',
+    conversion: 'Conversion Analysis',
+    reach: 'Reach Analysis',
+    detail: 'Details',
+    ideation: 'Ideation',
+    execution: 'Execution',
+    performance: 'Performance',
+    refinement: 'Refinement',
+    audience: 'Audience Analysis',
+    distribution: 'Distribution',
+    optimization: 'Optimization',
+    tracking: 'Tracking',
+    edm: 'EDM Marketing',
     linkedin: 'LinkedIn',
-    shopify: 'Shopify商店',
+    shopify: 'Shopify Store',
     whatsapp: 'WhatsApp',
-    'offline-stores': '线下门店',
-    'consumer-voice': '消费者声音',
-    'search-insights': '搜索洞察',
-    'video-insights': '视频洞察',
-    'viral-analysis': '病毒传播分析'
+    'offline-stores': 'Offline Stores',
+    'consumer-voice': 'Consumer Voice',
+    'search-insights': 'Search Insights',
+    'video-insights': 'Video Insights',
+    'viral-analysis': 'Viral Analysis',
+    videos: 'Videos'
   };
   
   let currentPath = '';

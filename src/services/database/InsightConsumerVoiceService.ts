@@ -44,7 +44,7 @@ export class InsightConsumerVoiceService extends BaseService<any> {
         modifier_type as need_category,
         COUNT(*) as frequency,
         GROUP_CONCAT(DISTINCT modifier) as modifiers,
-        GROUP_CONCAT(DISTINCT keyword, '|||') as keywords
+        GROUP_CONCAT(keyword, ',') as keywords
       FROM ${this.searchTable}
       WHERE modifier_type IS NOT NULL
     `;
@@ -72,7 +72,7 @@ export class InsightConsumerVoiceService extends BaseService<any> {
       need_category: r.need_category,
       frequency: r.frequency,
       related_keywords: r.modifiers ? r.modifiers.split(',').slice(0, 10) : [],
-      example_searches: r.keywords ? r.keywords.split('|||').slice(0, 5) : []
+      example_searches: r.keywords ? r.keywords.split(',').slice(0, 5) : []
     }));
   }
 
@@ -94,11 +94,13 @@ export class InsightConsumerVoiceService extends BaseService<any> {
       let sql = `
         SELECT 
           COUNT(*) as count,
-          GROUP_CONCAT(DISTINCT keyword, '|||') as keywords
+          GROUP_CONCAT(keyword, ',') as keywords
         FROM ${this.searchTable}
-        WHERE keyword REGEXP ?
+        WHERE (${intent.pattern.split('|').map(() => 'keyword LIKE ?').join(' OR ')})
       `;
-      const params: any[] = [intent.pattern];
+      // Create LIKE patterns for each keyword in the pattern
+      const patterns = intent.pattern.split('|');
+      const params: any[] = patterns.map(p => `%${p}%`);
 
       if (region) {
         sql += ` AND region = ?`;
@@ -115,7 +117,7 @@ export class InsightConsumerVoiceService extends BaseService<any> {
 
         results.push({
           intent_type: intent.type,
-          keywords: result.keywords ? result.keywords.split('|||').slice(0, 10) : [],
+          keywords: result.keywords ? result.keywords.split(',').slice(0, 10) : [],
           percentage: Math.round((result.count / total) * 100)
         });
       }
@@ -162,8 +164,8 @@ export class InsightConsumerVoiceService extends BaseService<any> {
         modifier_type as category,
         COUNT(*) as count,
         AVG(search_volume) as avg_volume,
-        GROUP_CONCAT(DISTINCT keyword, '|||') as keywords,
-        GROUP_CONCAT(DISTINCT suggestion, '|||') as suggestions
+        GROUP_CONCAT(DISTINCT keyword) as keywords,
+        GROUP_CONCAT(DISTINCT suggestion) as suggestions
       FROM ${this.searchTable}
       WHERE modifier_type IS NOT NULL
     `;
@@ -192,8 +194,8 @@ export class InsightConsumerVoiceService extends BaseService<any> {
     const results = await this.db.query<any>(sql, queryParams);
 
     return results.map(r => {
-      const keywords = r.keywords ? r.keywords.split('|||').filter(Boolean) : [];
-      const suggestions = r.suggestions ? r.suggestions.split('|||').filter(Boolean) : [];
+      const keywords = r.keywords ? r.keywords.split(',').filter(Boolean) : [];
+      const suggestions = r.suggestions ? r.suggestions.split(',').filter(Boolean) : [];
 
       // 生成洞察
       const insights: string[] = [];
@@ -231,7 +233,7 @@ export class InsightConsumerVoiceService extends BaseService<any> {
         COUNT(DISTINCT p.商品名称) as product_count,
         SUM(p.销量) as total_sales,
         AVG((p.商品价格最大值 + p.商品价格最小值) / 2) as avg_price,
-        GROUP_CONCAT(DISTINCT p.商品名称, '|||') as products
+        GROUP_CONCAT(DISTINCT p.商品名称) as products
       FROM ${this.productTable} p
       WHERE p.\`商品类目-zh\` IS NOT NULL
       GROUP BY p.\`商品类目-zh\`
@@ -241,11 +243,31 @@ export class InsightConsumerVoiceService extends BaseService<any> {
 
     const results = await this.db.query<any>(sql);
 
+    // Map Chinese categories to English
+    const categoryMap: Record<string, string> = {
+      '手机与数码': 'Mobile & Digital',
+      '家电': 'Home Appliances',
+      '五金工具': 'Hardware Tools',
+      '家装建材': 'Home Improvement',
+      '居家日用': 'Home & Living',
+      '运动与户外': 'Sports & Outdoors',
+      '玩具和爱好': 'Toys & Hobbies',
+      '电脑办公': 'Computer & Office',
+      '汽车与摩托车': 'Automotive',
+      '美妆个护': 'Beauty & Personal Care',
+      '服装配饰': 'Clothing & Accessories',
+      '母婴用品': 'Baby & Kids',
+      '食品饮料': 'Food & Beverage',
+      '宠物用品': 'Pet Supplies',
+      '珠宝首饰': 'Jewelry',
+      '鞋靴箱包': 'Shoes & Bags'
+    };
+
     return results.map(r => ({
-      category: r.category,
+      category: categoryMap[r.category] || r.category || 'Other',
       demand_score: Math.min(r.total_sales / 1000, 100), // 标准化需求分数
       avg_price: r.avg_price || 0,
-      top_products: r.products ? r.products.split('|||').slice(0, 5) : []
+      top_products: r.products ? r.products.split(',').slice(0, 5) : []
     }));
   }
 

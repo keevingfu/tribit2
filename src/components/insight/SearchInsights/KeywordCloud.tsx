@@ -16,7 +16,7 @@ export const KeywordCloud: React.FC<KeywordCloudProps> = ({
   onKeywordClick,
   loading = false 
 }) => {
-  // 使用TreeMap作为词云的替代方案
+  // Using TreeMap as an alternative to word cloud
   const option: EChartsOption = useMemo(() => {
     const treeMapData = data.map(item => ({
       name: item.keyword,
@@ -49,13 +49,13 @@ export const KeywordCloud: React.FC<KeywordCloudProps> = ({
           return `
             <div class="p-2">
               <div class="font-semibold">${params.name}</div>
-              <div class="text-sm mt-1">搜索量: ${params.value.toLocaleString()}</div>
-              <div class="text-sm">CPC: ¥${params.data.cpc.toFixed(2)}</div>
-              <div class="text-sm">竞争度: ${
-                params.data.competition === 'high' ? '高' : 
-                params.data.competition === 'medium' ? '中' : '低'
+              <div class="text-sm mt-1">Search Volume: ${params.value.toLocaleString()}</div>
+              <div class="text-sm">CPC: $${params.data.cpc.toFixed(2)}</div>
+              <div class="text-sm">Competition: ${
+                params.data.competition === 'high' ? 'High' : 
+                params.data.competition === 'medium' ? 'Medium' : 'Low'
               }</div>
-              <div class="text-sm">趋势: ${params.data.trend > 0 ? '+' : ''}${params.data.trend}%</div>
+              <div class="text-sm">Trend: ${params.data.trend > 0 ? '+' : ''}${params.data.trend}%</div>
             </div>
           `;
         }
@@ -88,7 +88,7 @@ export const KeywordCloud: React.FC<KeywordCloudProps> = ({
   }, [data]);
 
 
-  // 标签云备选方案
+  // Tag cloud alternative
   const renderTagCloud = () => {
     const maxVolume = Math.max(...data.map(d => d.searchVolume));
     const minVolume = Math.min(...data.map(d => d.searchVolume));
@@ -134,7 +134,7 @@ export const KeywordCloud: React.FC<KeywordCloudProps> = ({
         height={400}
         loading={loading}
       />
-      {/* 备选方案：标签云 */}
+      {/* Alternative: Tag Cloud */}
       {/* {renderTagCloud()} */}
     </div>
   );

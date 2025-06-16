@@ -13,9 +13,9 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const notifications = [
-    { id: 1, title: '新的KOL申请审核', time: '5分钟前', unread: true },
-    { id: 2, title: '数据分析报告已生成', time: '1小时前', unread: true },
-    { id: 3, title: '系统维护通知', time: '2小时前', unread: false },
+    { id: 1, title: 'New KOL Application Review', time: '5 minutes ago', unread: true },
+    { id: 2, title: 'Data Analysis Report Generated', time: '1 hour ago', unread: true },
+    { id: 3, title: 'System Maintenance Notice', time: '2 hours ago', unread: false },
   ];
 
   return (
@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
             type="text"
-            placeholder="搜索内容、KOL..."
+            placeholder="Search content, KOL..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -61,7 +61,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           {showNotifications && (
             <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
               <div className="p-4 border-b border-gray-200">
-                <h3 className="font-semibold text-gray-900">通知</h3>
+                <h3 className="font-semibold text-gray-900">Notifications</h3>
               </div>
               <div className="max-h-96 overflow-y-auto">
                 {notifications.map((notification) => (
@@ -83,7 +83,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
               </div>
               <div className="p-3 text-center border-t border-gray-200">
                 <button className="text-sm text-blue-600 hover:text-blue-700">
-                  查看所有通知
+                  View all notifications
                 </button>
               </div>
             </div>
@@ -99,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
               <User className="w-4 h-4 text-white" />
             </div>
-            <span className="text-sm font-medium text-gray-700">管理员</span>
+            <span className="text-sm font-medium text-gray-700">Admin</span>
             <ChevronDown className="w-4 h-4 text-gray-500" />
           </button>
           
@@ -110,19 +110,19 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                   href="#profile"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
                 >
-                  个人资料
+                  Profile
                 </a>
                 <a
                   href="#settings"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
                 >
-                  设置
+                  Settings
                 </a>
                 <hr className="my-2 border-gray-200" />
                 <button
                   className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md"
                 >
-                  退出登录
+                  Logout
                 </button>
               </div>
             </div>
