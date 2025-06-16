@@ -95,8 +95,22 @@ const KOLOverviewEnhanced: React.FC = () => {
       // Fetch KOL list
       const kolRes = await fetch('/api/kol/total?page=1&pageSize=50');
       const kolResult = await kolRes.json();
-      if (kolResult.success && kolResult.data) {
-        setKolData(kolResult.data);
+      console.log('KOL API Response:', kolResult); // Debug log
+      
+      if (kolResult.success) {
+        // The API returns { success: true, data: [...], pagination: {...} }
+        // Extract the data array from the response
+        let kolArray = [];
+        if (Array.isArray(kolResult.data)) {
+          kolArray = kolResult.data;
+        } else if (kolResult.data && typeof kolResult.data === 'object') {
+          // If data is wrapped in another object
+          if (Array.isArray(kolResult.data.data)) {
+            kolArray = kolResult.data.data;
+          }
+        }
+        console.log('Setting KOL data:', kolArray); // Debug log
+        setKolData(kolArray);
       }
 
       // Generate mock growth data
@@ -131,8 +145,10 @@ const KOLOverviewEnhanced: React.FC = () => {
       // Fetch videos
       const videosRes = await fetch('/api/kol/total/videos?limit=12');
       const videosData = await videosRes.json();
-      if (videosData.success) {
-        setVideos(videosData.data);
+      if (videosData.success && videosData.data) {
+        // Ensure videos data is an array
+        const videosArray = Array.isArray(videosData.data) ? videosData.data : [];
+        setVideos(videosArray);
       }
 
     } catch (error) {
@@ -146,7 +162,9 @@ const KOLOverviewEnhanced: React.FC = () => {
     console.log('Exporting report...');
   };
 
-  const filteredKOLs = (kolData || []).filter(kol => {
+  // Ensure kolData is always an array
+  const kolDataArray = Array.isArray(kolData) ? kolData : [];
+  const filteredKOLs = kolDataArray.filter(kol => {
     if (searchTerm && !kol.kol_account.toLowerCase().includes(searchTerm.toLowerCase())) {
       return false;
     }
