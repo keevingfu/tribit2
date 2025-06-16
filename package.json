@@ -36,6 +36,10 @@
     "sync:quick": "node scripts/auto-sync.js --skip-validation",
     "watch": "node scripts/watch-and-sync.js",
     "sync:status": "node scripts/check-sync-status.js",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel",
+    "deploy:monitor": "node scripts/deployment-monitor.js",
+    "deploy:watch": "node scripts/deployment-monitor.js --watch",
     "prepare": "husky"
   },
   "dependencies": {
