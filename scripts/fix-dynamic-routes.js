@@ -9,7 +9,10 @@ const routesToFix = [
   'app/api/ads/performance/route.ts',
   'app/api/ads/route.ts',
   'app/api/testing/executions/route.ts',
-  'app/api/testing/route.ts'
+  'app/api/testing/route.ts',
+  'app/api/insight/video/tiktok/videos/route.ts',
+  'app/api/insight/video/tiktok/products/route.ts',
+  'app/api/insight/video/tiktok/creators/route.ts'
 ];
 
 const dynamicExport = "export const dynamic = 'force-dynamic';\n\n";
