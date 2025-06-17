@@ -8,12 +8,6 @@
     "TURSO_AUTH_TOKEN": "@turso_auth_token",
     "NEXT_PUBLIC_API_BASE_URL": "@next_public_api_base_url"
   },
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
   "git": {
     "deploymentEnabled": {
       "main": true,
