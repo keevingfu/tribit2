@@ -1,0 +1,20 @@
+# Vercel Turso Configuration Commands
+# After running 'vercel login', execute these commands:
+
+# 1. Link project
+vercel link --yes
+
+# 2. Add TURSO_DATABASE_URL
+echo "libsql://tribit-prod-keevingfu.aws-us-west-2.turso.io" | vercel env add TURSO_DATABASE_URL production
+
+# 3. Add TURSO_AUTH_TOKEN
+echo "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NTAwNTYyNzksImlkIjoiYzY0ODFkYjEtNTlmNC00ZGY0LTg0NTAtNGRhM2I0YWE2MDM3IiwicmlkIjoiNWU3MDJjMzItZmYzOC00ODRjLTkxNTAtMjFjZmY2MGMyYzE2In0.FrMGP7X8apA_GQpJzNKnJrkLWz8gbaz5-u7wx34bebJg6JPio-27P77B81Mw2TN-bI8hBeDOfg2znVuzQVPiAA" | vercel env add TURSO_AUTH_TOKEN production
+
+# 4. List environment variables to confirm
+vercel env ls production
+
+# 5. Deploy to production
+vercel --prod --yes
+
+# 6. After deployment, verify with:
+node scripts/verify-vercel-turso.js
