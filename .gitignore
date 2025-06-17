@@ -55,3 +55,12 @@ __tests__/coverage
 # Temporary files
 tmp/
 temp/
+
+# Token and sensitive files
+*token*.txt
+TURSO_TOKEN_CORRECT.txt
+turso-token.txt
+**/turso-token.txt
+
+# Vercel
+.vercel

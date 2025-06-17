@@ -59,13 +59,23 @@ npm run lint          # Run ESLint with Next.js config
 npm run type-check    # TypeScript type checking
 npm run format        # Format code with Prettier
 
-# Testing
+# Testing - Basic Commands
 npm run test          # Run all tests
 npm run test:watch    # Run tests in watch mode
 npm run test:coverage # Generate coverage report
+npm run test:ci       # CI-optimized test run
+
+# Testing - Specific Test Suites
+npm run test:db       # Run all database service tests
+npm run test:api      # Run all API integration tests
 npm run test:e2e      # Run E2E tests with Playwright
-npm run test:unit     # Run unit tests only
-npm run test:integration # Run integration tests only
+npm run test:e2e:ui   # Run E2E tests with UI mode
+npm run test:e2e:debug # Debug E2E tests
+
+# Testing - Running Single Tests
+npx jest path/to/test.file.test.ts  # Run specific test file
+npx jest --testNamePattern="test name" # Run tests matching pattern
+npx jest --watch path/to/file        # Watch mode for single file
 
 # Synchronization & Deployment
 npm run sync          # Sync code to GitHub with validation
@@ -254,6 +264,24 @@ Useful scripts for database management:
 - React.memo on frequently re-rendered components
 - Batch queries supported in BaseService
 
+## Testing Requirements
+
+### Coverage Targets
+- **Overall Coverage**: 80%+ (currently ~25%)
+- **New Code**: 85%+ coverage required
+- **Critical Modules**:
+  - Database Services: 60%+ 
+  - Redux Slices: 80%+
+  - API Routes: 50%+
+  - Business Logic: 90%+
+
+### Testing Philosophy
+- Follow the Testing Pyramid (Unit > Integration > E2E)
+- Write tests before fixing bugs (TDD approach preferred)
+- Each bug fix should include a regression test
+- Mock external dependencies appropriately
+- Use meaningful test descriptions
+
 ## Authentication
 
 - **Demo Users**:
@@ -424,9 +452,35 @@ If you encounter "localhost refused to connect":
 4. Try incognito/private mode
 5. Run diagnostics: `node scripts/diagnose-connection.js`
 
+## Security Considerations
+
+### Known Vulnerabilities (from Security Audit)
+1. **SQL Injection Risk in BaseService**
+   - Always use parameterized queries with `?` placeholders
+   - Never concatenate user input directly into SQL strings
+   - Use the `QueryValue` type for all query parameters
+
+2. **Authentication Implementation**
+   - Current JWT implementation is for demo only
+   - Production deployment requires proper JWT secret management
+   - Consider implementing refresh tokens
+
+3. **Input Validation**
+   - Always validate user input with Zod schemas
+   - Sanitize data before database operations
+   - Use proper error boundaries
+
+### Security Best Practices
+- Never log sensitive information (passwords, tokens)
+- Use environment variables for all secrets
+- Enable CORS with proper origin restrictions
+- Implement rate limiting for API endpoints
+- Regular dependency updates for security patches
+
 ## Important Notes
 - Always use English in code, Chinese only in user communication
 - Check actual database column names (many use Chinese)
 - ESLint has multiple errors that need fixing
 - Husky hooks need proper configuration
 - Application is production-ready despite minor issues
+- Security audit recommendations should be implemented before production

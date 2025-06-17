@@ -1,0 +1,9 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/sync-check",
+      "schedule": "0 0 * * *"
+    }
+  ],
+  "note": "This is the cron configuration that was removed from vercel.json due to plan limits. To restore, add the 'crons' section back to vercel.json"
+}
