@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:vercel": "next build --no-lint",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
@@ -40,7 +41,7 @@
     "deploy:preview": "npx vercel",
     "deploy:monitor": "node scripts/deployment-monitor.js",
     "deploy:watch": "node scripts/deployment-monitor.js --watch",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

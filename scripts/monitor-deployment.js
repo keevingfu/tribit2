@@ -4,7 +4,7 @@ const https = require('https');
 
 function checkHealth() {
   return new Promise((resolve) => {
-    https.get('https://tribit2.vercel.app/api/health', (res) => {
+    https.get('https://tribit.vercel.app/api/health', (res) => {
       let data = '';
       res.on('data', (chunk) => data += chunk);
       res.on('end', () => {
@@ -46,8 +46,8 @@ async function monitor() {
       if (dbType === 'turso' && tursoConfigured) {
         console.log('✅ Turso is now connected! Deployment successful!');
         console.log('\n🎉 You can now access:');
-        console.log('- KOL Overview: https://tribit2.vercel.app/kol/overview');
-        console.log('- Insights: https://tribit2.vercel.app/insight/search');
+        console.log('- KOL Overview: https://tribit.vercel.app/kol/overview');
+        console.log('- Insights: https://tribit.vercel.app/insight/search');
         clearInterval(interval);
         return;
       }

@@ -1,58 +1,46 @@
-# Development files
-.git
-.gitignore
-node_modules
+# Dependencies
+node_modules/
+
+# Testing
+__tests__/
+test/
+tests/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+jest.config.js
+playwright.config.ts
+
+# Development
 .env.local
 .env.development.local
 .env.test.local
-.env.production.local
 
-# Database files
-*.db
-*.sqlite
-*.sqlite3
-data/
-
-# Test files
-__tests__
-*.test.ts
-*.test.tsx
-jest.config.js
-jest.setup.js
-coverage/
-.jest-cache
+# Git
+.git/
+.gitignore
 
 # Documentation
 docs/
 *.md
 !README.md
 
-# Scripts and configs
+# Scripts (except necessary ones)
 scripts/
-e2e/
-playwright.config.ts
+!scripts/build-utils.js
 
-# OS files
-.DS_Store
-Thumbs.db
-
-# Editor files
-.vscode/
-.idea/
-
-# Build cache
-.next/
-.turbo/
-dist/
-build/
-
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Coverage
+coverage/
+.nyc_output/
 
 # Misc
-.nvmrc
-tsconfig.tsbuildinfo
-/tmp/
+.DS_Store
+*.log
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Husky
+.husky/

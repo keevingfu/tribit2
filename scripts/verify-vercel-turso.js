@@ -27,7 +27,7 @@ async function verifyDeployment() {
 
   // Check health endpoint
   console.log('1️⃣ Checking Health Endpoint...');
-  const healthUrl = 'https://tribit2.vercel.app/api/health';
+  const healthUrl = 'https://tribit.vercel.app/api/health';
   const health = await checkEndpoint(healthUrl);
   
   if (health.error) {
@@ -56,7 +56,7 @@ async function verifyDeployment() {
 
   // Check KOL API
   console.log('\n3️⃣ Checking KOL API...');
-  const kolUrl = 'https://tribit2.vercel.app/api/kol/total?page=1&pageSize=1';
+  const kolUrl = 'https://tribit.vercel.app/api/kol/total?page=1&pageSize=1';
   const kol = await checkEndpoint(kolUrl);
   
   if (kol.data && kol.data.success) {
@@ -68,7 +68,7 @@ async function verifyDeployment() {
 
   // Check statistics
   console.log('\n4️⃣ Checking Statistics API...');
-  const statsUrl = 'https://tribit2.vercel.app/api/kol/total/statistics';
+  const statsUrl = 'https://tribit.vercel.app/api/kol/total/statistics';
   const stats = await checkEndpoint(statsUrl);
   
   if (stats.data && stats.data.success) {
