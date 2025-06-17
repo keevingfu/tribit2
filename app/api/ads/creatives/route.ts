@@ -7,6 +7,8 @@ const querySchema = z.object({
   limit: z.string().optional().transform(val => val ? parseInt(val) : 10),
 });
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

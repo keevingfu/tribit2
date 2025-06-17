@@ -7,6 +7,8 @@ const querySchema = z.object({
   campaignId: z.string().optional().transform(val => val ? parseInt(val) : undefined),
 });
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

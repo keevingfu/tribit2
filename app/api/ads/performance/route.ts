@@ -7,6 +7,8 @@ const querySchema = z.object({
   days: z.string().optional().transform(val => val ? parseInt(val) : 30),
 });
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

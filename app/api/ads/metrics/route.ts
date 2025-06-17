@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { adService } from '@/services/database/AdService';
 
+export const dynamic = 'force-dynamic';
+
 // Validation schema
 const querySchema = z.object({
   startDate: z.string().optional(),
