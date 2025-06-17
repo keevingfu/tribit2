@@ -64,12 +64,12 @@ class KOLTotalService extends BaseService {
       LIMIT ? OFFSET ?
     `;
     
-    const countResult = this.db.queryOne<{ total: number }>(
+    const countResult = await this.db.queryOne<{ total: number }>(
       countSql, 
       queryParams
     );
     
-    const data = this.db.query<KOLTotal>(
+    const data = await this.db.query<KOLTotal>(
       dataSql, 
       [...queryParams, pageSize, offset]
     );
@@ -110,12 +110,12 @@ class KOLTotalService extends BaseService {
       LIMIT ? OFFSET ?
     `;
     
-    const countResult = this.db.queryOne<{ total: number }>(
+    const countResult = await this.db.queryOne<{ total: number }>(
       countSql, 
       queryParams
     );
     
-    const data = this.db.query<KOL2024>(
+    const data = await this.db.query<KOL2024>(
       dataSql, 
       [...queryParams, pageSize, offset]
     );
@@ -156,12 +156,12 @@ class KOLTotalService extends BaseService {
       LIMIT ? OFFSET ?
     `;
     
-    const countResult = this.db.queryOne<{ total: number }>(
+    const countResult = await this.db.queryOne<{ total: number }>(
       countSql, 
       queryParams
     );
     
-    const data = this.db.query<KOLIndia>(
+    const data = await this.db.query<KOLIndia>(
       dataSql, 
       [...queryParams, pageSize, offset]
     );
@@ -206,7 +206,7 @@ class KOLTotalService extends BaseService {
       GROUP BY Platform
     `;
     
-    return this.db.query<{ platform: string; count: number; source: string }>(sql);
+    return await this.db.query<{ platform: string; count: number; source: string }>(sql);
   }
 
   // Get region distribution
@@ -224,7 +224,7 @@ class KOLTotalService extends BaseService {
       ORDER BY count DESC
     `;
     
-    return this.db.query<{ Region: string; count: number }>(sql);
+    return await this.db.query<{ Region: string; count: number }>(sql);
   }
 
   // Get video URLs for preview
@@ -262,7 +262,7 @@ class KOLTotalService extends BaseService {
     
     const params = region ? [region, region, limit] : [limit];
     
-    let results = this.db.query<{ 
+    let results = await this.db.query<{ 
       kol_account: string; 
       url: string; 
       platform: string;
@@ -286,7 +286,7 @@ class KOLTotalService extends BaseService {
         LIMIT ?
       `;
       
-      const results2024 = this.db.query<{ 
+      const results2024 = await this.db.query<{ 
         kol_account: string; 
         url: string; 
         platform: string;
@@ -310,7 +310,7 @@ class KOLTotalService extends BaseService {
         (SELECT COUNT(DISTINCT platform) FROM kol_tribit_2024) as platforms
     `;
     
-    return this.db.queryOne<{
+    return await this.db.queryOne<{
       total_kols: number;
       kols_2024: number;
       india_kols: number;
