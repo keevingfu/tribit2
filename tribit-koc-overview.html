@@ -389,6 +389,101 @@
             align-items: center;
             gap: 4px;
         }
+        
+        /* Insights and Recommendations Styles */
+        .insights-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .insights-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .insights-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .insights-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .insights-content {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .insight-item {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        
+        .insight-bullet {
+            color: #3b82f6;
+            font-size: 1.2rem;
+            line-height: 1.2;
+        }
+        
+        .insight-text {
+            flex: 1;
+            color: #cbd5e1;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .recommendation-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid #3b82f6;
+            padding: 15px 20px;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+        
+        .recommendation-label {
+            color: #3b82f6;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .recommendation-text {
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .executive-summary {
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .summary-title {
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -421,36 +516,188 @@
             </div>
         </div>
         
+        <div class="executive-summary">
+            <h2 class="summary-title">Global KOC Performance Executive Summary</h2>
+            <div class="insights-section" style="margin-top: 0; background: transparent; border: none; padding: 0;">
+                <div class="insights-content">
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Strong global presence with 156 active KOCs across 3 major regions, demonstrating effective international influencer network</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">YouTube dominates with 70% of content, while emerging platforms like TikTok remain underutilized at only 12%</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">US region shows highest engagement rates (5.6%) but Europe leads in content volume, indicating optimization opportunities</span>
+                    </div>
+                </div>
+                <div class="recommendation-box">
+                    <div class="recommendation-label">Strategic Priority</div>
+                    <div class="recommendation-text">Expand TikTok presence by 50% to capture younger demographics, while maintaining YouTube excellence. Focus on replicating US engagement strategies in European and Indian markets.</div>
+                </div>
+            </div>
+        </div>
+        
         <div class="charts-grid">
             <div class="chart-container">
                 <h3>Regional Distribution</h3>
                 <div id="regionChart" class="chart"></div>
+                <div class="insights-section">
+                    <div class="insights-header">
+                        <div class="insights-icon">🌍</div>
+                        <div class="insights-title">Regional Coverage Insights</div>
+                    </div>
+                    <div class="insights-content">
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">Europe leads with 40% of KOC posts, showing strong market penetration but potential oversaturation</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">India represents significant growth opportunity with only 30% share despite large creator economy</span>
+                        </div>
+                    </div>
+                    <div class="recommendation-box">
+                        <div class="recommendation-label">Regional Strategy</div>
+                        <div class="recommendation-text">Increase India region investment by 25% to tap into rapidly growing creator market. Optimize Europe content for quality over quantity.</div>
+                    </div>
+                </div>
             </div>
             <div class="chart-container">
                 <h3>Platform Distribution</h3>
                 <div id="platformChart" class="chart"></div>
+                <div class="insights-section">
+                    <div class="insights-header">
+                        <div class="insights-icon">📱</div>
+                        <div class="insights-title">Platform Strategy Analysis</div>
+                    </div>
+                    <div class="insights-content">
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">YouTube's 70% dominance creates platform risk while TikTok's 12% share misses viral potential</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">Instagram underutilized at 10% despite high engagement rates for tech products</span>
+                        </div>
+                    </div>
+                    <div class="recommendation-box">
+                        <div class="recommendation-label">Platform Diversification</div>
+                        <div class="recommendation-text">Target 50-25-15-10 distribution (YouTube-TikTok-Instagram-Others) to maximize reach while maintaining platform resilience.</div>
+                    </div>
+                </div>
             </div>
         </div>
         
         <div class="chart-container">
             <h3>Regional Platform Preferences</h3>
             <div id="heatmapChart" class="chart"></div>
+            <div class="insights-section">
+                <div class="insights-header">
+                    <div class="insights-icon">🔥</div>
+                    <div class="insights-title">Cross-Regional Platform Insights</div>
+                </div>
+                <div class="insights-content">
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">US shows balanced platform usage with strong TikTok adoption, while Europe and India remain YouTube-centric</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Amazon Live severely underutilized across all regions despite e-commerce integration benefits</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Instagram performs best in India but remains underdeveloped in other markets</span>
+                    </div>
+                </div>
+                <div class="recommendation-box">
+                    <div class="recommendation-label">Regional Platform Optimization</div>
+                    <div class="recommendation-text">Launch region-specific platform strategies: TikTok focus for Europe, Instagram Reels for India, and Amazon Live integration for all markets to drive direct sales.</div>
+                </div>
+            </div>
         </div>
         
         <div class="charts-grid">
             <div class="chart-container">
                 <h3>Top 15 Active KOCs</h3>
                 <div id="topKocsChart" class="chart"></div>
+                <div class="insights-section">
+                    <div class="insights-header">
+                        <div class="insights-icon">🏆</div>
+                        <div class="insights-title">Creator Performance Analysis</div>
+                    </div>
+                    <div class="insights-content">
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">Top 5 KOCs generate 35% of total content, indicating healthy distribution without over-reliance</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">Unbox Therapy leads with premium content but lower frequency, suggesting quality-over-quantity approach</span>
+                        </div>
+                    </div>
+                    <div class="recommendation-box">
+                        <div class="recommendation-label">Creator Development</div>
+                        <div class="recommendation-text">Implement tiered support system: premium partnerships for top 5, growth incentives for emerging creators, and onboarding program for new KOCs.</div>
+                    </div>
+                </div>
             </div>
             <div class="chart-container">
                 <h3>Platform Growth Trend</h3>
                 <div id="trendChart" class="chart"></div>
+                <div class="insights-section">
+                    <div class="insights-header">
+                        <div class="insights-icon">📈</div>
+                        <div class="insights-title">Growth Trajectory Insights</div>
+                    </div>
+                    <div class="insights-content">
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">TikTok shows 150% growth potential based on industry benchmarks vs current 12% share</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">YouTube growth plateauing, suggesting need for format innovation and platform diversification</span>
+                        </div>
+                    </div>
+                    <div class="recommendation-box">
+                        <div class="recommendation-label">Growth Strategy</div>
+                        <div class="recommendation-text">Allocate 40% of new content budget to emerging platforms (TikTok, Instagram Reels) while maintaining YouTube quality standards.</div>
+                    </div>
+                </div>
             </div>
         </div>
         
         <div class="chart-container">
             <h3>Video Performance by Region</h3>
             <div id="videoPerformanceChart" class="chart"></div>
+            <div class="insights-section">
+                <div class="insights-header">
+                    <div class="insights-icon">🎬</div>
+                    <div class="insights-title">Video Performance Insights</div>
+                </div>
+                <div class="insights-content">
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">US content achieves 3.6x higher average views (87.5K) than other regions, indicating superior content strategy or algorithm optimization</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Engagement rates remain consistent across regions (4.7-5.6%), suggesting content quality is uniform but reach varies</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Europe and India show similar performance despite different market sizes, indicating untapped potential</span>
+                    </div>
+                </div>
+                <div class="recommendation-box">
+                    <div class="recommendation-label">Performance Optimization</div>
+                    <div class="recommendation-text">Analyze and replicate US content strategies (timing, hashtags, formats) in other regions. Invest in regional SEO optimization and trending topic integration to boost visibility.</div>
+                </div>
+            </div>
         </div>
         
         <div class="content-section">
@@ -461,6 +708,30 @@
         <div class="content-section">
             <h2 class="section-title">Video Performance Analysis</h2>
             <div class="video-grid" id="videoGrid"></div>
+            <div class="insights-section">
+                <div class="insights-header">
+                    <div class="insights-icon">🔍</div>
+                    <div class="insights-title">Top Content Analysis</div>
+                </div>
+                <div class="insights-content">
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Unbox Therapy's single video (245K views) outperforms next 5 videos combined, demonstrating power of established creators</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Review and comparison videos consistently achieve higher engagement (5-6%) than unboxing content (4-5%)</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Regional creators show strong local performance but limited cross-regional appeal</span>
+                    </div>
+                </div>
+                <div class="recommendation-box">
+                    <div class="recommendation-label">Content Excellence Framework</div>
+                    <div class="recommendation-text">Develop content templates based on high-performers: comparison formats for engagement, unboxing for reach, and long-term reviews for credibility. Partner with 2-3 mega-influencers per region while nurturing micro-influencer network.</div>
+                </div>
+            </div>
         </div>
     </div>
     
