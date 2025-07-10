@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tribit India KOL Performance Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --tribit-primary: #0066cc;
+            --tribit-secondary: #ff6600;
+            --tribit-dark: #333333;
+            --tribit-light: #f8f9fa;
+            --youtube-color: #FF0000;
+            --instagram-color: #E1306C;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: var(--tribit-dark);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--tribit-primary) !important;
+        }
+
+        .dashboard-header {
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            border: none;
+        }
+
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            padding: 1rem 1.25rem;
+        }
+
+        .stats-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 10px;
+            color: white;
+            height: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-card.youtube {
+            background: linear-gradient(135deg, #FF0000, #282828);
+        }
+
+        .stats-card.instagram {
+            background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCAF45);
+        }
+
+        .stats-card .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+
+        .stats-card .stats-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .metrics-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: #f5f5f5;
+            padding: 1rem 0;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .platform-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 0.5rem;
+        }
+
+        .platform-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .platform-badge.youtube {
+            background: linear-gradient(135deg, #FF0000, #282828);
+        }
+
+        .platform-badge.instagram {
+            background: linear-gradient(135deg, #833AB4, #FD1D1D);
+        }
+
+        .kol-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .video-preview-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .video-preview-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .kol-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .kol-item {
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+
+        .kol-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .kol-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .kol-platform {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .tab-content {
+            padding-top: 1.5rem;
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--tribit-dark);
+            font-weight: 500;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--tribit-primary);
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        /* Video Modal Styles */
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 1rem 1.5rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        .btn-outline-primary {
+            color: var(--tribit-primary);
+            border-color: var(--tribit-primary);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--tribit-primary);
+            border-color: var(--tribit-primary);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .stats-card .stats-number {
+                font-size: 1.8rem;
+            }
+
+            .video-thumbnail {
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <span class="text-primary">TRIBIT</span> <span class="text-secondary">India KOL Dashboard</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#overview">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#kol-analysis">KOL Analysis</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#content-library">Content Library</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-header">
+        <div class="container">
+            <h1 class="h3 mb-0">Tribit India KOL Performance Dashboard</h1>
+        </div>
+    </div>
+
+    <!-- 固定在顶部的指标卡 -->
+    <div class="metrics-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="stats-card youtube">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/1024px-YouTube_full-color_icon_%282017%29.svg.png" class="platform-icon" alt="YouTube">
+                        <h5>YouTube</h5>
+                        <div class="stats-number">65</div>
+                        <div class="stats-label">Total Content</div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="stats-card instagram">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/600px-Instagram_icon.png" class="platform-icon" alt="Instagram">
+                        <h5>Instagram</h5>
+                        <div class="stats-number">42</div>
+                        <div class="stats-label">Total Content</div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="stats-card" style="background: linear-gradient(135deg, #4e73df, #224abe);">
+                        <i class="bi bi-collection-play fs-3"></i>
+                        <h5>Total</h5>
+                        <div class="stats-number">107</div>
+                        <div class="stats-label">Content Pieces</div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="stats-card" style="background: linear-gradient(135deg, #1cc88a, #13855c);">
+                        <i class="bi bi-people fs-3"></i>
+                        <h5>Total</h5>
+                        <div class="stats-number">15</div>
+                        <div class="stats-label">Active KOLs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5" id="overview">
+        <!-- 第二排：Top KOL和Content Types图表 -->
+        <div class="row mb-4">
+            <div class="col-lg-6 mb-3">
+                <div class="card" style="height: 10cm;">
+                    <div class="card-header">
+                        Top KOLs by Content Volume
+                    </div>
+                    <div class="card-body">
+                        <canvas id="topKolsChart" style="height: 8cm;"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <div class="card" style="height: 10cm;">
+                    <div class="card-header">
+                        Content Types Distribution
+                    </div>
+                    <div class="card-body">
+                        <canvas id="contentTypeChart" style="height: 8cm;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三排：平台分布趋势图 -->
+        <div class="row mb-4">
+            <div class="col-12 mb-3">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Platform Distribution Over Time</span>
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-outline-secondary active" data-period="all">All Time</button>
+                            <button type="button" class="btn btn-outline-secondary" data-period="q1">Q1 2025</button>
+                            <button type="button" class="btn btn-outline-secondary" data-period="q2">Q2 2025</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="platformTrendChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5" id="kol-analysis">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="kolTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="all-kols-tab" data-bs-toggle="tab" data-bs-target="#all-kols" type="button" role="tab">All KOLs</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="youtube-kols-tab" data-bs-toggle="tab" data-bs-target="#youtube-kols" type="button" role="tab">YouTube KOLs</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="instagram-kols-tab" data-bs-toggle="tab" data-bs-target="#instagram-kols" type="button" role="tab">Instagram KOLs</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="kolTabsContent">
+                    <div class="tab-pane fade show active" id="all-kols" role="tabpanel">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>KOL Name</th>
+                                                <th>Platform</th>
+                                                <th>Content Count</th>
+                                                <th>Latest Content</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="kolTableBody">
+                                            <!-- KOL data will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        KOL Distribution by Content Count
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="kolDistributionChart" height="250"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="youtube-kols" role="tabpanel">
+                        <div class="row" id="youtubeKolCards">
+                            <!-- YouTube KOL cards will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="instagram-kols" role="tabpanel">
+                        <div class="row" id="instagramKolCards">
+                            <!-- Instagram KOL cards will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5" id="content-library">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="contentTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="all-content-tab" data-bs-toggle="tab" data-bs-target="#all-content" type="button" role="tab">All Content</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="youtube-content-tab" data-bs-toggle="tab" data-bs-target="#youtube-content" type="button" role="tab">YouTube Videos</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="instagram-content-tab" data-bs-toggle="tab" data-bs-target="#instagram-content" type="button" role="tab">Instagram Content</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="contentTabsContent">
+                    <div class="tab-pane fade show active" id="all-content" role="tabpanel">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="contentSearch" placeholder="Search content...">
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="platformFilter">
+                                    <option value="all">All Platforms</option>
+                                    <option value="youtube">YouTube</option>
+                                    <option value="instagram">Instagram</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="contentTypeFilter">
+                                    <option value="all">All Content Types</option>
+                                    <option value="video">Regular Videos</option>
+                                    <option value="shorts">Shorts/Reels</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row" id="allContentCards">
+                            <!-- Content cards will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="youtube-content" role="tabpanel">
+                        <div class="row" id="youtubeContentCards">
+                            <!-- YouTube content cards will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="instagram-content" role="tabpanel">
+                        <div class="row" id="instagramContentCards">
+                            <!-- Instagram content cards will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Preview Modal -->
+    <div class="modal fade" id="videoPreviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="videoPreviewModalLabel">Video Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="video-preview-container">
+                        <iframe id="videoPreviewFrame" src="" title="Video Preview" allowfullscreen></iframe>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <span class="platform-badge" id="videoPreviewPlatform">Platform</span>
+                            <span class="ms-2" id="videoPreviewKol">KOL Name</span>
+                        </div>
+                        <a href="#" class="btn btn-sm btn-outline-primary" id="openOriginalLink" target="_blank">
+                            <i class="bi bi-box-arrow-up-right"></i> Open Original
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">© 2025 Tribit. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">India KOL Performance Dashboard</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // KOL Data
+        const kolData = [{
+                id: 1,
+                name: "WhySoTechie",
+                platform: "youtube",
+                contentCount: 7,
+                latestContent: "https://www.youtube.com/watch?v=7kKE9EpSv3A"
+            },
+            {
+                id: 2,
+                name: "Rickyrodger",
+                platform: "youtube",
+                contentCount: 5,
+                latestContent: "https://www.youtube.com/shorts/6uk7eUx6o8I"
+            },
+            {
+                id: 3,
+                name: "SteReo",
+                platform: "youtube",
+                contentCount: 5,
+                latestContent: "https://www.youtube.com/watch?v=wHEMo7_tsy8"
+            },
+            {
+                id: 4,
+                name: "TechnoBhawesh",
+                platform: "instagram",
+                contentCount: 4,
+                latestContent: "https://www.instagram.com/reel/C_zLwgxP2Gp/?igsh=MTR6d2VsZWs2dHBzNQ=="
+            },
+            {
+                id: 5,
+                name: "True Techy",
+                platform: "youtube",
+                contentCount: 4,
+                latestContent: "https://www.youtube.com/watch?v=09zKXmIDMuc"
+            },
+            {
+                id: 6,
+                name: "ask.theashugandhi",
+                platform: "instagram",
+                contentCount: 4,
+                latestContent: "https://www.instagram.com/reel/DBrAB_aIsm3/?igsh=MWV4azU1NGI0bGNlcw=="
+            },
+            {
+                id: 7,
+                name: "Mr Rudee",
+                platform: "youtube",
+                contentCount: 3,
+                latestContent: "https://www.youtube.com/watch?v=TN7Sjhz_XCM"
+            },
+            {
+                id: 8,
+                name: "Halka Tech",
+                platform: "youtube",
+                contentCount: 3,
+                latestContent: "https://www.youtube.com/watch?v=_ZEX3hG1whM"
+            },
+            {
+                id: 9,
+                name: "techbits__",
+                platform: "instagram",
+                contentCount: 3,
+                latestContent: "https://www.instagram.com/reel/C_qBbbNh5Hz/?igsh=MWZxemlvaGNleWJxMw=="
+            },
+            {
+                id: 10,
+                name: "mrcheri",
+                platform: "instagram",
+                contentCount: 3,
+                latestContent: "https://www.instagram.com/reel/C6DPUu6Rfu3/?igsh=MW9nd2k1NzdhczZsNg%3D%3D"
+            },
+            {
+                id: 11,
+                name: "Tech Therapy",
+                platform: "youtube",
+                contentCount: 2,
+                latestContent: "https://www.youtube.com/watch?v=4aoSUNLAENU"
+            },
+            {
+                id: 12,
+                name: "AB Tech Vlog",
+                platform: "youtube",
+                contentCount: 2,
+                latestContent: "https://www.youtube.com/watch?v=orPtHZw-Tow"
+            },
+            {
+                id: 13,
+                name: "TechReflex",
+                platform: "youtube",
+                contentCount: 2,
+                latestContent: "https://www.youtube.com/watch?v=UehOzq6SZos"
+            },
+            {
+                id: 14,
+                name: "Meta Tech Reviews",
+                platform: "youtube",
+                contentCount: 2,
+                latestContent: "https://www.youtube.com/watch?v=qr-vVB6kMMk"
+            },
+            {
+                id: 15,
+                name: "Tech Dreams",
+                platform: "youtube",
+                contentCount: 2,
+                latestContent: "https://www.youtube.com/watch?v=PtivzZoAnFU&t=255s"
+            }
+        ];
+
+        // Content Data (sample of the 107 entries)
+        const contentData = [{
+                id: 1,
+                kol: "Mr LazyTech",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=6uJ1Stn-r6Q&t=1s",
+                title: "Tribit Review"
+            },
+            {
+                id: 2,
+                kol: "AB Tech Vlog",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=VN9IHp8qdiw",
+                title: "Tribit Speaker Test"
+            },
+            {
+                id: 3,
+                kol: "Rickyrodger",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=t6K185yFccQ",
+                title: "Tribit Audio Quality Test"
+            },
+            {
+                id: 4,
+                kol: "Tech Therapy",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=z12_ug0lU5k",
+                title: "Tribit vs Competitors"
+            },
+            {
+                id: 5,
+                kol: "Saurav Anuraj",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=-1xKbtYZX9M",
+                title: "Tribit Unboxing"
+            },
+            {
+                id: 6,
+                kol: "gizmogyn",
+                platform: "instagram",
+                type: "reel",
+                url: "https://www.instagram.com/reel/C2fFAYxvUuD/?igsh=MXd5ZXNheWZkY2JnNA%3D%3D",
+                title: "Tribit Sound Test"
+            },
+            {
+                id: 7,
+                kol: "Mr Rude",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=dhJN1mOtHQs&t=129s",
+                title: "Tribit Speaker Review"
+            },
+            {
+                id: 8,
+                kol: "mrcheri",
+                platform: "instagram",
+                type: "reel",
+                url: "https://www.instagram.com/reel/C3LBWCTxkG4/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+                title: "Tribit Bass Test"
+            },
+            {
+                id: 9,
+                kol: "technobhawesh",
+                platform: "instagram",
+                type: "reel",
+                url: "https://www.instagram.com/reel/C3bnW2Avak8/?igsh=dnU3Z3Bwa2FudDBi",
+                title: "Tribit Sound Quality"
+            },
+            {
+                id: 10,
+                kol: "Techzonical",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=4NKYTkjqDbc",
+                title: "Tribit StormBox Review"
+            },
+            {
+                id: 11,
+                kol: "ETetra Gadgets",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=9T1g1XDhe5A",
+                title: "Tribit Audio Test"
+            },
+            {
+                id: 12,
+                kol: "Techdreams",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=xP4mhnz4R9M&t=31s",
+                title: "Tribit Speaker Comparison"
+            },
+            {
+                id: 13,
+                kol: "TechFreak",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=Gv5mNqnUMJc",
+                title: "Tribit Product Review"
+            },
+            {
+                id: 14,
+                kol: "Tech Bengali",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=0M_LMzWOSis",
+                title: "Tribit Speaker Test"
+            },
+            {
+                id: 15,
+                kol: "Arjun Tech",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=TxsMpZCNPJo",
+                title: "Tribit Audio Quality"
+            },
+            {
+                id: 16,
+                kol: "WhySoTechie",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=okg1xn-FASo",
+                title: "Tribit Speaker Review"
+            },
+            {
+                id: 17,
+                kol: "AR7 TECH",
+                platform: "instagram",
+                type: "reel",
+                url: "https://www.instagram.com/reel/DDQ_OUfSxU2/",
+                title: "Tribit Sound Demo"
+            },
+            {
+                id: 18,
+                kol: "Electrical Unboxing",
+                platform: "youtube",
+                type: "shorts",
+                url: "https://www.youtube.com/shorts/PTWNdz736AY",
+                title: "Tribit Quick Review"
+            },
+            {
+                id: 19,
+                kol: "SteReo",
+                platform: "youtube",
+                type: "shorts",
+                url: "https://www.youtube.com/shorts/1yvDIEteE3A",
+                title: "Tribit Bass Test"
+            },
+            {
+                id: 20,
+                kol: "vivekartiste",
+                platform: "instagram",
+                type: "post",
+                url: "https://www.instagram.com/p/C344KrLxU-l/",
+                title: "Tribit Product Showcase"
+            },
+            {
+                id: 21,
+                kol: "techbits__",
+                platform: "instagram",
+                type: "reel",
+                url: "https://www.instagram.com/reel/C4xpze6rBlC/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+                title: "Tribit Sound Quality"
+            },
+            {
+                id: 22,
+                kol: "techxstreet",
+                platform: "instagram",
+                type: "reel",
+                url: "https://www.instagram.com/reel/C4-qntGvHW2/",
+                title: "Tribit Speaker Demo"
+            },
+            {
+                id: 23,
+                kol: "ask.theashugandhi",
+                platform: "instagram",
+                type: "profile",
+                url: "https://www.instagram.com/ask.theashugandhi/",
+                title: "Tribit Product Reviews"
+            },
+            {
+                id: 24,
+                kol: "Gupta Information Systems in Hindi",
+                platform: "youtube",
+                type: "shorts",
+                url: "https://www.youtube.com/shorts/BuZebi87qeE",
+                title: "Tribit Quick Review"
+            },
+            {
+                id: 25,
+                kol: "Mr Rudee",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=_fZogMcJH6o&t=181s",
+                title: "Tribit Speaker Test"
+            },
+            {
+                id: 26,
+                kol: "WhySoTechie",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=oCHo7zHmP0Y",
+                title: "Tribit Audio Review"
+            },
+            {
+                id: 27,
+                kol: "WhySoTechie",
+                platform: "youtube",
+                type: "shorts",
+                url: "https://www.youtube.com/shorts/jTVVt7SM_OE",
+                title: "Tribit Quick Demo"
+            },
+            {
+                id: 28,
+                kol: "WhySoTechie",
+                platform: "youtube",
+                type: "video",
+                url: "https://www.youtube.com/watch?v=-PjFO2ortDM&t=96s",
+                title: "Tribit StormBox Pro Review"
+            }
+        ];
+
+        // 初始化仪表板
+        $(document).ready(function() {
+            // 渲染KOL表格
+            renderKolTable();
+
+            // 渲染内容卡片
+            renderContentCards();
+
+            // 渲染图表
+            renderCharts();
+
+            // 设置视频预览功能
+            setupVideoPreview();
+
+            // 设置过滤器
+            setupFilters();
+        });
+
+        // 渲染KOL表格
+        function renderKolTable() {
+            const tableBody = $('#kolTableBody');
+            tableBody.empty();
+
+            kolData.forEach(kol => {
+                const platformBadge = `<span class="platform-badge ${kol.platform}">${kol.platform.charAt(0).toUpperCase() + kol.platform.slice(1)}</span>`;
+                const row = `
+                    <tr>
+                        <td>${kol.name}</td>
+                        <td>${platformBadge}</td>
+                        <td>${kol.contentCount}</td>
+                        <td><a href="${kol.latestContent}" target="_blank">View</a></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary preview-btn" data-url="${kol.latestContent}" data-kol="${kol.name}" data-platform="${kol.platform}">
+                                Preview
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.append(row);
+            });
+
+            // 为预览按钮添加点击事件
+            $('.preview-btn').on('click', function() {
+                const url = $(this).data('url');
+                const kol = $(this).data('kol');
+                const platform = $(this).data('platform');
+                showVideoPreview(url, kol, platform);
+            });
+        }
+        // 渲染内容卡片
+        function renderContentCards() {
+            renderPlatformContentCards('all', '#allContentCards');
+            renderPlatformContentCards('youtube', '#youtubeContentCards');
+            renderPlatformContentCards('instagram', '#instagramContentCards');
+        }
+
+        // 渲染特定平台的内容卡片
+        function renderPlatformContentCards(platform, containerId) {
+            const container = $(containerId);
+            container.empty();
+
+            let filteredContent = contentData;
+            if (platform !== 'all') {
+                filteredContent = contentData.filter(item => item.platform === platform);
+            }
+
+            filteredContent.forEach(content => {
+                // 获取视频缩略图
+                let thumbnailUrl = '';
+                if (content.platform === 'youtube') {
+                    // 从YouTube URL提取视频ID
+                    let videoId = '';
+                    if (content.url.includes('watch?v=')) {
+                        videoId = content.url.split('watch?v=')[1].split('&')[0];
+                    } else if (content.url.includes('shorts/')) {
+                        videoId = content.url.split('shorts/')[1].split('?')[0];
+                    }
+                    thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+                } else {
+                    // Instagram没有简单的缩略图API，使用占位图
+                    thumbnailUrl = 'https://via.placeholder.com/320x180?text=Instagram+Content';
+                }
+
+                const platformBadge = `<span class="platform-badge ${content.platform}">${content.platform.charAt(0).toUpperCase() + content.platform.slice(1)}</span>`;
+                const card = `
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="card video-card" data-url="${content.url}" data-kol="${content.kol}" data-platform="${content.platform}">
+                            <img src="${thumbnailUrl}" class="video-thumbnail" alt="${content.title}">
+                            <div class="card-body">
+                                <h6 class="card-title">${content.title}</h6>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">${content.kol}</small>
+                                    ${platformBadge}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.append(card);
+            });
+
+            // 为视频卡片添加点击事件
+            $('.video-card').on('click', function() {
+                const url = $(this).data('url');
+                const kol = $(this).data('kol');
+                const platform = $(this).data('platform');
+                showVideoPreview(url, kol, platform);
+            });
+        }
+
+        // 显示视频预览
+        function showVideoPreview(url, kol, platform) {
+            const modal = $('#videoPreviewModal');
+            const iframe = $('#videoPreviewFrame');
+            const platformBadge = $('#videoPreviewPlatform');
+            const kolName = $('#videoPreviewKol');
+            const originalLink = $('#openOriginalLink');
+
+            // 设置平台徽章
+            platformBadge.attr('class', 'platform-badge ' + platform);
+            platformBadge.text(platform.charAt(0).toUpperCase() + platform.slice(1));
+
+            // 设置KOL名称
+            kolName.text(kol);
+
+            // 设置原始链接
+            originalLink.attr('href', url);
+
+            // 根据平台设置iframe src
+            if (platform === 'youtube') {
+                let videoId = '';
+                if (url.includes('watch?v=')) {
+                    videoId = url.split('watch?v=')[1].split('&')[0];
+                } else if (url.includes('shorts/')) {
+                    videoId = url.split('shorts/')[1].split('?')[0];
+                }
+                iframe.attr('src', `https://www.youtube.com/embed/${videoId}`);
+            } else if (platform === 'instagram') {
+                // Instagram嵌入比较复杂，这里简化处理
+                if (url.includes('/reel/')) {
+                    const postId = url.split('/reel/')[1].split('/')[0].split('?')[0];
+                    iframe.attr('src', `https://www.instagram.com/p/${postId}/embed/`);
+                } else if (url.includes('/p/')) {
+                    const postId = url.split('/p/')[1].split('/')[0].split('?')[0];
+                    iframe.attr('src', `https://www.instagram.com/p/${postId}/embed/`);
+                } else {
+                    iframe.attr('src', '');
+                    iframe.after('<div class="alert alert-info">Instagram profile or unsupported content type</div>');
+                }
+            }
+
+            // 显示模态框
+            modal.modal('show');
+
+            // 当模态框关闭时清空iframe src
+            modal.on('hidden.bs.modal', function() {
+                iframe.attr('src', '');
+            });
+        }
+
+        // 设置过滤器
+        function setupFilters() {
+            // 平台过滤器
+            $('#platformFilter').on('change', function() {
+                filterContent();
+            });
+
+            // 内容类型过滤器
+            $('#contentTypeFilter').on('change', function() {
+                filterContent();
+            });
+
+            // 搜索过滤器
+            $('#contentSearch').on('keyup', function() {
+                filterContent();
+            });
+        }
+
+        // 过滤内容
+        function filterContent() {
+            const platform = $('#platformFilter').val();
+            const contentType = $('#contentTypeFilter').val();
+            const searchTerm = $('#contentSearch').val().toLowerCase();
+
+            const container = $('#allContentCards');
+            container.empty();
+
+            let filteredContent = contentData;
+
+            // 平台过滤
+            if (platform !== 'all') {
+                filteredContent = filteredContent.filter(item => item.platform === platform);
+            }
+
+            // 内容类型过滤
+            if (contentType !== 'all') {
+                filteredContent = filteredContent.filter(item => {
+                    if (contentType === 'video') {
+                        return item.type === 'video';
+                    } else if (contentType === 'shorts') {
+                        return item.type === 'shorts' || item.type === 'reel';
+                    }
+                    return true;
+                });
+            }
+
+            // 搜索过滤
+            if (searchTerm) {
+                filteredContent = filteredContent.filter(item =>
+                    item.title.toLowerCase().includes(searchTerm) ||
+                    item.kol.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // 重新渲染过滤后的内容
+            filteredContent.forEach(content => {
+                // 获取视频缩略图
+                let thumbnailUrl = '';
+                if (content.platform === 'youtube') {
+                    // 从YouTube URL提取视频ID
+                    let videoId = '';
+                    if (content.url.includes('watch?v=')) {
+                        videoId = content.url.split('watch?v=')[1].split('&')[0];
+                    } else if (content.url.includes('shorts/')) {
+                        videoId = content.url.split('shorts/')[1].split('?')[0];
+                    }
+                    thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+                } else {
+                    // Instagram没有简单的缩略图API，使用占位图
+                    thumbnailUrl = 'https://via.placeholder.com/320x180?text=Instagram+Content';
+                }
+
+                const platformBadge = `<span class="platform-badge ${content.platform}">${content.platform.charAt(0).toUpperCase() + content.platform.slice(1)}</span>`;
+                const card = `
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="card video-card" data-url="${content.url}" data-kol="${content.kol}" data-platform="${content.platform}">
+                            <img src="${thumbnailUrl}" class="video-thumbnail" alt="${content.title}">
+                            <div class="card-body">
+                                <h6 class="card-title">${content.title}</h6>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">${content.kol}</small>
+                                    ${platformBadge}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.append(card);
+            });
+
+            // 为视频卡片添加点击事件
+            $('.video-card').on('click', function() {
+                const url = $(this).data('url');
+                const kol = $(this).data('kol');
+                const platform = $(this).data('platform');
+                showVideoPreview(url, kol, platform);
+            });
+        }
+
+        // 渲染图表
+        function renderCharts() {
+            // 内容类型图表 - 极坐标面积图
+            const contentTypeCtx = document.getElementById('contentTypeChart').getContext('2d');
+            const contentTypeChart = new Chart(contentTypeCtx, {
+                type: 'polarArea',
+                data: {
+                    labels: ['Regular Videos', 'Shorts/Reels', 'Posts/Profiles'],
+                    datasets: [{
+                        data: [40, 35, 25],
+                        backgroundColor: [
+                            'rgba(78, 115, 223, 0.8)',
+                            'rgba(28, 200, 138, 0.8)',
+                            'rgba(54, 185, 204, 0.8)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Content Types Distribution',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            ticks: {
+                                display: false
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 平台趋势图表
+            const platformTrendCtx = document.getElementById('platformTrendChart').getContext('2d');
+            const platformTrendChart = new Chart(platformTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                    datasets: [{
+                            label: 'YouTube',
+                            data: [10, 12, 15, 14, 14],
+                            borderColor: '#FF0000',
+                            backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Instagram',
+                            data: [5, 7, 9, 10, 11],
+                            borderColor: '#E1306C',
+                            backgroundColor: 'rgba(225, 48, 108, 0.1)',
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Content Count'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Top KOLs图表 - 饼图
+            const topKolsCtx = document.getElementById('topKolsChart').getContext('2d');
+            const topKolsChart = new Chart(topKolsCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['WhySoTechie', 'Rickyrodger', 'SteReo', 'TechnoBhawesh', 'True Techy'],
+                    datasets: [{
+                        data: [7, 5, 5, 4, 4],
+                        backgroundColor: [
+                            '#4e73df',
+                            '#1cc88a',
+                            '#36b9cc',
+                            '#f6c23e',
+                            '#e74a3b'
+                        ],
+                        borderWidth: 1,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Top KOLs by Content Volume',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    return `${label}: ${value} contents`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // KOL分布图表
+            const kolDistributionCtx = document.getElementById('kolDistributionChart').getContext('2d');
+            const kolDistributionChart = new Chart(kolDistributionCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['1 Content', '2 Contents', '3 Contents', '4+ Contents'],
+                    datasets: [{
+                        data: [65, 20, 10, 5],
+                        backgroundColor: [
+                            '#4e73df',
+                            '#1cc88a',
+                            '#36b9cc',
+                            '#f6c23e'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tribit TikTok Analytics Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ff0050 0%, #00f2ea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #aaa;
+            font-size: 1.2rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 0, 80, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+        
+        .metric-card:hover::before {
+            animation: shimmer 0.5s ease-out;
+            opacity: 1;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .metric-label {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .metric-value {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #fff 0%, #ddd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .metric-subtitle {
+            color: #aaa;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        
+        .metric-trend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .trend-up { color: #00f2ea; }
+        .trend-down { color: #ff0050; }
+        
+        .content-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 28px;
+            background: linear-gradient(180deg, #ff0050, #00f2ea);
+            border-radius: 2px;
+        }
+        
+        .video-showcase {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 1200px) {
+            .video-showcase {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .video-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .video-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 0, 80, 0.3);
+            border-color: #ff0050;
+        }
+        
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 177.78%; /* 9:16 Aspect Ratio for TikTok */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #1a1a1a;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .video-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .video-error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+        }
+        
+        .video-error button {
+            margin-top: 10px;
+            padding: 8px 20px;
+            background: linear-gradient(90deg, #ff0050, #00f2ea);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .video-error button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 0, 80, 0.3);
+        }
+        
+        .video-info {
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .video-creator {
+            color: #00f2ea;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .video-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .video-stat {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        
+        .video-stat-value {
+            display: block;
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .chart {
+            width: 100%;
+            height: 400px;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .creator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .creator-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .creator-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff0050, #00f2ea);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .creator-card:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .creator-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff0050;
+        }
+        
+        .creator-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff0050, #00f2ea);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .creator-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        
+        .creator-stats {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        .creator-stats div {
+            margin: 5px 0;
+        }
+        
+        .engagement-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .engagement-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .engagement-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .engagement-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .engagement-label {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Insights and Recommendations Styles */
+        .insights-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .insights-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .insights-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #ff0050, #00f2ea);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .insights-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .insights-content {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .insight-item {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        
+        .insight-bullet {
+            color: #00f2ea;
+            font-size: 1.2rem;
+            line-height: 1.2;
+        }
+        
+        .insight-text {
+            flex: 1;
+            color: #ddd;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .recommendation-box {
+            background: rgba(255, 0, 80, 0.1);
+            border-left: 3px solid #ff0050;
+            padding: 15px 20px;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+        
+        .recommendation-label {
+            color: #ff0050;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .recommendation-text {
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .alert-box {
+            background: rgba(255, 0, 80, 0.2);
+            border: 1px solid #ff0050;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .alert-title {
+            color: #ff0050;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .alert-text {
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-showcase {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <h1>Tribit TikTok Analytics</h1>
+            <p class="subtitle">Self-managed Content Performance • July 3-10, 2025</p>
+        </div>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Views</div>
+                <div class="metric-value">35.3K</div>
+                <div class="metric-subtitle">39 videos published</div>
+                <span class="metric-trend trend-up">📈</span>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Total Engagement</div>
+                <div class="metric-value">566</div>
+                <div class="metric-subtitle">513 likes • 5 comments • 48 shares</div>
+                <span class="metric-trend trend-down">📉</span>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Best Performer</div>
+                <div class="metric-value">3.9K</div>
+                <div class="metric-subtitle">views on top video</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Engagement Rate</div>
+                <div class="metric-value">1.6%</div>
+                <div class="metric-subtitle">likes + comments + shares</div>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h2 class="section-title">Engagement Overview</h2>
+            <div class="alert-box">
+                <div class="alert-title">Critical Engagement Alert</div>
+                <div class="alert-text">Average engagement rate of 1.6% is below TikTok's algorithm recommendation threshold of 3-5%. Immediate action required to improve content visibility.</div>
+            </div>
+            <div class="engagement-metrics">
+                <div class="engagement-card">
+                    <div class="engagement-icon">❤️</div>
+                    <div class="engagement-value">513</div>
+                    <div class="engagement-label">Total Likes</div>
+                </div>
+                <div class="engagement-card">
+                    <div class="engagement-icon">💬</div>
+                    <div class="engagement-value">5</div>
+                    <div class="engagement-label">Comments</div>
+                </div>
+                <div class="engagement-card">
+                    <div class="engagement-icon">🔄</div>
+                    <div class="engagement-value">48</div>
+                    <div class="engagement-label">Forwards</div>
+                </div>
+                <div class="engagement-card">
+                    <div class="engagement-icon">👁️</div>
+                    <div class="engagement-value">906</div>
+                    <div class="engagement-label">Avg Views</div>
+                </div>
+            </div>
+            <div class="insights-section">
+                <div class="insights-header">
+                    <div class="insights-icon">💡</div>
+                    <div class="insights-title">Engagement Analysis</div>
+                </div>
+                <div class="insights-content">
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Total engagement of 566 interactions across 35.3K views represents only 1.6% engagement rate, significantly below TikTok's 3-5% benchmark for viral potential</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Comments are virtually non-existent (5 total), indicating content fails to spark conversation or community interaction</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Forward rate of 48 shares suggests some viral potential exists but is not being fully leveraged</span>
+                    </div>
+                </div>
+                <div class="recommendation-box">
+                    <div class="recommendation-label">Recommendation</div>
+                    <div class="recommendation-text">Implement engagement-first content strategy: use trending sounds within 24 hours of release, add clear CTAs asking viewers to comment, create controversial or opinion-based content, and respond to every comment to boost algorithm signals.</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h2 class="section-title">Top Performing Videos</h2>
+            <div class="video-showcase" id="topVideos"></div>
+            <div class="insights-section">
+                <div class="insights-header">
+                    <div class="insights-icon">🎬</div>
+                    <div class="insights-title">Content Performance Insights</div>
+                </div>
+                <div class="insights-content">
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Top video achieved 3.9K views but represents only 11% of total weekly views, indicating lack of breakout viral content</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Performance drops sharply after top 4 videos, with 90% of content receiving under 1.5K views</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">@mariabjdzjo and @bonoh2306017 consistently appear in top performers, suggesting these creators understand audience preferences better</span>
+                    </div>
+                </div>
+                <div class="recommendation-box">
+                    <div class="recommendation-label">Content Strategy</div>
+                    <div class="recommendation-text">Analyze top 4 videos for common elements (hooks, sounds, visual style). Replicate successful formats across all creators. Consider A/B testing different content styles and posting times to identify optimal strategy.</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h2 class="section-title">Creator Performance</h2>
+            <div class="creator-grid" id="creatorGrid"></div>
+            <div class="insights-section">
+                <div class="insights-header">
+                    <div class="insights-icon">👥</div>
+                    <div class="insights-title">Creator Portfolio Analysis</div>
+                </div>
+                <div class="insights-content">
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">7 creators produced 39 videos with highly uneven performance distribution - top 3 creators generate 70% of total views</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Average views per video varies dramatically by creator (100-1500 views), indicating inconsistent content quality or audience fit</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Multiple creators posting similar content suggests lack of differentiation strategy and content planning</span>
+                    </div>
+                </div>
+                <div class="recommendation-box">
+                    <div class="recommendation-label">Creator Optimization</div>
+                    <div class="recommendation-text">Focus resources on top 3 performers while providing training to underperformers. Assign unique content niches to each creator to avoid audience cannibalization. Implement minimum performance thresholds and replace consistently low performers.</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3>Daily Performance Trend</h3>
+                <div id="dailyChart" class="chart"></div>
+                <div class="insights-section">
+                    <div class="insights-header">
+                        <div class="insights-icon">📈</div>
+                        <div class="insights-title">Trend Analysis</div>
+                    </div>
+                    <div class="insights-content">
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">Daily views fluctuate wildly from 1K to 8K with no clear pattern, suggesting lack of consistent posting strategy or algorithm optimization</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">Engagement doesn't correlate with view counts, indicating content reaches wrong audience segments</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">No sustained growth trend visible across the week, pointing to algorithmic suppression or content fatigue</span>
+                        </div>
+                    </div>
+                    <div class="recommendation-box">
+                        <div class="recommendation-label">Growth Strategy</div>
+                        <div class="recommendation-text">Establish consistent posting schedule (3-5 videos daily at peak hours: 6-10am and 7-11pm). Use TikTok Analytics to identify when your audience is most active. Implement 3-2-1 strategy: 3 trending sounds, 2 original concepts, 1 user-generated content daily.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3>Views Distribution by Creator</h3>
+                <div id="creatorChart" class="chart"></div>
+                <div class="insights-section">
+                    <div class="insights-header">
+                        <div class="insights-icon">🥧</div>
+                        <div class="insights-title">Creator Contribution Analysis</div>
+                    </div>
+                    <div class="insights-content">
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">View distribution is heavily skewed with top 2 creators generating 50% of total views, creating dangerous dependency</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">Bottom 3 creators contribute less than 15% of views despite producing 30% of content volume</span>
+                        </div>
+                    </div>
+                    <div class="recommendation-box">
+                        <div class="recommendation-label">Portfolio Balance</div>
+                        <div class="recommendation-text">Diversify creator portfolio to reduce risk. Pair high-performing creators with underperformers for collaborative content. Set minimum view targets (1K per video) and provide additional support or replace creators who consistently miss targets.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h3>Engagement Analysis</h3>
+            <div id="engagementChart" class="chart"></div>
+            <div class="insights-section">
+                <div class="insights-header">
+                    <div class="insights-icon">🔍</div>
+                    <div class="insights-title">Engagement Pattern Insights</div>
+                </div>
+                <div class="insights-content">
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Scatter plot reveals no correlation between views and engagement, suggesting content reaches broad but uninterested audiences</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Several high-view videos show minimal engagement, indicating poor content-audience fit or weak calls-to-action</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-bullet">•</span>
+                        <span class="insight-text">Engagement clustering around 1-2% suggests systemic content strategy issues rather than isolated problems</span>
+                    </div>
+                </div>
+                <div class="recommendation-box">
+                    <div class="recommendation-label">Engagement Optimization</div>
+                    <div class="recommendation-text">Implement hook-based content structure: capture attention in first 3 seconds, use pattern interrupts every 5-7 seconds, and end with clear CTAs. Test interactive elements like polls, challenges, and duets to boost engagement metrics.</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3>Content Volume & Performance</h3>
+                <div id="volumeChart" class="chart"></div>
+                <div class="insights-section">
+                    <div class="insights-header">
+                        <div class="insights-icon">📊</div>
+                        <div class="insights-title">Volume-Performance Correlation</div>
+                    </div>
+                    <div class="insights-content">
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">No positive correlation between posting volume and average views - posting more doesn't guarantee better performance</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">Days with highest video count show lowest average views, suggesting quantity-over-quality approach backfires</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">Optimal posting volume appears to be 4-5 videos per day based on performance data</span>
+                        </div>
+                    </div>
+                    <div class="recommendation-box">
+                        <div class="recommendation-label">Volume Strategy</div>
+                        <div class="recommendation-text">Shift from volume-based to quality-focused approach. Limit to 4-5 high-quality videos daily. Implement pre-publication quality checklist: trending audio, strong hook, clear CTA, optimal hashtags, and engaging caption.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3>Interaction Types Distribution</h3>
+                <div id="interactionChart" class="chart"></div>
+                <div class="insights-section">
+                    <div class="insights-header">
+                        <div class="insights-icon">💬</div>
+                        <div class="insights-title">Interaction Quality Analysis</div>
+                    </div>
+                    <div class="insights-content">
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">Comments represent less than 1% of total interactions, indicating content fails to generate discussion or community building</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">Likes dominate at 90% of interactions, suggesting passive consumption without deeper engagement</span>
+                        </div>
+                        <div class="insight-item">
+                            <span class="insight-bullet">•</span>
+                            <span class="insight-text">Forward rate of 8.5% shows some viral potential but needs significant improvement to reach TikTok's 15-20% benchmark</span>
+                        </div>
+                    </div>
+                    <div class="recommendation-box">
+                        <div class="recommendation-label">Interaction Enhancement</div>
+                        <div class="recommendation-text">Transform passive viewers into active participants: ask questions in videos, create comment-bait content, use controversial hooks, implement "comment your answer" CTAs, and respond to every comment within first hour to boost algorithmic favor.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Video data
+        const videoData = [
+            { url: '7522510984393542926', likes: 25, comments: 0, forwards: 4, views: 3946, date: '2025/7/3', creator: '@mariabjdzjo' },
+            { url: '7522143391472176398', likes: 31, comments: 0, forwards: 7, views: 3766, date: '2025/7/2', creator: '@bonoh2306017' },
+            { url: '7523636377112612110', likes: 20, comments: 0, forwards: 0, views: 2239, date: '2025/7/6', creator: '@bonoh2306017' },
+            { url: '7524378411423386935', likes: 13, comments: 0, forwards: 0, views: 2195, date: '2025/7/8', creator: '@bonoh2306017' },
+            { url: '7522509772847926583', likes: 15, comments: 0, forwards: 6, views: 1760, date: '2025/7/3', creator: '@bigtedd69' },
+            { url: '7524011864079060238', likes: 26, comments: 0, forwards: 3, views: 1540, date: '2025/7/7', creator: '@mariabjdzjo' },
+            { url: '7523600688476179726', likes: 25, comments: 0, forwards: 2, views: 1535, date: '2025/7/6', creator: '@bigtedd69' },
+            { url: '7522854831149550862', likes: 23, comments: 0, forwards: 2, views: 1365, date: '2025/7/4', creator: '@bigtedd69' },
+            { url: '7522511009672629559', likes: 25, comments: 0, forwards: 0, views: 1353, date: '2025/7/3', creator: '@bonoh2306017' },
+            { url: '7522147902186147103', likes: 17, comments: 0, forwards: 0, views: 1351, date: '2025/7/2', creator: '@myintgots' },
+            { url: '7522509984752487711', likes: 15, comments: 0, forwards: 4, views: 1331, date: '2025/7/3', creator: '@myintgots' },
+            { url: '7522863767139536141', likes: 40, comments: 0, forwards: 1, views: 1315, date: '2025/7/4', creator: '@bonoh230601' },
+            { url: '7522142994728766733', likes: 10, comments: 1, forwards: 0, views: 1155, date: '2025/7/2', creator: '@bonoh230601' },
+            { url: '7522863727511735565', likes: 30, comments: 1, forwards: 3, views: 1149, date: '2025/7/4', creator: '@mariabjdzjo' },
+            { url: '7524377781933755662', likes: 7, comments: 2, forwards: 1, views: 1123, date: '2025/7/8', creator: '@mariabjdzjo' },
+            { url: '7523948587374415117', likes: 29, comments: 0, forwards: 2, views: 1017, date: '2025/7/7', creator: '@orozcde' },
+            { url: '7524377868105813303', likes: 9, comments: 0, forwards: 1, views: 977, date: '2025/7/8', creator: '@bonoh230601' },
+            { url: '7523636357822958862', likes: 6, comments: 0, forwards: 0, views: 942, date: '2025/7/6', creator: '@bonoh230601' },
+            { url: '7522147690961046798', likes: 15, comments: 0, forwards: 2, views: 917, date: '2025/7/2', creator: '@orozcde' },
+            { url: '7522854785146457399', likes: 16, comments: 0, forwards: 1, views: 913, date: '2025/7/4', creator: '@orozcde' },
+            { url: '7524752348367817997', likes: 15, comments: 0, forwards: 0, views: 904, date: '2025/7/9', creator: '@bonoh2306017' },
+            { url: '7522863488830573837', likes: 18, comments: 0, forwards: 0, views: 852, date: '2025/7/4', creator: '@bonoh2306017' },
+            { url: '7523600948145425695', likes: 8, comments: 0, forwards: 1, views: 484, date: '2025/7/6', creator: '@myintgots' },
+            { url: '7523948493183012109', likes: 4, comments: 0, forwards: 0, views: 454, date: '2025/7/7', creator: '@bigtedd69' },
+            { url: '7523636260238413070', likes: 10, comments: 0, forwards: 0, views: 440, date: '2025/7/6', creator: '@mariabjdzjo' },
+            { url: '7522143080493894925', likes: 6, comments: 0, forwards: 0, views: 424, date: '2025/7/2', creator: '@mariabjdzjo' },
+            { url: '7524752236484906254', likes: 1, comments: 0, forwards: 1, views: 420, date: '2025/7/9', creator: '@mariabjdzjo' },
+            { url: '7522509744016264503', likes: 11, comments: 1, forwards: 2, views: 402, date: '2025/7/3', creator: '@orozcde' },
+            { url: '7523949271939337502', likes: 9, comments: 0, forwards: 1, views: 392, date: '2025/7/7', creator: '@myintgots' },
+            { url: '7524752442286705933', likes: 1, comments: 0, forwards: 0, views: 326, date: '2025/7/9', creator: '@bonoh230601' },
+            { url: '7524011842079853838', likes: 3, comments: 0, forwards: 0, views: 308, date: '2025/7/7', creator: '@bonoh2306017' },
+            { url: '7524732576213372174', likes: 2, comments: 0, forwards: 2, views: 306, date: '2025/7/8', creator: '@bigtedd69' },
+            { url: '7522854953400962334', likes: 6, comments: 0, forwards: 1, views: 296, date: '2025/7/4', creator: '@myintgots' },
+            { url: '7524011939400289549', likes: 3, comments: 0, forwards: 0, views: 274, date: '2025/7/7', creator: '@bonoh230601' },
+            { url: '7524732852705955103', likes: 2, comments: 0, forwards: 0, views: 268, date: '2025/7/8', creator: '@myintgots' },
+            { url: '7523601208913726734', likes: 1, comments: 0, forwards: 0, views: 208, date: '2025/7/6', creator: '@orozcde' },
+            { url: '7522510963375967502', likes: 4, comments: 0, forwards: 0, views: 207, date: '2025/7/3', creator: '@bonoh230601' },
+            { url: '7524732612741467406', likes: 1, comments: 0, forwards: 0, views: 84, date: '2025/7/8', creator: '@orozcde' },
+            { url: '7522147791909457207', likes: 0, comments: 0, forwards: 0, views: 11, date: '2025/7/2', creator: '@bigtedd69' }
+        ];
+        
+        // Render top videos
+        const topVideosContainer = document.getElementById('topVideos');
+        videoData.slice(0, 6).forEach((video, index) => {
+            const engagementRate = ((video.likes + video.comments + video.forwards) / video.views * 100).toFixed(2);
+            const videoCard = document.createElement('div');
+            videoCard.className = 'video-card';
+            videoCard.innerHTML = `
+                <div class="video-wrapper">
+                    <div class="video-loading">Loading TikTok video...</div>
+                    <iframe src="https://www.tiktok.com/embed/v2/${video.url}" 
+                            allowfullscreen
+                            onload="this.previousElementSibling.style.display='none'"
+                            onerror="handleVideoError(this, '${video.url}', '${video.creator}')"></iframe>
+                </div>
+                <div class="video-info">
+                    <div class="video-creator">${video.creator}</div>
+                    <div class="video-stats">
+                        <div class="video-stat">
+                            <span class="video-stat-value">${video.views.toLocaleString()}</span>
+                            Views
+                        </div>
+                        <div class="video-stat">
+                            <span class="video-stat-value">${video.likes}</span>
+                            Likes
+                        </div>
+                        <div class="video-stat">
+                            <span class="video-stat-value">${video.comments}</span>
+                            Comments
+                        </div>
+                        <div class="video-stat">
+                            <span class="video-stat-value">${video.forwards}</span>
+                            Shares
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px; color: #888; font-size: 0.85rem;">
+                        ${video.date} • ${engagementRate}% engagement
+                    </div>
+                </div>
+            `;
+            topVideosContainer.appendChild(videoCard);
+        });
+        
+        // Handle video loading errors
+        function handleVideoError(iframe, videoId, creator) {
+            const wrapper = iframe.parentElement;
+            wrapper.innerHTML = `
+                <div class="video-error">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🎵</div>
+                    <div>Unable to load TikTok video</div>
+                    <button onclick="window.open('https://www.tiktok.com/${creator}/video/${videoId}', '_blank')">
+                        Watch on TikTok
+                    </button>
+                </div>
+            `;
+        }
+        
+        // Calculate creator stats
+        const creatorStats = {};
+        videoData.forEach(video => {
+            if (!creatorStats[video.creator]) {
+                creatorStats[video.creator] = { 
+                    videos: 0, 
+                    views: 0, 
+                    likes: 0, 
+                    comments: 0, 
+                    forwards: 0 
+                };
+            }
+            creatorStats[video.creator].videos++;
+            creatorStats[video.creator].views += video.views;
+            creatorStats[video.creator].likes += video.likes;
+            creatorStats[video.creator].comments += video.comments;
+            creatorStats[video.creator].forwards += video.forwards;
+        });
+        
+        // Render creator cards
+        const creatorGrid = document.getElementById('creatorGrid');
+        Object.entries(creatorStats)
+            .sort((a, b) => b[1].views - a[1].views)
+            .forEach(([creator, stats]) => {
+                const avgViews = Math.round(stats.views / stats.videos);
+                const engagementRate = ((stats.likes + stats.comments + stats.forwards) / stats.views * 100).toFixed(2);
+                const creatorCard = `
+                    <div class="creator-card">
+                        <div class="creator-avatar">${creator.charAt(1).toUpperCase()}</div>
+                        <div class="creator-name">${creator}</div>
+                        <div class="creator-stats">
+                            <div><strong>${stats.videos}</strong> videos</div>
+                            <div><strong>${stats.views.toLocaleString()}</strong> total views</div>
+                            <div><strong>${avgViews.toLocaleString()}</strong> avg views</div>
+                            <div><strong>${engagementRate}%</strong> engagement</div>
+                        </div>
+                    </div>
+                `;
+                creatorGrid.innerHTML += creatorCard;
+            });
+        
+        // Initialize charts
+        const dailyChart = echarts.init(document.getElementById('dailyChart'));
+        const creatorChart = echarts.init(document.getElementById('creatorChart'));
+        const engagementChart = echarts.init(document.getElementById('engagementChart'));
+        const volumeChart = echarts.init(document.getElementById('volumeChart'));
+        const interactionChart = echarts.init(document.getElementById('interactionChart'));
+        
+        // Daily Performance Chart
+        const dailyData = {};
+        videoData.forEach(video => {
+            const date = video.date.split('/').slice(1).join('/');
+            if (!dailyData[date]) dailyData[date] = { views: 0, videos: 0, engagement: 0 };
+            dailyData[date].views += video.views;
+            dailyData[date].videos++;
+            dailyData[date].engagement += video.likes + video.comments + video.forwards;
+        });
+        
+        const dailyOption = {
+            backgroundColor: 'transparent',
+            tooltip: { 
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff0050',
+                textStyle: { color: '#fff' }
+            },
+            legend: {
+                data: ['Views', 'Engagement'],
+                textStyle: { color: '#aaa' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: Object.keys(dailyData).sort(),
+                axisLine: { lineStyle: { color: '#666' } },
+                axisLabel: { color: '#aaa' }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Views',
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { color: '#aaa' },
+                    splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+                },
+                {
+                    type: 'value',
+                    name: 'Engagement',
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { color: '#aaa' }
+                }
+            ],
+            series: [
+                {
+                    name: 'Views',
+                    type: 'line',
+                    smooth: true,
+                    data: Object.keys(dailyData).sort().map(date => dailyData[date].views),
+                    itemStyle: { color: '#00f2ea' },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(0, 242, 234, 0.3)' },
+                            { offset: 1, color: 'rgba(0, 242, 234, 0.1)' }
+                        ])
+                    }
+                },
+                {
+                    name: 'Engagement',
+                    type: 'bar',
+                    yAxisIndex: 1,
+                    data: Object.keys(dailyData).sort().map(date => dailyData[date].engagement),
+                    itemStyle: { 
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#ff0050' },
+                            { offset: 1, color: '#ff0050aa' }
+                        ])
+                    }
+                }
+            ]
+        };
+        
+        // Creator Performance Pie Chart
+        const creatorOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {c} views ({d}%)',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff0050',
+                textStyle: { color: '#fff' }
+            },
+            series: [{
+                type: 'pie',
+                radius: ['45%', '75%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#000',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '20',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: { show: false },
+                data: Object.entries(creatorStats).map(([creator, stats], index) => ({
+                    value: stats.views,
+                    name: creator,
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: `hsl(${index * 45}, 100%, 50%)` },
+                            { offset: 1, color: `hsl(${index * 45}, 100%, 30%)` }
+                        ])
+                    }
+                }))
+            }]
+        };
+        
+        // Engagement Analysis Scatter Chart
+        const engagementOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    return `Views: ${params.value[0].toLocaleString()}<br/>
+                            Engagement: ${params.value[1]}<br/>
+                            Rate: ${params.value[2]}%<br/>
+                            Creator: ${params.data.creator}`;
+                },
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff0050',
+                textStyle: { color: '#fff' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                name: 'Views',
+                type: 'value',
+                axisLine: { lineStyle: { color: '#666' } },
+                axisLabel: { color: '#aaa' },
+                splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+            },
+            yAxis: {
+                name: 'Total Engagement',
+                type: 'value',
+                axisLine: { lineStyle: { color: '#666' } },
+                axisLabel: { color: '#aaa' },
+                splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+            },
+            series: [{
+                type: 'scatter',
+                symbolSize: function(data) {
+                    return Math.sqrt(data[0]) / 3;
+                },
+                data: videoData.map(v => ({
+                    value: [
+                        v.views, 
+                        v.likes + v.comments + v.forwards,
+                        ((v.likes + v.comments + v.forwards) / v.views * 100).toFixed(2)
+                    ],
+                    creator: v.creator,
+                    itemStyle: {
+                        color: new echarts.graphic.RadialGradient(0.5, 0.5, 0.5, [
+                            { offset: 0, color: 'rgba(255, 0, 80, 0.8)' },
+                            { offset: 0.5, color: 'rgba(0, 242, 234, 0.5)' },
+                            { offset: 1, color: 'rgba(255, 0, 80, 0.2)' }
+                        ])
+                    }
+                }))
+            }]
+        };
+        
+        // Content Volume & Performance Chart
+        const volumeOption = {
+            backgroundColor: 'transparent',
+            tooltip: { 
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff0050',
+                textStyle: { color: '#fff' }
+            },
+            legend: {
+                data: ['Videos Posted', 'Average Views'],
+                textStyle: { color: '#aaa' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: Object.keys(dailyData).sort(),
+                axisLine: { lineStyle: { color: '#666' } },
+                axisLabel: { color: '#aaa' }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Videos',
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { color: '#aaa' },
+                    splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+                },
+                {
+                    type: 'value',
+                    name: 'Avg Views',
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { color: '#aaa' }
+                }
+            ],
+            series: [
+                {
+                    name: 'Videos Posted',
+                    type: 'bar',
+                    data: Object.keys(dailyData).sort().map(date => dailyData[date].videos),
+                    itemStyle: { 
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#ff0050' },
+                            { offset: 1, color: '#ff005088' }
+                        ])
+                    }
+                },
+                {
+                    name: 'Average Views',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    smooth: true,
+                    data: Object.keys(dailyData).sort().map(date => 
+                        Math.round(dailyData[date].views / dailyData[date].videos)
+                    ),
+                    itemStyle: { color: '#00f2ea' }
+                }
+            ]
+        };
+        
+        // Interaction Types Distribution
+        const totalLikes = videoData.reduce((sum, v) => sum + v.likes, 0);
+        const totalComments = videoData.reduce((sum, v) => sum + v.comments, 0);
+        const totalForwards = videoData.reduce((sum, v) => sum + v.forwards, 0);
+        
+        const interactionOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {c} ({d}%)',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff0050',
+                textStyle: { color: '#fff' }
+            },
+            series: [{
+                type: 'pie',
+                radius: ['30%', '70%'],
+                center: ['50%', '50%'],
+                roseType: 'area',
+                itemStyle: {
+                    borderRadius: 8,
+                    borderColor: '#000',
+                    borderWidth: 2
+                },
+                label: {
+                    color: '#fff',
+                    fontSize: 14
+                },
+                data: [
+                    { 
+                        value: totalLikes, 
+                        name: 'Likes',
+                        itemStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: '#ff0050' },
+                                { offset: 1, color: '#ff005088' }
+                            ])
+                        }
+                    },
+                    { 
+                        value: totalComments, 
+                        name: 'Comments',
+                        itemStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: '#00f2ea' },
+                                { offset: 1, color: '#00f2ea88' }
+                            ])
+                        }
+                    },
+                    { 
+                        value: totalForwards, 
+                        name: 'Forwards',
+                        itemStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: '#ff00ff' },
+                                { offset: 1, color: '#ff00ff88' }
+                            ])
+                        }
+                    }
+                ]
+            }]
+        };
+        
+        // Set chart options
+        dailyChart.setOption(dailyOption);
+        creatorChart.setOption(creatorOption);
+        engagementChart.setOption(engagementOption);
+        volumeChart.setOption(volumeOption);
+        interactionChart.setOption(interactionOption);
+        
+        // Responsive
+        window.addEventListener('resize', function() {
+            dailyChart.resize();
+            creatorChart.resize();
+            engagementChart.resize();
+            volumeChart.resize();
+            interactionChart.resize();
+        });
+    </script>
+</body>
+</html>

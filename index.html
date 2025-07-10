@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tribit Analytics Portal</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .portal-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 20px 30px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        
+        /* Main Content Container */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 300px;
+            background: rgba(22, 33, 62, 0.6);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+        
+        .nav-section {
+            margin-bottom: 30px;
+        }
+        
+        .nav-section-title {
+            padding: 0 20px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .nav-item {
+            display: block;
+            padding: 12px 20px;
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            padding-left: 25px;
+        }
+        
+        .nav-item.active {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        
+        .nav-item.active::before {
+            transform: translateX(0);
+        }
+        
+        .nav-item-icon {
+            display: inline-block;
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+        }
+        
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+        }
+        
+        .content-frame.active {
+            display: block;
+        }
+        
+        /* Welcome Screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .welcome-screen h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .welcome-screen p {
+            font-size: 1.2rem;
+            color: #888;
+            max-width: 600px;
+            line-height: 1.8;
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 250px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+        
+        /* Scrollbar Styling */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Tribit Analytics Portal</h1>
+        </header>
+        
+        <!-- Main Container -->
+        <div class="main-container">
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar">
+                <!-- Self KOC Weekly Reports -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Self KOC Weekly Reports</div>
+                    <a class="nav-item" data-page="tribit-selfkoc_week_overview.html">
+                        <span class="nav-item-icon">📊</span>
+                        Weekly Overview Dashboard
+                    </a>
+                    <a class="nav-item" data-page="tribit-selfkoc_week_content.html">
+                        <span class="nav-item-icon">🎬</span>
+                        Video Performance Dashboard
+                    </a>
+                    <a class="nav-item" data-page="tribit-selfkoc_week_youtube.html">
+                        <span class="nav-item-icon">▶️</span>
+                        YouTube Performance
+                    </a>
+                    <a class="nav-item" data-page="tribit-selfkoc_week_tiktok.html">
+                        <span class="nav-item-icon">🎵</span>
+                        TikTok Performance
+                    </a>
+                    <a class="nav-item" data-page="tribit-selfkoc_week_instagram.html">
+                        <span class="nav-item-icon">📷</span>
+                        Instagram Performance
+                    </a>
+                </div>
+                
+                <!-- Regional KOL Reports -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Regional KOL Reports</div>
+                    <a class="nav-item" data-page="tribit_kol_india.html">
+                        <span class="nav-item-icon">🇮🇳</span>
+                        India KOL Dashboard
+                    </a>
+                </div>
+            </nav>
+            
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Welcome Screen -->
+                <div class="welcome-screen" id="welcomeScreen">
+                    <h2>Welcome to Tribit Analytics</h2>
+                    <p>Select a dashboard from the navigation menu to view detailed analytics and performance metrics across different social media platforms.</p>
+                </div>
+                
+                <!-- Loading Indicator -->
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                </div>
+                
+                <!-- Content Frames -->
+                <iframe class="content-frame" id="contentFrame"></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Navigation functionality
+        const navItems = document.querySelectorAll('.nav-item');
+        const contentFrame = document.getElementById('contentFrame');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const loading = document.getElementById('loading');
+        
+        // Track current active page
+        let currentPage = null;
+        
+        // Handle navigation item clicks
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = item.getAttribute('data-page');
+                
+                if (page && page !== currentPage) {
+                    loadPage(page, item);
+                }
+            });
+        });
+        
+        // Load page function
+        function loadPage(page, navItem) {
+            // Show loading
+            loading.style.display = 'block';
+            welcomeScreen.style.display = 'none';
+            
+            // Update active navigation
+            navItems.forEach(item => item.classList.remove('active'));
+            navItem.classList.add('active');
+            
+            // Load the page
+            contentFrame.src = page;
+            currentPage = page;
+            
+            // Handle iframe load
+            contentFrame.onload = () => {
+                loading.style.display = 'none';
+                contentFrame.classList.add('active');
+            };
+            
+            // Handle load error
+            contentFrame.onerror = () => {
+                loading.style.display = 'none';
+                alert('Failed to load dashboard. Please try again.');
+            };
+        }
+        
+        // Initialize with welcome screen
+        window.addEventListener('load', () => {
+            contentFrame.classList.remove('active');
+            welcomeScreen.style.display = 'flex';
+        });
+        
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                const activeItem = document.querySelector('.nav-item.active');
+                const allItems = Array.from(navItems);
+                const currentIndex = allItems.indexOf(activeItem);
+                
+                let nextIndex;
+                if (e.key === 'ArrowDown') {
+                    nextIndex = (currentIndex + 1) % allItems.length;
+                } else {
+                    nextIndex = currentIndex - 1 < 0 ? allItems.length - 1 : currentIndex - 1;
+                }
+                
+                if (nextIndex >= 0 && nextIndex < allItems.length) {
+                    allItems[nextIndex].click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
