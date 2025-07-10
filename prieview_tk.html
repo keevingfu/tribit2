@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安克 TikTok 视频表现分析报告</title>
+    <style>
+        :root {
+            --primary-color: #00a4ff;
+            --secondary-color: #0057ff;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --rank-bg: #f1f8ff;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 20px 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .ranking-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .ranking-card {
+            background-color: var(--card-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .ranking-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .ranking-header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--rank-bg);
+        }
+
+        .rank-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-right: 15px;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .format-name {
+            font-size: 18px;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+
+        .views {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .video-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 177.78%; /* 9:16 Aspect Ratio for TikTok */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #f0f0f0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .video-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 20px 0;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .ranking-header {
+                padding: 12px 15px;
+            }
+            
+            .rank-number {
+                font-size: 20px;
+                min-width: 35px;
+                height: 35px;
+            }
+            
+            .format-name {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>安克 TikTok 视频表现分析报告</h1>
+        </header>
+
+        <h2>表现最佳的视频格式排行榜</h2>
+        
+        <div class="ranking-list">
+            <!-- 排名1 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">1</div>
+                    <div class="format-name">产品功能深度演示</div>
+                    <div class="views">625,573 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        创作者详细展示产品特点如可伸缩电缆和多个端口，以动态有吸引力的方式演示快速充电功能。通过全方位展示产品功能，使观众能够深入了解产品的实用性和便捷性。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @moremattkahla</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7475424968621313311" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @suprafinds</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7470708333414993182" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @suprafinds</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7477400993639042335" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名2 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">2</div>
+                    <div class="format-name">通过产品使用解决不便</div>
+                    <div class="views">534,412 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        创作者展示日常生活中的不便问题，并演示如何用产品解决这一困扰。通过场景化展示，使观众能够直观理解产品如何改善生活质量，增强实用性认知。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @rudyfindz</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7473164373234650410" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @vipdealsinsider</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7476906374417452318" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @faizaali6413114</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7473771637863746846" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名3 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">3</div>
+                    <div class="format-name">真实长期使用评测</div>
+                    <div class="views">136,750 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        展示经过6-7个月实际使用的产品，包括磨损和持久性能表现。这种长期使用效果的展示增强了产品质量的可信度，让观众对产品耐用性有直观认识。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @bestdealzonhere</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7471091798891466030" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @bestdealzonhere</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7474436079962328366" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @bestdealzonhere</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7472582805395098926" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名4 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">4</div>
+                    <div class="format-name">设备兼容性快速展示</div>
+                    <div class="views">127,566 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        演示充电器与多种不同设备的兼容性和便捷连接方式。通过展示产品在各类设备上的实际应用，解决潜在购买者对设备兼容性的顾虑。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @ashleyslzr</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7472434964391382314" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @anivoura</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7472447651754167583" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @homegadgets1688</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7473597227626204459" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名6 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">5</div>
+                    <div class="format-name">直接回应客户问题展示</div>
+                    <div class="views">80,412 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        针对特定用户提问，详细解答并展示产品相关功能。这种针对性的回应增强了与观众互动感，提供个性化内容，解决潜在顾虑促进购买决策。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @suprafinds</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7472105631923637534" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @bensbestdeals</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7473249931910810926" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @suprafinds</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7476678481020030238" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名7 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">6</div>
+                    <div class="format-name">时效性购物技巧公告</div>
+                    <div class="views">79,857 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        分享限时特惠信息，强调稀缺性和紧迫感。利用"稀缺性"心理效应促使观众快速采取行动，避免错过优惠，提高转化率。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @dannysdeals01</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7476996982880472363" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @dannysdeals01</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7476992949859945771" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @clem.kirk</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7471701735418154286" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名8 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">7</div>
+                    <div class="format-name">妈妈旅行必备产品评测</div>
+                    <div class="views">77,732 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        以忙碌妈妈视角分享产品如何在旅行中解决充电难题。这种针对特定人群的内容能够精准定位需求，增强内容相关性和情感共鸣。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @mamamadelife</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7473173171869371694" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @mamamadelife</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7478333517022350638" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @mamamadelife</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7480359749553278251" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名9 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">8</div>
+                    <div class="format-name">简明买一送一说明</div>
+                    <div class="views">63,924 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        清晰简洁解释促销活动规则和参与方式。通过消除参与活动的复杂性和不确定性，降低行动门槛提高转化率。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @jeremyallen2.0</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7478345809315056926" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @mcdouble_deez</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7478634025549172011" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @jeremyallen2.0</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7473543285944913183" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名11 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">9</div>
+                    <div class="format-name">针对痛点的产品演示</div>
+                    <div class="views">53,844 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        直接指出常见问题（如手机充电困境），并展示产品如何解决。集中关注单一核心痛点，强化"问题严重性"和"解决方案有效性"。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @imen_offical</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7478441011253955871" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @funk242424</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7477705231594294574" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @satirefox</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7476981586165108011" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名12 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">10</div>
+                    <div class="format-name">兄弟/家人互动产品功能展示</div>
+                    <div class="views">52,446 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        通过自然的家庭成员互动方式展示产品特性和使用体验。利用家庭场景增加真实感和亲和力，使产品融入日常生活情境。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @headmasterpq</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7477401587393006878" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @rudyfindz</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7474681052141849898" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @rudyfindz</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7474340223325834538" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名13 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">11</div>
+                    <div class="format-name">热情客户评价与特别优惠</div>
+                    <div class="views">52,325 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        以高度热情分享个人使用体验，同时强调特别优惠信息。结合情感感染力和实际利益诱因，双管齐下促进购买决策。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @jeremyallen2.0</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7474285173174209838" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @officialcamm</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7474738471228149023" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @dannysdeals01</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7477366368686460203" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名14 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">12</div>
+                    <div class="format-name">幽默轶事配合产品演示</div>
+                    <div class="views">51,257 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        通过讲述与家人竞争最新科技产品的幽默故事引入产品。使用幽默增强内容娱乐性，同时自然融入产品信息增加接受度。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @lovedbylyss</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7479515858876845343" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @rj.mataa</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7472865683068472607" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @goldenretriever_family</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7473596884913753375" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名15 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">13</div>
+                    <div class="format-name">实用功能与实际使用演示</div>
+                    <div class="views">49,988 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        详细展示产品各项功能，并在实际使用环境中演示其表现。强调实用性和便捷性，帮助观众想象产品如何融入自身生活。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @dylanstiktokfinds</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7474322690661174574" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @adams.shopco</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7473921309735488811" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @dylanstiktokfinds</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7474934225308102966" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名16 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">14</div>
+                    <div class="format-name">实体店价格差异对比</div>
+                    <div class="views">41,282 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        对比实体零售店与TikTok商店的价格差异，突出优惠力度。创造"捡到便宜"的心理满足感，激发观众立即购买的冲动。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @monaaa2901</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7472811281448291614" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @rose9905</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7472688815153417503" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @anythinggoesproject</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7475554679884303662" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名17 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">15</div>
+                    <div class="format-name">科技功能展示与数据监控</div>
+                    <div class="views">39,200 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        展示充电器的实时功率显示和温度监控等高级技术特性。满足技术爱好者对数据和控制的需求，增强产品的高端形象。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @mysmoosh</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7472944064338644270" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @tech_voyager</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7478724922823609646" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @chrispa46</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7471446978799357230" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名18 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">16</div>
+                    <div class="format-name">对限时产品促销的惊喜反应</div>
+                    <div class="views">38,273 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        创作者对限时优惠表现出明显惊讶和兴奋，强调稀缺性。情绪感染力强，通过创作者反应强化优惠的独特性和紧迫感。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @clem.kirk</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7471701735418154286" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @clem.kirk</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7472837853345565995" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @makeupbyapalacios</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7475548816440053034" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 排名19 -->
+            <div class="ranking-card">
+                <div class="ranking-header">
+                    <div class="rank-number">17</div>
+                    <div class="format-name">科技功能展示与APP应用</div>
+                    <div class="views">34,194 次观看</div>
+                </div>
+                <div class="card-content">
+                    <div class="description">
+                        演示产品与手机应用的配合使用，突出智能控制功能。展示产品的技术先进性，满足用户对智能化体验的期待。
+                    </div>
+                    <div class="video-grid">
+                        <div class="video-item">
+                            <div class="video-title">案例一: @futvollo</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7478906184498498846" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例二: @peachgrower7</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7478384776257359135" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="video-item">
+                            <div class="video-title">案例三: @bruce.sc</div>
+                            <div class="video-wrapper">
+                                <iframe src="https://www.tiktok.com/embed/v2/7478918816303566122" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>安克 TikTok 视频表现分析报告 © 2025</p>
+        </footer>
+    </div>
+</body>
+</html>
