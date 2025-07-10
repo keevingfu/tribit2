@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "name": "tribit-analytics-dashboard",
+  "builds": [
+    {
+      "src": "**/*.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "public": true
+}
