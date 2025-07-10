@@ -6,9 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **Tribit Social Media Analytics Dashboard** project consisting of standalone HTML files that visualize social media performance metrics for Tribit, likely an audio/electronics brand. The dashboards track Key Opinion Leader (KOL) and self-generated content performance across multiple platforms.
 
+### Project Status
+- **Development Stage**: Production-ready
+- **Last Updated**: July 2025
+- **Git Repository**: https://github.com/keevingfu/tribit3
+- **Deployment**: Ready for Vercel deployment
+
 ## Architecture & Structure
 
-The project contains 7 primary dashboard files:
+The project contains 8 primary dashboard files:
 
 1. **index.html** - Main portal page with navigation menu and iframe-based content loading
 2. **tribit-selfkoc_week_overview.html** - Weekly overview dashboard for self-generated KOC (Key Opinion Consumer) content
@@ -17,10 +23,15 @@ The project contains 7 primary dashboard files:
 5. **tribit-selfkoc_week_tiktok.html** - TikTok-specific performance metrics with native video embeds
 6. **tribit-selfkoc_week_instagram.html** - Instagram-specific performance metrics with official embed integration
 7. **tribit_kol_india.html** - India region KOL (Key Opinion Leader) performance dashboard
+8. **tribit-koc-overview.html** - Global KOC performance dashboard with multi-regional analytics
 
 ### Additional Reference Files
 - **preview_ytb.html** - YouTube video preview implementation reference
 - **prieview_tk.html** - TikTok video preview implementation reference
+
+### Configuration Files
+- **vercel.json** - Vercel deployment configuration
+- **.vercelignore** - Files to exclude from Vercel deployment
 
 ### Technology Stack
 
@@ -35,17 +46,20 @@ The project contains 7 primary dashboard files:
 ### Key Features
 
 - Real-time data visualization with animated charts
-- Platform-specific metrics (YouTube, TikTok, Instagram)
+- Platform-specific metrics (YouTube, TikTok, Instagram, Amazon, Facebook)
 - KPI cards with achievement indicators
 - Responsive grid layouts
 - Dark theme with gradient backgrounds (selfkoc dashboards)
 - Light theme with material design (India KOL dashboard)
+- Blue gradient theme (KOC overview dashboard)
 - **Video Preview Functionality**:
   - YouTube: Modal-based preview with thumbnail lazy loading, 9:16 aspect ratio for Shorts
   - TikTok: Native iframe embeds using TikTok's embed v2 API
   - Instagram: Official blockquote embeds with Instagram's embed.js
+  - KOC Overview: Video grid with 3-column layout and performance metrics
 - **Portal Navigation**: Centralized access through index.html with keyboard shortcuts
 - **Insights & Recommendations**: Each dashboard includes data-driven insights and actionable recommendations in English
+- **Multi-Regional Support**: Global KOC tracking across Europe, US, and India regions
 
 ## Development Notes
 
@@ -115,6 +129,33 @@ Each insight section follows a consistent structure:
 - Highlighted recommendation boxes with specific actions
 - All content in English for international accessibility
 
+### Dashboards with Full Insights Implementation:
+1. **Weekly Overview** - Platform performance and efficiency analysis
+2. **Content Analysis** - Quarterly vs weekly performance gaps
+3. **YouTube Dashboard** - Shorts performance and trend analysis
+4. **TikTok Dashboard** - Engagement and creator portfolio insights
+5. **Instagram Dashboard** - Reel performance and recovery strategies
+6. **KOC Overview** - Global creator network analysis
+
+## Recent Updates (July 2025)
+
+1. **Added tribit-koc-overview.html** - Global KOC performance dashboard with:
+   - Multi-regional analytics (Europe, US, India)
+   - Video performance grid with preview functionality
+   - Comprehensive insights for all analysis sections
+
+2. **Enhanced All Dashboards** with:
+   - Data-driven insights and recommendations
+   - Executive summaries with critical alerts
+   - Platform-specific optimization strategies
+   - Consistent English-only content
+
+3. **Improved Video Preview Features**:
+   - YouTube Shorts vertical format (9:16)
+   - TikTok native embeds with error handling
+   - Instagram official embed integration
+   - Video performance analytics
+
 ## Future Enhancement Opportunities
 
 - Consolidate common styles into shared CSS file
@@ -125,3 +166,6 @@ Each insight section follows a consistent structure:
 - Add export functionality for insights and reports
 - Implement real-time data updates
 - Add user authentication for personalized dashboards
+- Integrate with Tribit's backend analytics system
+- Add multi-language support beyond English
+- Implement A/B testing for content recommendations
