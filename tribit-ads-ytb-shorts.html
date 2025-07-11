@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tribit YouTube Shorts Analytics Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #0f0f0f;
+            color: #e1e1e1;
+            overflow-x: hidden;
+        }
+        
+        .dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff0000, #ff4444, #ff6666);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            color: #9ca3af;
+            font-size: 1.2em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+            border-color: rgba(255, 0, 0, 0.5);
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff0000, transparent);
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .metric-card:hover::before {
+            opacity: 0.3;
+        }
+        
+        .metric-label {
+            color: #9ca3af;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .metric-value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        
+        .metric-trend {
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .trend-up {
+            color: #10b981;
+        }
+        
+        .trend-down {
+            color: #ef4444;
+        }
+        
+        .trend-neutral {
+            color: #f59e0b;
+        }
+        
+        .critical-insight {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 68, 68, 0.05));
+            border: 2px solid rgba(255, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .critical-insight::before {
+            content: '⚠️';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2em;
+            opacity: 0.3;
+        }
+        
+        .critical-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #ff4444;
+        }
+        
+        .critical-text {
+            color: #e1e1e1;
+            line-height: 1.7;
+        }
+        
+        .critical-text strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .charts-container {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .chart-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart {
+            height: 380px;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .chart-insights {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .insights-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #ff4444;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .insights-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .insights-list li {
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+            color: #e1e1e1;
+            line-height: 1.6;
+        }
+        
+        .insights-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #ff4444;
+            font-weight: bold;
+        }
+        
+        .insights-list strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .highlight {
+            color: #ff4444;
+            font-weight: 600;
+        }
+        
+        .video-preview-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            margin-top: 30px;
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .video-card {
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+            border-color: rgba(255, 0, 0, 0.5);
+        }
+        
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(45deg, #2a2a2a, #3a3a3a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .video-thumbnail iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .play-button {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 0, 0, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .play-button:hover {
+            background: #ff0000;
+            transform: scale(1.1);
+        }
+        
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 20px solid #fff;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 5px;
+        }
+        
+        .video-info {
+            padding: 16px;
+        }
+        
+        .video-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fff;
+            font-size: 1.05em;
+        }
+        
+        .video-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9em;
+            color: #9ca3af;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .strategy-section {
+            margin: 40px 0;
+        }
+        
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .strategy-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .strategy-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.2);
+        }
+        
+        .strategy-card.urgent {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+        }
+        
+        .strategy-card.high {
+            border-color: rgba(245, 158, 11, 0.5);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+        }
+        
+        .strategy-card.growth {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+        }
+        
+        .strategy-type {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .strategy-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .strategy-card li {
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+            color: #e1e1e1;
+            line-height: 1.5;
+        }
+        
+        .strategy-card li:before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            font-weight: bold;
+        }
+        
+        .strategy-card.urgent li:before {
+            color: #ef4444;
+        }
+        
+        .strategy-card.high li:before {
+            color: #f59e0b;
+        }
+        
+        .strategy-card.growth li:before {
+            color: #10b981;
+        }
+        
+        .action-plan {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+        
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .action-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .action-period {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 12px;
+        }
+        
+        .action-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .action-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #e1e1e1;
+        }
+        
+        .action-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+        }
+        
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .metric-card {
+                padding: 20px;
+            }
+            
+            .chart {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>Tribit YouTube Shorts Analytics Dashboard</h1>
+            <p class="subtitle">Strategic Performance Analysis & Growth Optimization</p>
+        </div>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Views</div>
+                <div class="metric-value">271K</div>
+                <div class="metric-trend trend-neutral">
+                    <span>📊</span> 30 videos published
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Average Views/Video</div>
+                <div class="metric-value">9,034</div>
+                <div class="metric-trend trend-down">
+                    <span>↓</span> Below viral threshold
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Total Engagement</div>
+                <div class="metric-value">2,574</div>
+                <div class="metric-trend trend-down">
+                    <span>↓</span> 0.95% overall rate
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Avg Engagement Rate</div>
+                <div class="metric-value">1.50%</div>
+                <div class="metric-trend trend-down">
+                    <span>⚠️</span> 50% below target
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">YT Store Threshold</div>
+                <div class="metric-value">160K</div>
+                <div class="metric-trend trend-up">
+                    <span>↑</span> 60% increase in 2 months
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Best Performing</div>
+                <div class="metric-value">6.43%</div>
+                <div class="metric-trend trend-up">
+                    <span>🏆</span> Small audience win
+                </div>
+            </div>
+        </div>
+        
+        <div class="critical-insight">
+            <div class="critical-title">🚨 Critical Performance Alert</div>
+            <div class="critical-text">
+                <strong>The Engagement Crisis:</strong> Your YouTube Shorts are experiencing a severe engagement deficit with only <span class="highlight">1.50% average engagement rate</span> (industry benchmark: 3-5%). More concerning: <strong>small videos (<5K views) achieve 2.6x better engagement (1.87%) than viral videos (0.71%)</strong>.
+                <br><br>
+                <strong>YouTube Store Impact:</strong> The monetization threshold has increased <span class="highlight">60% in just 2 months</span> (100K → 160K views), making it increasingly difficult to qualify. At current performance, you need 18 average videos to meet the threshold.
+                <br><br>
+                <strong>Immediate Action Required:</strong> Pivot from volume-based strategy to engagement-focused content. Quality over quantity is not optional—it's survival.
+            </div>
+        </div>
+        
+        <div class="charts-container">
+            <div class="two-column">
+                <div class="chart-card">
+                    <h3 class="chart-title">📈 Monthly Performance Analysis</h3>
+                    <div id="monthly-performance" class="chart"></div>
+                    <div class="chart-insights">
+                        <h4 class="insights-title">📊 Temporal Performance Insights</h4>
+                        <ul class="insights-list">
+                            <li><strong>March Excellence:</strong> 16.7K average views with balanced 1.43% engagement - your golden formula</li>
+                            <li><strong>June Dilution:</strong> 12 videos generated only 5K avg views - oversaturation detected</li>
+                            <li><strong>July Recovery:</strong> Reduced frequency (5 videos) improved avg views by 91%</li>
+                            <li><strong>Optimal Frequency:</strong> Data suggests 5-6 videos/month maximizes both reach and engagement</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <h3 class="chart-title">🎯 View Size vs Engagement Analysis</h3>
+                    <div id="engagement-analysis" class="chart"></div>
+                    <div class="chart-insights">
+                        <h4 class="insights-title">💡 The Small Video Advantage</h4>
+                        <ul class="insights-list">
+                            <li><strong>Micro-Success:</strong> Videos under 5K views achieve <span class="highlight">1.87% engagement</span></li>
+                            <li><strong>Viral Failure:</strong> Videos over 20K views drop to <span class="highlight">0.71% engagement</span></li>
+                            <li><strong>Sweet Spot:</strong> Target 5-10K highly engaged viewers instead of viral reach</li>
+                            <li><strong>Algorithm Insight:</strong> YouTube rewards niche engagement over broad impressions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">🔍 Individual Video Performance Scatter</h3>
+                <div id="scatter-analysis" class="chart"></div>
+                <div class="chart-insights">
+                    <h4 class="insights-title">🎬 Content Optimization Framework</h4>
+                    <ul class="insights-list">
+                        <li><strong>Engagement Inverse Law:</strong> Clear negative correlation between views and engagement rate</li>
+                        <li><strong>Quality Indicators:</strong> Your best performers (>3% engagement) all have <2K views</li>
+                        <li><strong>Content Strategy:</strong> Create hyper-targeted content for specific audience segments</li>
+                        <li><strong>Testing Protocol:</strong> If engagement <1.5% after 1 week, analyze and iterate</li>
+                        <li><strong>Success Metrics:</strong> Redefine KPIs from views to engagement rate and community growth</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="two-column">
+                <div class="chart-card">
+                    <h3 class="chart-title">📊 YouTube Store Threshold Evolution</h3>
+                    <div id="threshold-chart" class="chart"></div>
+                    <div class="chart-insights">
+                        <h4 class="insights-title">💰 Monetization Challenge Analysis</h4>
+                        <ul class="insights-list">
+                            <li><strong>Rapid Inflation:</strong> 60% threshold increase threatens monetization viability</li>
+                            <li><strong>Current Gap:</strong> Average video achieves only 5.6% of required views</li>
+                            <li><strong>Break-even Analysis:</strong> Need 18 average videos or 3 viral hits to qualify</li>
+                            <li><strong>Strategic Pivot:</strong> Focus on alternative monetization (affiliates, sponsorships)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <h3 class="chart-title">🏆 Top & Bottom Performers</h3>
+                    <div id="top-bottom-chart" class="chart"></div>
+                    <div class="chart-insights">
+                        <h4 class="insights-title">🔑 Success Pattern Recognition</h4>
+                        <ul class="insights-list">
+                            <li><strong>Top Performer:</strong> 249 views with 6.43% engagement - intimacy wins</li>
+                            <li><strong>Common Success Factors:</strong> Likely specific product demos, direct address</li>
+                            <li><strong>Failure Pattern:</strong> Broad appeal content consistently underperforms</li>
+                            <li><strong>Replication Strategy:</strong> Analyze and clone top 5 engagement winners</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="strategy-section">
+            <h3 class="chart-title">🎯 Strategic Recommendations</h3>
+            <div class="strategy-grid">
+                <div class="strategy-card urgent">
+                    <h4 class="strategy-type">🚨 Urgent Actions (This Week)</h4>
+                    <ul>
+                        <li>Pause all content production immediately</li>
+                        <li>Deep-dive analysis of top 5 engagement videos</li>
+                        <li>Identify common elements in <2K view successes</li>
+                        <li>Survey engaged viewers for content preferences</li>
+                    </ul>
+                </div>
+                
+                <div class="strategy-card high">
+                    <h4 class="strategy-type">⚡ High Priority (30 Days)</h4>
+                    <ul>
+                        <li>Develop 3 hyper-niche content pillars</li>
+                        <li>Create intimate, direct-to-viewer format</li>
+                        <li>Test 60-second "mini-podcast" style videos</li>
+                        <li>Implement community tab engagement strategy</li>
+                    </ul>
+                </div>
+                
+                <div class="strategy-card growth">
+                    <h4 class="strategy-type">📈 Growth Opportunities</h4>
+                    <ul>
+                        <li>Launch "Tribit Insider" exclusive content series</li>
+                        <li>Partner with micro-influencers (1-10K followers)</li>
+                        <li>Develop educational "Audio Engineering 101" series</li>
+                        <li>Create user testimonial compilation videos</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="video-preview-section">
+            <h3 class="chart-title">🎥 Performance Case Studies</h3>
+            <div class="video-grid" id="video-grid">
+                <!-- Videos will be dynamically inserted here -->
+            </div>
+        </div>
+        
+        <div class="action-plan">
+            <h3 class="chart-title">🚀 90-Day YouTube Shorts Revival Plan</h3>
+            <div class="action-grid">
+                <div class="action-item">
+                    <h4 class="action-period">Days 1-30: Foundation Reset</h4>
+                    <ul class="action-list">
+                        <li>Complete content audit and pattern analysis</li>
+                        <li>Develop 3 distinct audience personas</li>
+                        <li>Create content templates for each persona</li>
+                        <li>Launch "Less is More" strategy - 1 video/week</li>
+                        <li>Implement rigorous pre-publish quality checks</li>
+                    </ul>
+                </div>
+                
+                <div class="action-item">
+                    <h4 class="action-period">Days 31-60: Engagement Focus</h4>
+                    <ul class="action-list">
+                        <li>Test hyper-targeted content for each persona</li>
+                        <li>Launch community engagement initiatives</li>
+                        <li>Collaborate with 5 nano-influencers</li>
+                        <li>Develop "Behind the Scenes" authentic content</li>
+                        <li>A/B test different video formats and lengths</li>
+                    </ul>
+                </div>
+                
+                <div class="action-item">
+                    <h4 class="action-period">Days 61-90: Scale & Optimize</h4>
+                    <ul class="action-list">
+                        <li>Double down on highest engagement content</li>
+                        <li>Launch YouTube Shorts series format</li>
+                        <li>Implement cross-platform promotion strategy</li>
+                        <li>Develop long-form content from best Shorts</li>
+                        <li>Create sustainable content production system</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.3);">
+                <h4 style="color: #10b981; margin-bottom: 15px;">📊 Expected Outcomes</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2.5em; font-weight: 700; color: #10b981;">3.0%</div>
+                        <div style="color: #9ca3af; margin-top: 5px;">Target Engagement Rate</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2.5em; font-weight: 700; color: #3b82f6;">5-10K</div>
+                        <div style="color: #9ca3af; margin-top: 5px;">Optimal View Range</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2.5em; font-weight: 700; color: #f59e0b;">70%</div>
+                        <div style="color: #9ca3af; margin-top: 5px;">Content Reduction</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2.5em; font-weight: 700; color: #8b5cf6;">200%</div>
+                        <div style="color: #9ca3af; margin-top: 5px;">Engagement Increase</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Campaign data with calculated metrics
+        const campaignData = [
+            { no: 1, date: "2025-03-04", url: "unrwF8D02Zc", views: 9703, likes: 166, comments: 8, engagementRate: 1.79 },
+            { no: 2, date: "2025-03-07", url: "rpwm51_ad4A", views: 52459, likes: 460, comments: 20, engagementRate: 0.92 },
+            { no: 3, date: "2025-03-08", url: "maDHwrtVsqw", views: 10307, likes: 143, comments: 9, engagementRate: 1.48 },
+            { no: 4, date: "2025-03-22", url: "4XbHzokElfo", views: 5821, likes: 50, comments: 3, engagementRate: 0.91 },
+            { no: 5, date: "2025-03-24", url: "FEH1_xCZkX4", views: 5345, likes: 106, comments: 5, engagementRate: 2.08 },
+            { no: 6, date: "2025-04-02", url: "ntafpB69TZg", views: 21313, likes: 214, comments: 5, engagementRate: 1.03 },
+            { no: 7, date: "2025-04-04", url: "Xw9LFxaTL1o", views: 2351, likes: 40, comments: 3, engagementRate: 1.83 },
+            { no: 8, date: "2025-04-06", url: "Cv5I3nFm-c0", views: 1892, likes: 41, comments: 2, engagementRate: 2.27 },
+            { no: 9, date: "2025-04-18", url: "Tt4cvgn6DVo", views: 1162, likes: 20, comments: 3, engagementRate: 1.98 },
+            { no: 10, date: "2025-04-22", url: "gjK_PLmailo", views: 6580, likes: 42, comments: 3, engagementRate: 0.68 },
+            { no: 11, date: "2025-04-26", url: "ciMeCZThKPQ", views: 27010, likes: 114, comments: 2, engagementRate: 0.43 },
+            { no: 12, date: "2025-05-26", url: "XbvZV4-kBrI", views: 5897, likes: 35, comments: 2, engagementRate: 0.63 },
+            { no: 13, date: "2025-05-31", url: "zHOtbD90zv4", views: 13185, likes: 139, comments: 9, engagementRate: 1.12 },
+            { no: 14, date: "2025-06-01", url: "QdFXkzRe0v0", views: 1645, likes: 23, comments: 1, engagementRate: 1.46 },
+            { no: 15, date: "2025-06-04", url: "G-2tSicbNYE", views: 1056, likes: 17, comments: 1, engagementRate: 1.70 },
+            { no: 16, date: "2025-06-07", url: "S0-1U93DE-8", views: 3558, likes: 58, comments: 4, engagementRate: 1.74 },
+            { no: 17, date: "2025-06-10", url: "Qt0nNdWSeKI", views: 2409, likes: 47, comments: 0, engagementRate: 1.95 },
+            { no: 18, date: "2025-06-12", url: "rMsmIPsq-Cw", views: 3606, likes: 55, comments: 6, engagementRate: 1.69 },
+            { no: 19, date: "2025-06-14", url: "qaRHe-TZcMQ", views: 31327, likes: 197, comments: 2, engagementRate: 0.64 },
+            { no: 20, date: "2025-06-15", url: "O9tG7I0klFI", views: 2102, likes: 22, comments: 1, engagementRate: 1.09 },
+            { no: 21, date: "2025-06-20", url: "6w4ezyZ5f5Y", views: 2998, likes: 23, comments: 0, engagementRate: 0.77 },
+            { no: 22, date: "2025-06-21", url: "uHQPbd9oqbg", views: 249, likes: 15, comments: 1, engagementRate: 6.43 },
+            { no: 23, date: "2025-06-23", url: "dhn-2xfevBo", views: 1591, likes: 29, comments: 1, engagementRate: 1.89 },
+            { no: 24, date: "2025-06-25", url: "S38onhBoC0Q", views: 3559, likes: 39, comments: 4, engagementRate: 1.21 },
+            { no: 25, date: "2025-06-30", url: "7zuSM9D5H1s", views: 6027, likes: 58, comments: 0, engagementRate: 0.96 },
+            { no: 26, date: "2025-07-03", url: "jupC8-NUucs", views: 39390, likes: 201, comments: 5, engagementRate: 0.52 },
+            { no: 27, date: "2025-07-05", url: "sHzd36-7a8A", views: 1641, likes: 31, comments: 0, engagementRate: 1.89 },
+            { no: 28, date: "2025-07-06", url: "iT0vF-qOfsk", views: 3040, likes: 35, comments: 3, engagementRate: 1.25 },
+            { no: 29, date: "2025-07-08", url: "hpC2Bifu8q4", views: 2743, likes: 36, comments: 1, engagementRate: 1.35 },
+            { no: 30, date: "2025-07-08", url: "UlTZnrOIlbU", views: 1056, likes: 13, comments: 1, engagementRate: 1.33 }
+        ];
+        
+        // Initialize all charts
+        const monthlyChart = echarts.init(document.getElementById('monthly-performance'));
+        const engagementChart = echarts.init(document.getElementById('engagement-analysis'));
+        const scatterChart = echarts.init(document.getElementById('scatter-analysis'));
+        const thresholdChart = echarts.init(document.getElementById('threshold-chart'));
+        const topBottomChart = echarts.init(document.getElementById('top-bottom-chart'));
+        
+        // Monthly Performance Data
+        const monthlyData = {
+            '2025-03': { views: 83635, videos: 5, avgViews: 16727, avgEngagement: 1.43 },
+            '2025-04': { views: 60308, videos: 6, avgViews: 10051, avgEngagement: 1.37 },
+            '2025-05': { views: 19082, videos: 2, avgViews: 9541, avgEngagement: 0.87 },
+            '2025-06': { views: 60127, videos: 12, avgViews: 5011, avgEngagement: 1.79 },
+            '2025-07': { views: 47870, videos: 5, avgViews: 9574, avgEngagement: 1.27 }
+        };
+        
+        // Monthly Performance Chart
+        const monthlyOption = {
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                borderColor: '#ff4444',
+                textStyle: { color: '#fff' },
+                formatter: params => {
+                    const month = params[0].axisValue;
+                    const data = monthlyData[month];
+                    return `<strong>${month}</strong><br/>
+                            Videos: ${data.videos}<br/>
+                            Total Views: ${data.views.toLocaleString()}<br/>
+                            Avg Views: ${data.avgViews.toLocaleString()}<br/>
+                            Avg Engagement: ${data.avgEngagement}%`;
+                }
+            },
+            legend: {
+                data: ['Total Views', 'Videos Published', 'Avg Engagement (%)'],
+                textStyle: { color: '#9ca3af' },
+                top: 0
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: Object.keys(monthlyData),
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { color: '#9ca3af' }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Views',
+                    axisLine: { lineStyle: { color: '#4b5563' } },
+                    axisLabel: { color: '#9ca3af' },
+                    splitLine: { lineStyle: { color: '#374151', opacity: 0.3 } }
+                },
+                {
+                    type: 'value',
+                    name: 'Videos / Engagement %',
+                    axisLine: { lineStyle: { color: '#4b5563' } },
+                    axisLabel: { color: '#9ca3af' }
+                }
+            ],
+            series: [
+                {
+                    name: 'Total Views',
+                    type: 'bar',
+                    data: Object.values(monthlyData).map(d => d.views),
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#ff4444' },
+                            { offset: 1, color: '#ff0000' }
+                        ])
+                    }
+                },
+                {
+                    name: 'Videos Published',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: Object.values(monthlyData).map(d => d.videos),
+                    itemStyle: { color: '#3b82f6' },
+                    lineStyle: { width: 3 },
+                    symbol: 'circle',
+                    symbolSize: 8
+                },
+                {
+                    name: 'Avg Engagement (%)',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: Object.values(monthlyData).map(d => d.avgEngagement),
+                    itemStyle: { color: '#10b981' },
+                    lineStyle: { width: 3, type: 'dashed' },
+                    symbol: 'diamond',
+                    symbolSize: 8
+                }
+            ]
+        };
+        monthlyChart.setOption(monthlyOption);
+        
+        // View Size vs Engagement Analysis
+        const viewRanges = [
+            { range: '<1K', views: 0, engagement: 0, count: 0 },
+            { range: '1-5K', views: 0, engagement: 0, count: 0 },
+            { range: '5-10K', views: 0, engagement: 0, count: 0 },
+            { range: '10-20K', views: 0, engagement: 0, count: 0 },
+            { range: '20K+', views: 0, engagement: 0, count: 0 }
+        ];
+        
+        campaignData.forEach(video => {
+            let index;
+            if (video.views < 1000) index = 0;
+            else if (video.views < 5000) index = 1;
+            else if (video.views < 10000) index = 2;
+            else if (video.views < 20000) index = 3;
+            else index = 4;
+            
+            viewRanges[index].views += video.views;
+            viewRanges[index].engagement += video.engagementRate;
+            viewRanges[index].count += 1;
+        });
+        
+        viewRanges.forEach(range => {
+            if (range.count > 0) {
+                range.avgEngagement = (range.engagement / range.count).toFixed(2);
+            }
+        });
+        
+        const engagementOption = {
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                borderColor: '#ff4444',
+                textStyle: { color: '#fff' }
+            },
+            xAxis: {
+                type: 'category',
+                data: viewRanges.map(r => r.range),
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { color: '#9ca3af' }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Videos Count',
+                    axisLine: { lineStyle: { color: '#4b5563' } },
+                    axisLabel: { color: '#9ca3af' },
+                    splitLine: { lineStyle: { color: '#374151', opacity: 0.3 } }
+                },
+                {
+                    type: 'value',
+                    name: 'Avg Engagement %',
+                    axisLine: { lineStyle: { color: '#4b5563' } },
+                    axisLabel: { color: '#9ca3af' }
+                }
+            ],
+            series: [
+                {
+                    name: 'Video Count',
+                    type: 'bar',
+                    data: viewRanges.map(r => r.count),
+                    itemStyle: {
+                        color: params => {
+                            const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#dc2626'];
+                            return colors[params.dataIndex];
+                        }
+                    }
+                },
+                {
+                    name: 'Avg Engagement',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: viewRanges.map(r => r.avgEngagement || 0),
+                    itemStyle: { color: '#10b981' },
+                    lineStyle: { width: 3 },
+                    symbol: 'circle',
+                    symbolSize: 10,
+                    label: {
+                        show: true,
+                        formatter: '{c}%',
+                        color: '#fff'
+                    }
+                }
+            ]
+        };
+        engagementChart.setOption(engagementOption);
+        
+        // Scatter Chart - Views vs Engagement
+        const scatterOption = {
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                borderColor: '#ff4444',
+                textStyle: { color: '#fff' },
+                formatter: params => {
+                    const d = params.data;
+                    return `Video: ${d[2]}<br/>Views: ${d[0].toLocaleString()}<br/>Engagement: ${d[1].toFixed(2)}%`;
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value',
+                name: 'Views',
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { color: '#9ca3af' },
+                splitLine: { lineStyle: { color: '#374151', opacity: 0.3 } }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Engagement Rate (%)',
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { color: '#9ca3af' },
+                splitLine: { lineStyle: { color: '#374151', opacity: 0.3 } }
+            },
+            series: [{
+                type: 'scatter',
+                symbolSize: data => Math.sqrt(data[0]) / 3 + 5,
+                data: campaignData.map(c => [c.views, c.engagementRate, c.url]),
+                itemStyle: {
+                    color: params => {
+                        const engagement = params.data[1];
+                        if (engagement > 3) return '#10b981';
+                        if (engagement > 2) return '#3b82f6';
+                        if (engagement > 1.5) return '#f59e0b';
+                        if (engagement > 1) return '#ff8844';
+                        return '#ef4444';
+                    },
+                    opacity: 0.7
+                },
+                emphasis: {
+                    itemStyle: {
+                        opacity: 1,
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                        shadowColor: 'rgba(255, 0, 0, 0.5)'
+                    }
+                }
+            }]
+        };
+        scatterChart.setOption(scatterOption);
+        
+        // YouTube Store Threshold Chart
+        const thresholdData = [
+            { date: '2025-05-26', threshold: 100000 },
+            { date: '2025-05-31', threshold: 120000 },
+            { date: '2025-06-10', threshold: 120000 },
+            { date: '2025-06-15', threshold: 140000 },
+            { date: '2025-06-23', threshold: 140000 },
+            { date: '2025-06-30', threshold: 140000 },
+            { date: '2025-07-08', threshold: 160000 }
+        ];
+        
+        const thresholdOption = {
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                borderColor: '#ff4444',
+                textStyle: { color: '#fff' },
+                formatter: params => {
+                    return `${params[0].axisValue}<br/>Threshold: ${params[0].value.toLocaleString()} views`;
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: thresholdData.map(d => d.date),
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { 
+                    color: '#9ca3af',
+                    rotate: 45
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Required Views',
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { 
+                    color: '#9ca3af',
+                    formatter: value => (value / 1000) + 'K'
+                },
+                splitLine: { lineStyle: { color: '#374151', opacity: 0.3 } }
+            },
+            series: [{
+                type: 'line',
+                data: thresholdData.map(d => d.threshold),
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 8,
+                lineStyle: {
+                    width: 3,
+                    color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                        { offset: 0, color: '#ff0000' },
+                        { offset: 1, color: '#ff6666' }
+                    ])
+                },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(255, 0, 0, 0.3)' },
+                        { offset: 1, color: 'rgba(255, 0, 0, 0.05)' }
+                    ])
+                },
+                markLine: {
+                    data: [{
+                        yAxis: 9034,
+                        label: {
+                            formatter: 'Your Avg: 9K',
+                            position: 'end'
+                        }
+                    }],
+                    lineStyle: {
+                        color: '#10b981',
+                        type: 'dashed'
+                    }
+                }
+            }]
+        };
+        thresholdChart.setOption(thresholdOption);
+        
+        // Top & Bottom Performers
+        const sortedVideos = [...campaignData].sort((a, b) => b.engagementRate - a.engagementRate);
+        const topVideos = sortedVideos.slice(0, 5);
+        const bottomVideos = sortedVideos.slice(-5).reverse();
+        
+        const topBottomOption = {
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                borderColor: '#ff4444',
+                textStyle: { color: '#fff' }
+            },
+            legend: {
+                data: ['Top Performers', 'Bottom Performers'],
+                textStyle: { color: '#9ca3af' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '15%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: [...topVideos, ...bottomVideos].map(v => v.url.substring(0, 6) + '...'),
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { 
+                    color: '#9ca3af',
+                    rotate: 45,
+                    fontSize: 10
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Engagement %',
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { color: '#9ca3af' },
+                splitLine: { lineStyle: { color: '#374151', opacity: 0.3 } }
+            },
+            series: [
+                {
+                    name: 'Top Performers',
+                    type: 'bar',
+                    data: [...topVideos.map(v => v.engagementRate), ...bottomVideos.map(() => 0)],
+                    itemStyle: { color: '#10b981' }
+                },
+                {
+                    name: 'Bottom Performers',
+                    type: 'bar',
+                    data: [...topVideos.map(() => 0), ...bottomVideos.map(v => v.engagementRate)],
+                    itemStyle: { color: '#ef4444' }
+                }
+            ]
+        };
+        topBottomChart.setOption(topBottomOption);
+        
+        // Video Preview Cards
+        const videoSamples = [
+            {
+                id: 'uHQPbd9oqbg',
+                title: 'Best Engagement Champion',
+                views: 249,
+                engagement: 6.43,
+                likes: 15,
+                comments: 1,
+                date: '2025-06-21'
+            },
+            {
+                id: 'rpwm51_ad4A',
+                title: 'Highest Views Leader',
+                views: 52459,
+                engagement: 0.92,
+                likes: 460,
+                comments: 20,
+                date: '2025-03-07'
+            },
+            {
+                id: 'jupC8-NUucs',
+                title: 'Recent Viral Attempt',
+                views: 39390,
+                engagement: 0.52,
+                likes: 201,
+                comments: 5,
+                date: '2025-07-03'
+            },
+            {
+                id: 'Cv5I3nFm-c0',
+                title: 'Small But Mighty',
+                views: 1892,
+                engagement: 2.27,
+                likes: 41,
+                comments: 2,
+                date: '2025-04-06'
+            }
+        ];
+        
+        const videoGrid = document.getElementById('video-grid');
+        videoSamples.forEach(video => {
+            const videoCard = document.createElement('div');
+            videoCard.className = 'video-card';
+            videoCard.innerHTML = `
+                <div class="video-thumbnail">
+                    <div class="play-button">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">${video.title}</div>
+                    <div class="video-stats">
+                        <span class="stat-item">👁 ${video.views.toLocaleString()}</span>
+                        <span class="stat-item">❤️ ${video.likes}</span>
+                        <span class="stat-item">💬 ${video.comments}</span>
+                        <span class="stat-item">📊 ${video.engagement.toFixed(2)}%</span>
+                    </div>
+                    <div style="margin-top: 8px; color: #6b7280; font-size: 0.85em;">
+                        ${video.date}
+                    </div>
+                </div>
+            `;
+            videoCard.addEventListener('click', () => {
+                window.open(`https://youtube.com/shorts/${video.id}`, '_blank');
+            });
+            videoGrid.appendChild(videoCard);
+        });
+        
+        // Responsive chart resizing
+        window.addEventListener('resize', () => {
+            monthlyChart.resize();
+            engagementChart.resize();
+            scatterChart.resize();
+            thresholdChart.resize();
+            topBottomChart.resize();
+        });
+    </script>
+</body>
+</html>

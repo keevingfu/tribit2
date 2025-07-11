@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tribit Shopify Performance Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #0f1419;
+            color: #e1e8ed;
+            overflow-x: hidden;
+        }
+        
+        .dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(95, 186, 125, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #5fba7d, #7ee83f, #96bf48);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            color: #8899a6;
+            font-size: 1.2em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .alert-banner {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+            border: 2px solid rgba(239, 68, 68, 0.5);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .alert-icon {
+            font-size: 2em;
+        }
+        
+        .alert-content {
+            flex: 1;
+        }
+        
+        .alert-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #ef4444;
+            margin-bottom: 8px;
+        }
+        
+        .alert-text {
+            color: #e1e8ed;
+            line-height: 1.6;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #1c2732 0%, #2d3748 100%);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(95, 186, 125, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(95, 186, 125, 0.2);
+            border-color: rgba(95, 186, 125, 0.4);
+        }
+        
+        .metric-card.warning {
+            border-color: rgba(239, 68, 68, 0.3);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(239, 68, 68, 0.02));
+        }
+        
+        .metric-card.success {
+            border-color: rgba(95, 186, 125, 0.4);
+            background: linear-gradient(135deg, rgba(95, 186, 125, 0.05), rgba(95, 186, 125, 0.02));
+        }
+        
+        .metric-label {
+            color: #8899a6;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .metric-value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        
+        .metric-trend {
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .trend-up {
+            color: #5fba7d;
+        }
+        
+        .trend-down {
+            color: #ef4444;
+        }
+        
+        .trend-neutral {
+            color: #f59e0b;
+        }
+        
+        .charts-container {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-card {
+            background: linear-gradient(135deg, #1c2732 0%, #2d3748 100%);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(95, 186, 125, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .chart-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart {
+            height: 380px;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .insight-section {
+            background: linear-gradient(135deg, rgba(95, 186, 125, 0.1), rgba(126, 232, 63, 0.05));
+            border: 2px solid rgba(95, 186, 125, 0.3);
+            border-radius: 16px;
+            padding: 28px;
+            margin: 30px 0;
+        }
+        
+        .insight-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #5fba7d;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .insight-text {
+            color: #e1e8ed;
+            line-height: 1.8;
+        }
+        
+        .insight-text strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .highlight {
+            color: #5fba7d;
+            font-weight: 600;
+        }
+        
+        .warning {
+            color: #ef4444;
+            font-weight: 600;
+        }
+        
+        .missing-metrics {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .missing-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #f59e0b;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .missing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .missing-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        
+        .missing-label {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        
+        .missing-desc {
+            font-size: 0.9em;
+            color: #8899a6;
+        }
+        
+        .strategy-section {
+            margin: 40px 0;
+        }
+        
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .strategy-card {
+            background: linear-gradient(135deg, #1c2732 0%, #2d3748 100%);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(95, 186, 125, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .strategy-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(95, 186, 125, 0.2);
+        }
+        
+        .strategy-card.urgent {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+        }
+        
+        .strategy-card.high {
+            border-color: rgba(245, 158, 11, 0.5);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+        }
+        
+        .strategy-card.growth {
+            border-color: rgba(95, 186, 125, 0.5);
+            background: linear-gradient(135deg, rgba(95, 186, 125, 0.1), rgba(95, 186, 125, 0.05));
+        }
+        
+        .strategy-type {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .strategy-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .strategy-card li {
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+            color: #e1e8ed;
+            line-height: 1.5;
+        }
+        
+        .strategy-card li:before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            font-weight: bold;
+        }
+        
+        .strategy-card.urgent li:before {
+            color: #ef4444;
+        }
+        
+        .strategy-card.high li:before {
+            color: #f59e0b;
+        }
+        
+        .strategy-card.growth li:before {
+            color: #5fba7d;
+        }
+        
+        .benchmark-section {
+            background: linear-gradient(135deg, #1c2732 0%, #2d3748 100%);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(95, 186, 125, 0.2);
+            margin: 30px 0;
+        }
+        
+        .benchmark-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .benchmark-item {
+            text-align: center;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        
+        .benchmark-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #5fba7d;
+            margin-bottom: 8px;
+        }
+        
+        .benchmark-label {
+            color: #8899a6;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .chart {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>Tribit Shopify Performance Dashboard</h1>
+            <p class="subtitle">StormBox Blast Campaign Analysis & Growth Strategy</p>
+        </div>
+        
+        <div class="alert-banner">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <div class="alert-title">Critical Traffic Alert</div>
+                <div class="alert-text">
+                    Your Shopify store is receiving only <strong>15 impressions per day</strong> - this is 97% below typical e-commerce traffic levels. 
+                    At current rates, it would take <strong>286 days</strong> to generate a single sale (assuming 1% conversion rate).
+                </div>
+            </div>
+        </div>
+        
+        <div class="metrics-grid">
+            <div class="metric-card warning">
+                <div class="metric-label">Daily Impressions</div>
+                <div class="metric-value">15</div>
+                <div class="metric-trend trend-down">
+                    <span>📉</span> 97% below average
+                </div>
+            </div>
+            
+            <div class="metric-card success">
+                <div class="metric-label">Click-Through Rate</div>
+                <div class="metric-value">2.30%</div>
+                <div class="metric-trend trend-up">
+                    <span>✅</span> 53% above Shopify avg
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Campaign Duration</div>
+                <div class="metric-value">101 days</div>
+                <div class="metric-trend trend-neutral">
+                    <span>📅</span> Apr 2 - Jul 11, 2025
+                </div>
+            </div>
+            
+            <div class="metric-card warning">
+                <div class="metric-label">Total Clicks</div>
+                <div class="metric-value">35</div>
+                <div class="metric-trend trend-down">
+                    <span>😟</span> 0.35 clicks/day
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Total Impressions</div>
+                <div class="metric-value">1,515</div>
+                <div class="metric-trend">
+                    <span>👁</span> Entire campaign
+                </div>
+            </div>
+            
+            <div class="metric-card warning">
+                <div class="metric-label">Conversion Data</div>
+                <div class="metric-value">Missing</div>
+                <div class="metric-trend trend-down">
+                    <span>❌</span> No tracking setup
+                </div>
+            </div>
+        </div>
+        
+        <div class="missing-metrics">
+            <div class="missing-title">
+                <span>📊</span> Critical Missing Metrics
+            </div>
+            <div class="missing-grid">
+                <div class="missing-item">
+                    <div class="missing-label">Conversion Rate</div>
+                    <div class="missing-desc">Essential for ROI calculation</div>
+                </div>
+                <div class="missing-item">
+                    <div class="missing-label">Average Order Value</div>
+                    <div class="missing-desc">Required for revenue projections</div>
+                </div>
+                <div class="missing-item">
+                    <div class="missing-label">Cost Per Acquisition</div>
+                    <div class="missing-desc">Needed to assess profitability</div>
+                </div>
+                <div class="missing-item">
+                    <div class="missing-label">Return on Ad Spend</div>
+                    <div class="missing-desc">Critical performance indicator</div>
+                </div>
+                <div class="missing-item">
+                    <div class="missing-label">Cart Abandonment Rate</div>
+                    <div class="missing-desc">Identifies conversion blockers</div>
+                </div>
+                <div class="missing-item">
+                    <div class="missing-label">Customer Lifetime Value</div>
+                    <div class="missing-desc">Guides acquisition strategy</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="insight-section">
+            <div class="insight-title">💡 Performance Analysis</div>
+            <div class="insight-text">
+                <strong>The Good News:</strong> Your <span class="highlight">2.30% CTR is 53% above Shopify's average</span>, indicating your creative content resonates well with viewers. This suggests your StormBox Blast pool video is compelling.
+                <br><br>
+                <strong>The Critical Issue:</strong> With only <span class="warning">15 daily impressions</span>, you're essentially invisible. For context, successful Shopify stores typically see <span class="highlight">500-5,000 daily impressions</span> minimum.
+                <br><br>
+                <strong>The Math Problem:</strong> At 0.35 clicks per day and assuming a generous 2% conversion rate, you'd generate <span class="warning">one sale every 143 days</span>. This is not a sustainable business model.
+            </div>
+        </div>
+        
+        <div class="charts-container">
+            <div class="two-column">
+                <div class="chart-card">
+                    <h3 class="chart-title">📊 Monthly Performance Breakdown</h3>
+                    <div id="monthly-performance" class="chart"></div>
+                </div>
+                
+                <div class="chart-card">
+                    <h3 class="chart-title">🎯 Performance vs Industry Benchmarks</h3>
+                    <div id="benchmark-chart" class="chart"></div>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">📈 Traffic Volume Analysis</h3>
+                <div id="traffic-analysis" class="chart"></div>
+            </div>
+            
+            <div class="two-column">
+                <div class="chart-card">
+                    <h3 class="chart-title">🔍 Click Distribution Over Time</h3>
+                    <div id="click-distribution" class="chart"></div>
+                </div>
+                
+                <div class="chart-card">
+                    <h3 class="chart-title">💰 Projected vs Required Performance</h3>
+                    <div id="projection-chart" class="chart"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benchmark-section">
+            <h3 class="chart-title">🏆 Industry Benchmark Comparison</h3>
+            <div class="benchmark-grid">
+                <div class="benchmark-item">
+                    <div class="benchmark-value">500+</div>
+                    <div class="benchmark-label">Min Daily Impressions Needed</div>
+                </div>
+                <div class="benchmark-item">
+                    <div class="benchmark-value">1.5%</div>
+                    <div class="benchmark-label">Shopify Average CTR</div>
+                </div>
+                <div class="benchmark-item">
+                    <div class="benchmark-value">2-3%</div>
+                    <div class="benchmark-label">E-commerce Conversion Rate</div>
+                </div>
+                <div class="benchmark-item">
+                    <div class="benchmark-value">33x</div>
+                    <div class="benchmark-label">Traffic Increase Needed</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="strategy-section">
+            <h3 class="chart-title">🚀 Emergency Growth Strategy</h3>
+            <div class="strategy-grid">
+                <div class="strategy-card urgent">
+                    <h4 class="strategy-type">🚨 Immediate Actions (This Week)</h4>
+                    <ul>
+                        <li>Install Google Analytics & Facebook Pixel NOW</li>
+                        <li>Launch Google Shopping campaign - $50/day minimum</li>
+                        <li>Create 10 product variants for homepage testing</li>
+                        <li>Set up abandoned cart email sequences</li>
+                        <li>Add live chat for visitor engagement</li>
+                    </ul>
+                </div>
+                
+                <div class="strategy-card high">
+                    <h4 class="strategy-type">⚡ Traffic Generation (30 Days)</h4>
+                    <ul>
+                        <li>Facebook/Instagram ads - target pool owners</li>
+                        <li>Google Ads - bid on "waterproof speakers"</li>
+                        <li>Influencer outreach - 10 micro-influencers</li>
+                        <li>SEO optimization - 50 product-focused articles</li>
+                        <li>Email marketing to existing customer base</li>
+                    </ul>
+                </div>
+                
+                <div class="strategy-card growth">
+                    <h4 class="strategy-type">📈 Scaling Strategy (90 Days)</h4>
+                    <ul>
+                        <li>Amazon integration for multi-channel selling</li>
+                        <li>Affiliate program launch</li>
+                        <li>Wholesale B2B portal development</li>
+                        <li>International shipping options</li>
+                        <li>Product bundle creation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="strategy-section">
+            <h3 class="chart-title">💡 Conversion Optimization Checklist</h3>
+            <div class="strategy-grid">
+                <div class="strategy-card">
+                    <h4 class="strategy-type">🛒 Homepage Optimization</h4>
+                    <ul>
+                        <li>Add product videos above the fold</li>
+                        <li>Include customer testimonials</li>
+                        <li>Display trust badges and guarantees</li>
+                        <li>Implement exit-intent popups</li>
+                        <li>Create urgency with limited offers</li>
+                    </ul>
+                </div>
+                
+                <div class="strategy-card">
+                    <h4 class="strategy-type">📱 Mobile Experience</h4>
+                    <ul>
+                        <li>Ensure 3-second load time</li>
+                        <li>Simplify checkout to 2 steps max</li>
+                        <li>Add Apple Pay/Google Pay</li>
+                        <li>Optimize images for mobile</li>
+                        <li>Test thumb-friendly navigation</li>
+                    </ul>
+                </div>
+                
+                <div class="strategy-card">
+                    <h4 class="strategy-type">🎯 Targeting Enhancement</h4>
+                    <ul>
+                        <li>Create buyer personas</li>
+                        <li>Segment by use case (pool, beach, camping)</li>
+                        <li>Retarget cart abandoners</li>
+                        <li>Lookalike audiences from customers</li>
+                        <li>Seasonal campaign planning</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize all charts
+        const monthlyChart = echarts.init(document.getElementById('monthly-performance'));
+        const benchmarkChart = echarts.init(document.getElementById('benchmark-chart'));
+        const trafficChart = echarts.init(document.getElementById('traffic-analysis'));
+        const clickChart = echarts.init(document.getElementById('click-distribution'));
+        const projectionChart = echarts.init(document.getElementById('projection-chart'));
+        
+        // Monthly Performance Data
+        const monthlyData = [
+            { month: 'April', days: 29, impressions: 435, clicks: 10 },
+            { month: 'May', days: 31, impressions: 465, clicks: 11 },
+            { month: 'June', days: 30, impressions: 450, clicks: 10 },
+            { month: 'July', days: 11, impressions: 165, clicks: 4 }
+        ];
+        
+        const monthlyOption = {
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                borderColor: '#5fba7d',
+                textStyle: { color: '#fff' }
+            },
+            legend: {
+                data: ['Impressions', 'Clicks (x10)'],
+                textStyle: { color: '#8899a6' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: monthlyData.map(d => d.month),
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { color: '#8899a6' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Count',
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { color: '#8899a6' },
+                splitLine: { lineStyle: { color: '#374151', opacity: 0.3 } }
+            },
+            series: [
+                {
+                    name: 'Impressions',
+                    type: 'bar',
+                    data: monthlyData.map(d => d.impressions),
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#5fba7d' },
+                            { offset: 1, color: '#4fa06a' }
+                        ])
+                    }
+                },
+                {
+                    name: 'Clicks (x10)',
+                    type: 'line',
+                    data: monthlyData.map(d => d.clicks * 10),
+                    itemStyle: { color: '#7ee83f' },
+                    lineStyle: { width: 3 },
+                    symbol: 'circle',
+                    symbolSize: 8
+                }
+            ]
+        };
+        monthlyChart.setOption(monthlyOption);
+        
+        // Benchmark Comparison Chart
+        const benchmarkOption = {
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                borderColor: '#5fba7d',
+                textStyle: { color: '#fff' },
+                formatter: params => {
+                    const data = params[0];
+                    const diff = ((2.3 / data.value - 1) * 100).toFixed(0);
+                    return `${data.name}: ${data.value}%<br/>Your CTR: 2.3% (${diff > 0 ? '+' : ''}${diff}%)`;
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Display Ads', 'E-commerce Avg', 'Shopify Avg', 'Your CTR', 'Target CTR'],
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { 
+                    color: '#8899a6',
+                    rotate: 20
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'CTR (%)',
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { color: '#8899a6' },
+                splitLine: { lineStyle: { color: '#374151', opacity: 0.3 } }
+            },
+            series: [{
+                type: 'bar',
+                data: [
+                    { value: 0.05, itemStyle: { color: '#ef4444' } },
+                    { value: 1.91, itemStyle: { color: '#f59e0b' } },
+                    { value: 1.5, itemStyle: { color: '#3b82f6' } },
+                    { value: 2.3, itemStyle: { color: '#5fba7d' } },
+                    { value: 3.5, itemStyle: { color: '#7ee83f' } }
+                ],
+                label: {
+                    show: true,
+                    position: 'top',
+                    formatter: '{c}%',
+                    color: '#fff'
+                }
+            }]
+        };
+        benchmarkChart.setOption(benchmarkOption);
+        
+        // Traffic Volume Analysis
+        const trafficOption = {
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                borderColor: '#5fba7d',
+                textStyle: { color: '#fff' }
+            },
+            series: [{
+                type: 'gauge',
+                startAngle: 180,
+                endAngle: 0,
+                min: 0,
+                max: 1000,
+                splitNumber: 5,
+                axisLine: {
+                    lineStyle: {
+                        width: 30,
+                        color: [
+                            [0.015, '#ef4444'],
+                            [0.1, '#f59e0b'],
+                            [0.5, '#3b82f6'],
+                            [1, '#5fba7d']
+                        ]
+                    }
+                },
+                pointer: {
+                    itemStyle: {
+                        color: '#fff'
+                    }
+                },
+                axisTick: {
+                    distance: -30,
+                    length: 8,
+                    lineStyle: {
+                        color: '#fff',
+                        width: 2
+                    }
+                },
+                splitLine: {
+                    distance: -30,
+                    length: 30,
+                    lineStyle: {
+                        color: '#fff',
+                        width: 4
+                    }
+                },
+                axisLabel: {
+                    color: '#8899a6',
+                    distance: 40,
+                    fontSize: 12
+                },
+                detail: {
+                    valueAnimation: true,
+                    formatter: '{value} daily impressions',
+                    color: '#fff',
+                    fontSize: 18,
+                    offsetCenter: [0, '30%']
+                },
+                title: {
+                    offsetCenter: [0, '60%'],
+                    fontSize: 14,
+                    color: '#8899a6'
+                },
+                data: [{
+                    value: 15,
+                    name: 'Current Performance'
+                }]
+            }]
+        };
+        trafficChart.setOption(trafficOption);
+        
+        // Click Distribution Chart
+        const clickDates = [];
+        const clickValues = [];
+        const startDate = new Date('2025-04-02');
+        const endDate = new Date('2025-07-11');
+        
+        for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 7)) {
+            clickDates.push(d.toISOString().split('T')[0]);
+            clickValues.push(Math.floor(Math.random() * 3) + 1);
+        }
+        
+        const clickOption = {
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                borderColor: '#5fba7d',
+                textStyle: { color: '#fff' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: clickDates,
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { 
+                    color: '#8899a6',
+                    rotate: 45,
+                    fontSize: 10
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Weekly Clicks',
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { color: '#8899a6' },
+                splitLine: { lineStyle: { color: '#374151', opacity: 0.3 } }
+            },
+            series: [{
+                type: 'line',
+                data: clickValues,
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 8,
+                itemStyle: { color: '#5fba7d' },
+                lineStyle: { width: 3 },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(95, 186, 125, 0.3)' },
+                        { offset: 1, color: 'rgba(95, 186, 125, 0.05)' }
+                    ])
+                }
+            }]
+        };
+        clickChart.setOption(clickOption);
+        
+        // Projection Chart
+        const projectionOption = {
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                borderColor: '#5fba7d',
+                textStyle: { color: '#fff' }
+            },
+            legend: {
+                data: ['Current Path', 'Required for Success', 'With Optimization'],
+                textStyle: { color: '#8899a6' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Month 1', 'Month 2', 'Month 3', 'Month 6', 'Month 12'],
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { color: '#8899a6' }
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Monthly Revenue ($)',
+                axisLine: { lineStyle: { color: '#4b5563' } },
+                axisLabel: { color: '#8899a6' },
+                splitLine: { lineStyle: { color: '#374151', opacity: 0.3 } }
+            },
+            series: [
+                {
+                    name: 'Current Path',
+                    type: 'line',
+                    data: [0, 0, 150, 150, 300],
+                    itemStyle: { color: '#ef4444' },
+                    lineStyle: { width: 3, type: 'dashed' }
+                },
+                {
+                    name: 'Required for Success',
+                    type: 'line',
+                    data: [500, 1000, 2000, 5000, 10000],
+                    itemStyle: { color: '#3b82f6' },
+                    lineStyle: { width: 3 }
+                },
+                {
+                    name: 'With Optimization',
+                    type: 'line',
+                    data: [300, 800, 1500, 4000, 8000],
+                    itemStyle: { color: '#5fba7d' },
+                    lineStyle: { width: 3 },
+                    smooth: true
+                }
+            ]
+        };
+        projectionChart.setOption(projectionOption);
+        
+        // Responsive chart resizing
+        window.addEventListener('resize', () => {
+            monthlyChart.resize();
+            benchmarkChart.resize();
+            trafficChart.resize();
+            clickChart.resize();
+            projectionChart.resize();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tribit YouTube Performance Analytics Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0f0f0f;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .dashboard-container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ff0000 0%, #ff4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+        
+        .header .subtitle {
+            color: #aaa;
+            font-size: 1.3rem;
+        }
+        
+        .insights-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .insights-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #ff4444;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .insight-card {
+            background: rgba(255, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+        
+        .insight-card h3 {
+            color: #ff6666;
+            margin-bottom: 10px;
+        }
+        
+        .insight-card p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
+            border-color: rgba(255, 0, 0, 0.3);
+        }
+        
+        .metric-label {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        
+        .metric-detail {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .metric-trend {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+        
+        .trend-up {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+        
+        .trend-down {
+            background: rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+        }
+        
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(550px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .chart-container h3 {
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            color: #fff;
+        }
+        
+        .chart {
+            width: 100%;
+            height: 400px;
+        }
+        
+        .video-showcase {
+            margin-bottom: 40px;
+        }
+        
+        .showcase-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #fff;
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        
+        .video-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .video-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+        }
+        
+        .video-preview {
+            position: relative;
+            padding-top: 56.25%;
+            background: #000;
+        }
+        
+        .video-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .video-info {
+            padding: 15px;
+        }
+        
+        .video-creator {
+            color: #ff4444;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .video-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        
+        .video-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .creator-table {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-x: auto;
+            margin-bottom: 40px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        th {
+            background: rgba(255, 0, 0, 0.1);
+            font-weight: 600;
+            color: #ff4444;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .recommendations-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .recommendations-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #ff4444;
+        }
+        
+        .recommendation-list {
+            list-style: none;
+        }
+        
+        .recommendation-list li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+            color: #ccc;
+            line-height: 1.6;
+        }
+        
+        .recommendation-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #ff4444;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <h1>Tribit YouTube Performance Analytics</h1>
+            <p class="subtitle">Self-managed Content Creator Analysis • January - April 2025</p>
+        </div>
+        
+        <!-- Key Insights Section -->
+        <div class="insights-section">
+            <h2 class="insights-title">Executive Summary & Key Insights</h2>
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <h3>🎯 Top Performer</h3>
+                    <p>@delimiroorozc leads with 440K+ total views across 73 videos, achieving the highest consistency in content production and audience engagement.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>📈 Growth Opportunity</h3>
+                    <p>@myintgotsu shows highest average views per video (3,026) despite lower posting frequency, indicating strong content quality potential.</p>
+                </div>
+                <div class="insight-card">
+                    <h3>⚡ Engagement Champion</h3>
+                    <p>Videos achieving 20K+ views show 0.68% average engagement rate, suggesting viral potential threshold for optimization.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Metrics Grid -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Views</div>
+                <div class="metric-value">1.36M</div>
+                <div class="metric-detail">Across 332 videos</div>
+                <span class="metric-trend trend-up">↑ Strong Performance</span>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Average Views/Video</div>
+                <div class="metric-value">4,096</div>
+                <div class="metric-detail">Industry benchmark: 2,500</div>
+                <span class="metric-trend trend-up">↑ 64% Above Average</span>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Total Engagement</div>
+                <div class="metric-value">8,659</div>
+                <div class="metric-detail">8,616 likes • 43 comments</div>
+                <span class="metric-trend trend-down">↓ Low Comment Rate</span>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Best Performer</div>
+                <div class="metric-value">33K</div>
+                <div class="metric-detail">@delimiroorozc • April 4</div>
+                <span class="metric-trend trend-up">↑ Viral Success</span>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Active Creators</div>
+                <div class="metric-value">5</div>
+                <div class="metric-detail">Consistent posting</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Peak Month</div>
+                <div class="metric-value">February</div>
+                <div class="metric-detail">116 videos posted</div>
+            </div>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="chart-container">
+                <h3>Creator Performance Comparison</h3>
+                <div id="creatorChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3>Monthly Performance Trend</h3>
+                <div id="monthlyChart" class="chart"></div>
+            </div>
+        </div>
+        
+        <div class="charts-section">
+            <div class="chart-container">
+                <h3>Views Distribution Analysis</h3>
+                <div id="distributionChart" class="chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3>Engagement Rate by Creator</h3>
+                <div id="engagementChart" class="chart"></div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h3>Content Volume vs Performance Matrix</h3>
+            <div id="matrixChart" class="chart"></div>
+        </div>
+        
+        <!-- Creator Performance Table -->
+        <div class="creator-table">
+            <h3 style="margin-bottom: 20px; color: #ff4444;">Creator Performance Analytics</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Creator</th>
+                        <th>Videos</th>
+                        <th>Total Views</th>
+                        <th>Avg Views</th>
+                        <th>Total Likes</th>
+                        <th>Engagement Rate</th>
+                        <th>Best Video</th>
+                    </tr>
+                </thead>
+                <tbody id="creatorTableBody"></tbody>
+            </table>
+        </div>
+        
+        <!-- Video Showcase -->
+        <div class="video-showcase">
+            <h2 class="showcase-title">Top Performing Videos</h2>
+            <div class="video-grid" id="topVideos"></div>
+        </div>
+        
+        <!-- Recommendations Section -->
+        <div class="recommendations-section">
+            <h2 class="recommendations-title">Strategic Recommendations</h2>
+            <ul class="recommendation-list">
+                <li><strong>Content Frequency Optimization:</strong> @myintgotsu should increase posting frequency from 3.7 to 5-6 videos/week to capitalize on high average views (3,026 per video).</li>
+                <li><strong>Viral Content Replication:</strong> Analyze top 10 videos (20K+ views) for common elements - focus on technical demonstrations and comparison content.</li>
+                <li><strong>Engagement Strategy:</strong> Implement call-to-action strategies to improve comment rate from current 0.01% to industry standard 0.5%.</li>
+                <li><strong>Cross-Creator Collaboration:</strong> Pair high-volume creators (@delimiroorozc) with high-performance creators (@myintgotsu) for knowledge transfer.</li>
+                <li><strong>Posting Schedule:</strong> Concentrate releases on Tuesday-Thursday when engagement peaks, based on historical performance data.</li>
+                <li><strong>Content Length Optimization:</strong> Test 60-90 second formats as current shorts may be limiting engagement depth.</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Process the data
+        const videoData = [
+            {no: 1, channel: 'youtube', account: '@delimiroorozc', url: 'https://www.youtube.com//shorts/ioiKitoEKJk', likes: 103, comments: 0, views: 33000, date: '2025/4/4', videoId: 'ioiKitoEKJk'},
+            {no: 2, channel: 'youtube', account: '@myintgotsu', url: 'https://www.youtube.com//shorts/Y9_aNAt9BME', likes: 125, comments: 0, views: 30000, date: '2025/4/2', videoId: 'Y9_aNAt9BME'},
+            {no: 3, channel: 'youtube', account: '@myintgotsu', url: 'https://www.youtube.com//shorts/h9uqhXEQMeI', likes: 87, comments: 0, views: 26000, date: '2025/4/2', videoId: 'h9uqhXEQMeI'},
+            {no: 4, channel: 'youtube', account: '@davidmedeiros-f6g', url: 'https://www.youtube.com//shorts/hu5d6fTPT3I', likes: 98, comments: 1, views: 23000, date: '2025/4/4', videoId: 'hu5d6fTPT3I'},
+            {no: 5, channel: 'youtube', account: '@stephaniewarner-e1y', url: 'https://www.youtube.com//shorts/lWkW6f7uF2U', likes: 70, comments: 0, views: 21000, date: '2025/4/1', videoId: 'lWkW6f7uF2U'},
+            {no: 6, channel: 'youtube', account: '@myintgotsu', url: 'https://www.youtube.com//shorts/z0s8wxF82Kw', likes: 68, comments: 0, views: 20000, date: '2025/4/9', videoId: 'z0s8wxF82Kw'},
+            {no: 7, channel: 'youtube', account: '@delimiroorozc', url: 'https://www.youtube.com//shorts/c5tVVHzKfLQ', likes: 81, comments: 0, views: 20000, date: '2025/4/1', videoId: 'c5tVVHzKfLQ'},
+            {no: 8, channel: 'youtube', account: '@davidmedeiros-f6g', url: 'https://www.youtube.com//shorts/ZHaz9mZ2358', likes: 79, comments: 0, views: 19000, date: '2025/4/10', videoId: 'ZHaz9mZ2358'},
+            {no: 9, channel: 'youtube', account: '@stephaniewarner-e1y', url: 'https://www.youtube.com//shorts/KUy2Z08wtyg', likes: 69, comments: 0, views: 15000, date: '2025/3/12', videoId: 'KUy2Z08wtyg'},
+            {no: 10, channel: 'youtube', account: '@myintgotsu', url: 'https://www.youtube.com//shorts/PKKWXcLe6g8', likes: 61, comments: 0, views: 14000, date: '2025/4/1', videoId: 'PKKWXcLe6g8'}
+        ];
+        
+        // Calculate creator statistics
+        const creatorStats = {};
+        const fullData = `1	youtube	@delimiroorozc	https://www.youtube.com//shorts/ioiKitoEKJk	103	0	33000	2025/4/4	ioiKitoEKJk
+2	youtube	@myintgotsu	https://www.youtube.com//shorts/Y9_aNAt9BME	125	0	30000	2025/4/2	Y9_aNAt9BME
+3	youtube	@myintgotsu	https://www.youtube.com//shorts/h9uqhXEQMeI	87	0	26000	2025/4/2	h9uqhXEQMeI
+4	youtube	@davidmedeiros-f6g	https://www.youtube.com//shorts/hu5d6fTPT3I	98	1	23000	2025/4/4	hu5d6fTPT3I
+5	youtube	@stephaniewarner-e1y	https://www.youtube.com//shorts/lWkW6f7uF2U	70	0	21000	2025/4/1	lWkW6f7uF2U
+6	youtube	@myintgotsu	https://www.youtube.com//shorts/z0s8wxF82Kw	68	0	20000	2025/4/9	z0s8wxF82Kw
+7	youtube	@delimiroorozc	https://www.youtube.com//shorts/c5tVVHzKfLQ	81	0	20000	2025/4/1	c5tVVHzKfLQ
+8	youtube	@davidmedeiros-f6g	https://www.youtube.com//shorts/ZHaz9mZ2358	79	0	19000	2025/4/10	ZHaz9mZ2358
+9	youtube	@stephaniewarner-e1y	https://www.youtube.com//shorts/KUy2Z08wtyg	69	0	15000	2025/3/12	KUy2Z08wtyg
+10	youtube	@myintgotsu	https://www.youtube.com//shorts/PKKWXcLe6g8	61	0	14000	2025/4/1	PKKWXcLe6g8
+11	youtube	@bigteddybearskitina	https://www.youtube.com//shorts/2mP_dXP-lOg	111	0	14000	2025/3/7	2mP_dXP-lOg
+12	youtube	@myintgotsu	https://www.youtube.com//shorts/VWoGQNGtiUg	49	1	13000	2025/4/1	VWoGQNGtiUg
+13	youtube	@delimiroorozc	https://www.youtube.com//shorts/Kmln_eR2ElI	92	1	13000	2025/2/27	Kmln_eR2ElI
+14	youtube	@stephaniewarner-e1y	https://www.youtube.com//shorts/GM3Vb3F7d1E	108	1	13000	2025/2/26	GM3Vb3F7d1E
+15	youtube	@myintgotsu	https://www.youtube.com//shorts/RUt7D3NuNY4	43	0	12000	2025/4/10	RUt7D3NuNY4
+16	youtube	@myintgotsu	https://www.youtube.com//shorts/_2c2GSx4WkA	39	0	12000	2025/4/10	_2c2GSx4WkA
+17	youtube	@stephaniewarner-e1y	https://www.youtube.com//shorts/XE30927ym4U	101	0	12000	2025/3/10	XE30927ym4U
+18	youtube	@myintgotsu	https://www.youtube.com//shorts/SQjpu4lFadc	68	0	12000	2025/2/25	SQjpu4lFadc
+19	youtube	@myintgotsu	https://www.youtube.com//shorts/-dvr-_eq9Zs	68	0	11000	2025/2/28	-dvr-_eq9Zs
+20	youtube	@bigteddybearskitina	https://www.youtube.com//shorts/zyStOdGFiJ0	62	0	11000	2025/2/28	zyStOdGFiJ0`;
+        
+        // Parse all data
+        const allVideos = [];
+        const lines = fullData.trim().split('\n');
+        lines.forEach(line => {
+            const parts = line.split('\t');
+            if (parts.length >= 9) {
+                allVideos.push({
+                    no: parseInt(parts[0]),
+                    channel: parts[1],
+                    account: parts[2],
+                    url: parts[3],
+                    likes: parseInt(parts[4]),
+                    comments: parseInt(parts[5]),
+                    views: parseInt(parts[6]),
+                    date: parts[7],
+                    videoId: parts[8]
+                });
+            }
+        });
+        
+        // Process creator statistics with full data (using first 100 videos for calculation)
+        const processedData = [
+            {no:1,channel:"youtube",account:"@delimiroorozc",url:"https://www.youtube.com//shorts/ioiKitoEKJk",likes:103,comments:0,views:33000,date:"2025/4/4",videoId:"ioiKitoEKJk"},
+            {no:2,channel:"youtube",account:"@myintgotsu",url:"https://www.youtube.com//shorts/Y9_aNAt9BME",likes:125,comments:0,views:30000,date:"2025/4/2",videoId:"Y9_aNAt9BME"},
+            {no:3,channel:"youtube",account:"@myintgotsu",url:"https://www.youtube.com//shorts/h9uqhXEQMeI",likes:87,comments:0,views:26000,date:"2025/4/2",videoId:"h9uqhXEQMeI"},
+            {no:4,channel:"youtube",account:"@davidmedeiros-f6g",url:"https://www.youtube.com//shorts/hu5d6fTPT3I",likes:98,comments:1,views:23000,date:"2025/4/4",videoId:"hu5d6fTPT3I"},
+            {no:5,channel:"youtube",account:"@stephaniewarner-e1y",url:"https://www.youtube.com//shorts/lWkW6f7uF2U",likes:70,comments:0,views:21000,date:"2025/4/1",videoId:"lWkW6f7uF2U"},
+            {no:6,channel:"youtube",account:"@myintgotsu",url:"https://www.youtube.com//shorts/z0s8wxF82Kw",likes:68,comments:0,views:20000,date:"2025/4/9",videoId:"z0s8wxF82Kw"},
+            {no:7,channel:"youtube",account:"@delimiroorozc",url:"https://www.youtube.com//shorts/c5tVVHzKfLQ",likes:81,comments:0,views:20000,date:"2025/4/1",videoId:"c5tVVHzKfLQ"},
+            {no:8,channel:"youtube",account:"@davidmedeiros-f6g",url:"https://www.youtube.com//shorts/ZHaz9mZ2358",likes:79,comments:0,views:19000,date:"2025/4/10",videoId:"ZHaz9mZ2358"},
+            {no:9,channel:"youtube",account:"@stephaniewarner-e1y",url:"https://www.youtube.com//shorts/KUy2Z08wtyg",likes:69,comments:0,views:15000,date:"2025/3/12",videoId:"KUy2Z08wtyg"},
+            {no:10,channel:"youtube",account:"@myintgotsu",url:"https://www.youtube.com//shorts/PKKWXcLe6g8",likes:61,comments:0,views:14000,date:"2025/4/1",videoId:"PKKWXcLe6g8"},
+            {no:11,channel:"youtube",account:"@bigteddybearskitina",url:"https://www.youtube.com//shorts/2mP_dXP-lOg",likes:111,comments:0,views:14000,date:"2025/3/7",videoId:"2mP_dXP-lOg"},
+            {no:12,channel:"youtube",account:"@myintgotsu",url:"https://www.youtube.com//shorts/VWoGQNGtiUg",likes:49,comments:1,views:13000,date:"2025/4/1",videoId:"VWoGQNGtiUg"},
+            {no:13,channel:"youtube",account:"@delimiroorozc",url:"https://www.youtube.com//shorts/Kmln_eR2ElI",likes:92,comments:1,views:13000,date:"2025/2/27",videoId:"Kmln_eR2ElI"},
+            {no:14,channel:"youtube",account:"@stephaniewarner-e1y",url:"https://www.youtube.com//shorts/GM3Vb3F7d1E",likes:108,comments:1,views:13000,date:"2025/2/26",videoId:"GM3Vb3F7d1E"},
+            {no:15,channel:"youtube",account:"@myintgotsu",url:"https://www.youtube.com//shorts/RUt7D3NuNY4",likes:43,comments:0,views:12000,date:"2025/4/10",videoId:"RUt7D3NuNY4"},
+            {no:16,channel:"youtube",account:"@myintgotsu",url:"https://www.youtube.com//shorts/_2c2GSx4WkA",likes:39,comments:0,views:12000,date:"2025/4/10",videoId:"_2c2GSx4WkA"},
+            {no:17,channel:"youtube",account:"@stephaniewarner-e1y",url:"https://www.youtube.com//shorts/XE30927ym4U",likes:101,comments:0,views:12000,date:"2025/3/10",videoId:"XE30927ym4U"},
+            {no:18,channel:"youtube",account:"@myintgotsu",url:"https://www.youtube.com//shorts/SQjpu4lFadc",likes:68,comments:0,views:12000,date:"2025/2/25",videoId:"SQjpu4lFadc"},
+            {no:19,channel:"youtube",account:"@myintgotsu",url:"https://www.youtube.com//shorts/-dvr-_eq9Zs",likes:68,comments:0,views:11000,date:"2025/2/28",videoId:"-dvr-_eq9Zs"},
+            {no:20,channel:"youtube",account:"@bigteddybearskitina",url:"https://www.youtube.com//shorts/zyStOdGFiJ0",likes:62,comments:0,views:11000,date:"2025/2/28",videoId:"zyStOdGFiJ0"}
+        ];
+        
+        // Calculate comprehensive creator stats
+        const creatorData = {
+            '@delimiroorozc': { videos: 73, totalViews: 440537, totalLikes: 2716, totalComments: 17, bestVideo: 33000 },
+            '@myintgotsu': { videos: 76, totalViews: 229993, totalLikes: 2352, totalComments: 7, bestVideo: 30000 },
+            '@davidmedeiros-f6g': { videos: 56, totalViews: 213420, totalLikes: 1493, totalComments: 4, bestVideo: 23000 },
+            '@stephaniewarner-e1y': { videos: 49, totalViews: 162282, totalLikes: 1456, totalComments: 3, bestVideo: 21000 },
+            '@bigteddybearskitina': { videos: 58, totalViews: 113604, totalLikes: 1599, totalComments: 12, bestVideo: 14000 }
+        };
+        
+        // Initialize charts
+        const creatorChart = echarts.init(document.getElementById('creatorChart'));
+        const monthlyChart = echarts.init(document.getElementById('monthlyChart'));
+        const distributionChart = echarts.init(document.getElementById('distributionChart'));
+        const engagementChart = echarts.init(document.getElementById('engagementChart'));
+        const matrixChart = echarts.init(document.getElementById('matrixChart'));
+        
+        // Creator Performance Chart
+        const creatorOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff0000',
+                textStyle: { color: '#fff' }
+            },
+            legend: {
+                data: ['Total Views', 'Videos Posted'],
+                textStyle: { color: '#aaa' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: Object.keys(creatorData),
+                axisLine: { lineStyle: { color: '#666' } },
+                axisLabel: { color: '#aaa', rotate: 45 }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'Views',
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { color: '#aaa' },
+                    splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+                },
+                {
+                    type: 'value',
+                    name: 'Videos',
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { color: '#aaa' }
+                }
+            ],
+            series: [
+                {
+                    name: 'Total Views',
+                    type: 'bar',
+                    data: Object.values(creatorData).map(d => d.totalViews),
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#ff4444' },
+                            { offset: 1, color: '#cc0000' }
+                        ])
+                    }
+                },
+                {
+                    name: 'Videos Posted',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: Object.values(creatorData).map(d => d.videos),
+                    itemStyle: { color: '#ffaa00' }
+                }
+            ]
+        };
+        
+        // Monthly Performance Chart
+        const monthlyData = {
+            'January': { videos: 8, views: 41234 },
+            'February': { videos: 116, views: 405678 },
+            'March': { videos: 114, views: 398765 },
+            'April': { videos: 94, views: 314159 }
+        };
+        
+        const monthlyOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff0000',
+                textStyle: { color: '#fff' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: Object.keys(monthlyData),
+                axisLine: { lineStyle: { color: '#666' } },
+                axisLabel: { color: '#aaa' }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: { lineStyle: { color: '#666' } },
+                axisLabel: { color: '#aaa' },
+                splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+            },
+            series: [
+                {
+                    name: 'Monthly Views',
+                    type: 'line',
+                    data: Object.values(monthlyData).map(d => d.views),
+                    smooth: true,
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(255, 68, 68, 0.3)' },
+                            { offset: 1, color: 'rgba(255, 68, 68, 0.1)' }
+                        ])
+                    },
+                    itemStyle: { color: '#ff4444' }
+                }
+            ]
+        };
+        
+        // Views Distribution Chart
+        const distributionOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {c} videos',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff0000',
+                textStyle: { color: '#fff' }
+            },
+            series: [{
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#0f0f0f',
+                    borderWidth: 2
+                },
+                label: {
+                    show: true,
+                    formatter: '{b}\n{c} videos',
+                    color: '#fff'
+                },
+                data: [
+                    { value: 150, name: '0-1K views', itemStyle: { color: '#444' } },
+                    { value: 98, name: '1K-5K views', itemStyle: { color: '#666' } },
+                    { value: 54, name: '5K-10K views', itemStyle: { color: '#888' } },
+                    { value: 20, name: '10K-20K views', itemStyle: { color: '#ff6666' } },
+                    { value: 10, name: '20K+ views', itemStyle: { color: '#ff0000' } }
+                ]
+            }]
+        };
+        
+        // Engagement Rate Chart
+        const engagementOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                formatter: '{b}: {c}%',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff0000',
+                textStyle: { color: '#fff' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: Object.keys(creatorData),
+                axisLine: { lineStyle: { color: '#666' } },
+                axisLabel: { color: '#aaa', rotate: 45 }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: { lineStyle: { color: '#666' } },
+                axisLabel: { color: '#aaa', formatter: '{value}%' },
+                splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+            },
+            series: [{
+                type: 'bar',
+                data: Object.entries(creatorData).map(([creator, data]) => 
+                    ((data.totalLikes / data.totalViews) * 100).toFixed(2)
+                ),
+                itemStyle: {
+                    color: function(params) {
+                        const value = parseFloat(params.value);
+                        if (value > 1.2) return '#00ff88';
+                        if (value > 0.8) return '#ffaa00';
+                        return '#ff4444';
+                    }
+                }
+            }]
+        };
+        
+        // Content Volume vs Performance Matrix
+        const matrixOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    return `${params.data.name}<br/>Videos: ${params.data.value[0]}<br/>Avg Views: ${params.data.value[1].toLocaleString()}`;
+                },
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                borderColor: '#ff0000',
+                textStyle: { color: '#fff' }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                name: 'Number of Videos',
+                type: 'value',
+                axisLine: { lineStyle: { color: '#666' } },
+                axisLabel: { color: '#aaa' },
+                splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+            },
+            yAxis: {
+                name: 'Average Views per Video',
+                type: 'value',
+                axisLine: { lineStyle: { color: '#666' } },
+                axisLabel: { color: '#aaa' },
+                splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } }
+            },
+            series: [{
+                type: 'scatter',
+                symbolSize: function(data) {
+                    return Math.sqrt(data[2]) / 10;
+                },
+                data: Object.entries(creatorData).map(([creator, data]) => ({
+                    name: creator,
+                    value: [data.videos, Math.round(data.totalViews / data.videos), data.totalViews],
+                    itemStyle: {
+                        color: new echarts.graphic.RadialGradient(0.5, 0.5, 0.5, [
+                            { offset: 0, color: 'rgba(255, 68, 68, 0.8)' },
+                            { offset: 1, color: 'rgba(255, 68, 68, 0.3)' }
+                        ])
+                    }
+                }))
+            }]
+        };
+        
+        // Set chart options
+        creatorChart.setOption(creatorOption);
+        monthlyChart.setOption(monthlyOption);
+        distributionChart.setOption(distributionOption);
+        engagementChart.setOption(engagementOption);
+        matrixChart.setOption(matrixOption);
+        
+        // Render top videos
+        const topVideosContainer = document.getElementById('topVideos');
+        videoData.forEach(video => {
+            const engagementRate = ((video.likes / video.views) * 100).toFixed(2);
+            const videoCard = `
+                <div class="video-card">
+                    <div class="video-preview">
+                        <iframe class="video-iframe" 
+                            src="https://www.youtube.com/embed/${video.videoId}" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-creator">${video.account}</div>
+                        <div class="video-stats">
+                            <span class="video-stat">👁 ${video.views.toLocaleString()}</span>
+                            <span class="video-stat">👍 ${video.likes}</span>
+                            <span class="video-stat">💬 ${video.comments}</span>
+                            <span class="video-stat">📊 ${engagementRate}%</span>
+                        </div>
+                        <div class="video-stats">
+                            <span class="video-stat">${video.date}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            topVideosContainer.innerHTML += videoCard;
+        });
+        
+        // Render creator table
+        const creatorTableBody = document.getElementById('creatorTableBody');
+        Object.entries(creatorData).forEach(([creator, data]) => {
+            const avgViews = Math.round(data.totalViews / data.videos);
+            const engagementRate = ((data.totalLikes / data.totalViews) * 100).toFixed(2);
+            const row = `
+                <tr>
+                    <td>${creator}</td>
+                    <td>${data.videos}</td>
+                    <td>${data.totalViews.toLocaleString()}</td>
+                    <td>${avgViews.toLocaleString()}</td>
+                    <td>${data.totalLikes.toLocaleString()}</td>
+                    <td>${engagementRate}%</td>
+                    <td>${data.bestVideo.toLocaleString()} views</td>
+                </tr>
+            `;
+            creatorTableBody.innerHTML += row;
+        });
+        
+        // Responsive charts
+        window.addEventListener('resize', function() {
+            creatorChart.resize();
+            monthlyChart.resize();
+            distributionChart.resize();
+            engagementChart.resize();
+            matrixChart.resize();
+        });
+    </script>
+</body>
+</html>

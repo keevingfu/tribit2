@@ -62,28 +62,62 @@
         }
         
         .nav-section {
-            margin-bottom: 30px;
+            margin-bottom: 5px;
         }
         
         .nav-section-title {
-            padding: 0 20px;
-            margin-bottom: 15px;
-            font-size: 0.85rem;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            padding: 12px 20px;
+            margin-bottom: 0;
+            font-size: 0.95rem;
+            color: #fff;
+            text-transform: none;
+            letter-spacing: 0.5px;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            user-select: none;
+        }
+        
+        .nav-section-title:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #667eea;
+        }
+        
+        .nav-section-title::after {
+            content: '▼';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-section.collapsed .nav-section-title::after {
+            transform: translateY(-50%) rotate(-90deg);
+        }
+        
+        .nav-submenu {
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .nav-section.collapsed .nav-submenu {
+            max-height: 0;
         }
         
         .nav-item {
             display: block;
-            padding: 12px 20px;
+            padding: 10px 20px 10px 40px;
             color: #ccc;
             text-decoration: none;
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            font-size: 0.9rem;
         }
         
         .nav-item::before {
@@ -101,7 +135,7 @@
         .nav-item:hover {
             background: rgba(255, 255, 255, 0.05);
             color: #ffffff;
-            padding-left: 25px;
+            padding-left: 45px;
         }
         
         .nav-item.active {
@@ -228,38 +262,102 @@
         <div class="main-container">
             <!-- Sidebar Navigation -->
             <nav class="sidebar">
-                <!-- Self KOC Weekly Reports -->
+                <!-- Self-Operated Accounts -->
                 <div class="nav-section">
-                    <div class="nav-section-title">Self KOC Weekly Reports</div>
-                    <a class="nav-item" data-page="tribit-selfkoc_week_overview.html">
-                        <span class="nav-item-icon">📊</span>
-                        Weekly Overview Dashboard
-                    </a>
-                    <a class="nav-item" data-page="tribit-selfkoc_week_content.html">
-                        <span class="nav-item-icon">🎬</span>
-                        Video Performance Dashboard
-                    </a>
-                    <a class="nav-item" data-page="tribit-selfkoc_week_youtube.html">
-                        <span class="nav-item-icon">▶️</span>
-                        YouTube Performance
-                    </a>
-                    <a class="nav-item" data-page="tribit-selfkoc_week_tiktok.html">
-                        <span class="nav-item-icon">🎵</span>
-                        TikTok Performance
-                    </a>
-                    <a class="nav-item" data-page="tribit-selfkoc_week_instagram.html">
-                        <span class="nav-item-icon">📷</span>
-                        Instagram Performance
-                    </a>
+                    <div class="nav-section-title">
+                        <span class="nav-item-icon">📱</span>
+                        Self-Operated Accounts
+                    </div>
+                    <div class="nav-submenu">
+                        <a class="nav-item" data-page="tribit-selfkoc_week_overview.html">
+                            <span class="nav-item-icon">📊</span>
+                            Weekly Overview
+                        </a>
+                        <a class="nav-item" data-page="tribit-selfkoc_week_content.html">
+                            <span class="nav-item-icon">🎬</span>
+                            Content Analysis
+                        </a>
+                        <a class="nav-item" data-page="tribit-selfkoc_week_youtube.html">
+                            <span class="nav-item-icon">▶️</span>
+                            YouTube Analysis
+                        </a>
+                        <a class="nav-item" data-page="tribit-selfkoc_week_tiktok.html">
+                            <span class="nav-item-icon">🎵</span>
+                            TikTok Analysis
+                        </a>
+                        <a class="nav-item" data-page="tribit-selfkoc_week_instagram.html">
+                            <span class="nav-item-icon">📷</span>
+                            Instagram Analysis
+                        </a>
+                        <a class="nav-item" data-page="tribit-selfkoc-overview-q1.html">
+                            <span class="nav-item-icon">📈</span>
+                            Q1 Overview
+                        </a>
+                        <a class="nav-item" data-page="tribit-selfkoc-ytb-q1.html">
+                            <span class="nav-item-icon">📺</span>
+                            Q1 YouTube
+                        </a>
+                        <a class="nav-item" data-page="tribit-selfkoc-tk-q1.html">
+                            <span class="nav-item-icon">🎤</span>
+                            Q1 TikTok
+                        </a>
+                        <a class="nav-item" data-page="tribit-selfkoc-ins-q1.html">
+                            <span class="nav-item-icon">📸</span>
+                            Q1 Instagram
+                        </a>
+                        <a class="nav-item" data-page="tribit-selfkoc-weekly-q2.html">
+                            <span class="nav-item-icon">📋</span>
+                            Q2 Weekly Report
+                        </a>
+                    </div>
                 </div>
                 
-                <!-- Regional KOL Reports -->
+                <!-- KOL/KOC Management -->
                 <div class="nav-section">
-                    <div class="nav-section-title">Regional KOL Reports</div>
-                    <a class="nav-item" data-page="tribit_kol_india.html">
-                        <span class="nav-item-icon">🇮🇳</span>
-                        India KOL Dashboard
-                    </a>
+                    <div class="nav-section-title">
+                        <span class="nav-item-icon">👥</span>
+                        KOL/KOC Management
+                    </div>
+                    <div class="nav-submenu">
+                        <a class="nav-item" data-page="tribit-kol-overview.html">
+                            <span class="nav-item-icon">🌍</span>
+                            Global Overview
+                        </a>
+                        <a class="nav-item" data-page="tribit_kol_india.html">
+                            <span class="nav-item-icon">🇮🇳</span>
+                            India Market
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Advertising -->
+                <div class="nav-section">
+                    <div class="nav-section-title">
+                        <span class="nav-item-icon">📢</span>
+                        Advertising
+                    </div>
+                    <div class="nav-submenu">
+                        <a class="nav-item" data-page="tribit-ads-overview.html">
+                            <span class="nav-item-icon">💰</span>
+                            Advertising Overview
+                        </a>
+                        <a class="nav-item" data-page="tribit-ads-amz-sbv.html">
+                            <span class="nav-item-icon">📦</span>
+                            Amazon SBV
+                        </a>
+                        <a class="nav-item" data-page="tribit-ads-ytb-shorts.html">
+                            <span class="nav-item-icon">🎥</span>
+                            YouTube Shorts
+                        </a>
+                        <a class="nav-item" data-page="tribit-ads-meta.html">
+                            <span class="nav-item-icon">👍</span>
+                            Meta Platform
+                        </a>
+                        <a class="nav-item" data-page="tribit-ads-shopify.html">
+                            <span class="nav-item-icon">🛒</span>
+                            Shopify Store
+                        </a>
+                    </div>
                 </div>
             </nav>
             
@@ -285,12 +383,22 @@
     <script>
         // Navigation functionality
         const navItems = document.querySelectorAll('.nav-item');
+        const navSections = document.querySelectorAll('.nav-section');
+        const navSectionTitles = document.querySelectorAll('.nav-section-title');
         const contentFrame = document.getElementById('contentFrame');
         const welcomeScreen = document.getElementById('welcomeScreen');
         const loading = document.getElementById('loading');
         
         // Track current active page
         let currentPage = null;
+        
+        // Handle section title clicks (collapse/expand)
+        navSectionTitles.forEach(title => {
+            title.addEventListener('click', () => {
+                const section = title.parentElement;
+                section.classList.toggle('collapsed');
+            });
+        });
         
         // Handle navigation item clicks
         navItems.forEach(item => {
@@ -314,6 +422,12 @@
             navItems.forEach(item => item.classList.remove('active'));
             navItem.classList.add('active');
             
+            // Ensure parent section is expanded
+            const parentSection = navItem.closest('.nav-section');
+            if (parentSection && parentSection.classList.contains('collapsed')) {
+                parentSection.classList.remove('collapsed');
+            }
+            
             // Load the page
             contentFrame.src = page;
             currentPage = page;
@@ -335,6 +449,13 @@
         window.addEventListener('load', () => {
             contentFrame.classList.remove('active');
             welcomeScreen.style.display = 'flex';
+            
+            // Collapse all sections except the first one by default
+            navSections.forEach((section, index) => {
+                if (index > 0) {
+                    section.classList.add('collapsed');
+                }
+            });
         });
         
         // Add keyboard navigation
