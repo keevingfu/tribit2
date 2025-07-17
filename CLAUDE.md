@@ -4,225 +4,178 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a **Tribit Social Media Analytics Dashboard** project consisting of standalone HTML files that visualize social media performance metrics for Tribit, likely an audio/electronics brand. The dashboards track Key Opinion Leader (KOL) and self-generated content performance across multiple platforms.
+This is a **Tribit Social Media Analytics Dashboard** - a collection of standalone HTML files that visualize social media performance metrics for Tribit (audio/electronics brand). The dashboards track Key Opinion Leader (KOL) and self-generated content performance across YouTube, TikTok, Instagram, and advertising platforms.
 
-### Project Status
-- **Development Stage**: Production-ready
-- **Last Updated**: July 2025
-- **Git Repository**: https://github.com/keevingfu/tribit3
-- **Deployment**: Ready for Vercel deployment
-
-## Architecture & Structure
-
-The project contains 8 primary dashboard files:
-
-1. **index.html** - Main portal page with navigation menu and iframe-based content loading
-2. **tribit-selfkoc_week_overview.html** - Weekly overview dashboard for self-generated KOC (Key Opinion Consumer) content
-3. **tribit-selfkoc_week_content.html** - Video performance analysis dashboard with quarterly/weekly comparisons
-4. **tribit-selfkoc_week_youtube.html** - YouTube-specific performance metrics with Shorts video preview
-5. **tribit-selfkoc_week_tiktok.html** - TikTok-specific performance metrics with native video embeds
-6. **tribit-selfkoc_week_instagram.html** - Instagram-specific performance metrics with official embed integration
-7. **tribit_kol_india.html** - India region KOL (Key Opinion Leader) performance dashboard
-8. **tribit-koc-overview.html** - Global KOC performance dashboard with multi-regional analytics
-
-### Additional Reference Files
-- **preview_ytb.html** - YouTube video preview implementation reference
-- **prieview_tk.html** - TikTok video preview implementation reference
-
-### Configuration Files
-- **vercel.json** - Vercel deployment configuration
-- **.vercelignore** - Files to exclude from Vercel deployment
-
-### Technology Stack
-
-- **Frontend Only**: Pure HTML/CSS/JavaScript dashboards
-- **Charting Libraries**: 
-  - ECharts (5.4.3) - Used in selfkoc dashboards
-  - Chart.js - Used in India KOL dashboard
-- **CSS Framework**: Bootstrap 5.3.0 (India KOL dashboard only)
-- **Icons**: Bootstrap Icons 1.10.3 (India KOL dashboard)
-- **Styling**: Custom CSS with glassmorphism effects and gradient themes
-
-### Key Features
-
-- Real-time data visualization with animated charts
-- Platform-specific metrics (YouTube, TikTok, Instagram, Amazon, Facebook)
-- KPI cards with achievement indicators
-- Responsive grid layouts
-- Dark theme with gradient backgrounds (selfkoc dashboards)
-- Light theme with material design (India KOL dashboard)
-- Blue gradient theme (KOC overview dashboard)
-- **Video Preview Functionality**:
-  - YouTube: Modal-based preview with thumbnail lazy loading, 9:16 aspect ratio for Shorts
-  - TikTok: Native iframe embeds using TikTok's embed v2 API
-  - Instagram: Official blockquote embeds with Instagram's embed.js
-  - KOC Overview: Video grid with 3-column layout and performance metrics
-- **Portal Navigation**: Centralized access through index.html with keyboard shortcuts
-- **Insights & Recommendations**: Each dashboard includes data-driven insights and actionable recommendations in English
-- **Multi-Regional Support**: Global KOC tracking across Europe, US, and India regions
-
-## Development Notes
-
-### File Naming Convention
-- `tribit-selfkoc_week_*.html` - Self-generated content weekly dashboards
-- `tribit_kol_*.html` - KOL performance dashboards by region
-
-### Color Schemes
-- YouTube: `#FF0000` / `#ff4444`
-- Instagram: `#E1306C` / Gradient: `#833AB4, #FD1D1D, #FCAF45`
-- TikTok: Platform-specific colors used in respective files
-- Tribit Brand: Primary `#0066cc`, Secondary `#ff6600`
-
-### Common Patterns
-- All dashboards use animation effects (fadeIn, fadeInUp, fadeInDown)
-- Hover effects on cards with transform and shadow transitions
-- Glassmorphism design with `backdrop-filter: blur()` effects
-- Grid-based responsive layouts
-- Platform-specific embed implementations:
-  - YouTube: `https://www.youtube.com/embed/{videoId}`
-  - TikTok: `https://www.tiktok.com/embed/v2/{videoId}`
-  - Instagram: Blockquote with `data-instgrm-permalink`
-
-## Important Considerations
-
-1. **No Build Process**: These are standalone HTML files with inline CSS and JavaScript
-2. **CDN Dependencies**: All external libraries loaded via CDN links
-3. **Data Source**: Currently uses hardcoded data within script tags - consider implementing dynamic data loading
-4. **Browser Compatibility**: Modern browser features used (CSS Grid, backdrop-filter, gradient text)
-5. **Video Embedding**: 
-   - YouTube embeds require proper video IDs
-   - TikTok embeds may be blocked by some browsers/networks
-   - Instagram embeds require the official embed.js script
-6. **Performance**: Video embeds are lazy-loaded to improve initial page load
-
-## Video Preview Implementation Details
-
-### YouTube (tribit-selfkoc_week_youtube.html)
-- Uses modal-based preview system with thumbnails
-- Implements 9:16 aspect ratio for Shorts format
-- Features lazy loading for performance
-- Grid layout: 3 videos per row (responsive to 1 on mobile)
-
-### TikTok (tribit-selfkoc_week_tiktok.html)
-- Direct iframe embeds using TikTok's official embed v2 API
-- Error handling with fallback to external TikTok links
-- Loading indicators during embed initialization
-- Maintains TikTok's native 9:16 aspect ratio
-
-### Instagram (tribit-selfkoc_week_instagram.html)
-- Official Instagram blockquote embed method
-- Requires Instagram's embed.js script
-- 3 videos per row layout with responsive design
-- Preserves Instagram's native styling and interactions
-
-## Insights and Recommendations Feature
-
-All dashboard pages now include comprehensive insights sections that provide:
-- **Data-driven analysis** of performance metrics
-- **Actionable recommendations** for improvement
-- **Critical alerts** for urgent issues
-- **Strategic guidance** for content optimization
-
-Each insight section follows a consistent structure:
-- Icon-based headers for visual hierarchy
-- Bullet-pointed insights for easy scanning
-- Highlighted recommendation boxes with specific actions
-- All content in English for international accessibility
-
-### Dashboards with Full Insights Implementation:
-1. **Weekly Overview** - Platform performance and efficiency analysis
-2. **Content Analysis** - Quarterly vs weekly performance gaps
-3. **YouTube Dashboard** - Shorts performance and trend analysis
-4. **TikTok Dashboard** - Engagement and creator portfolio insights
-5. **Instagram Dashboard** - Reel performance and recovery strategies
-6. **KOC Overview** - Global creator network analysis
-
-## Recent Updates (July 2025)
-
-1. **Added tribit-koc-overview.html** - Global KOC performance dashboard with:
-   - Multi-regional analytics (Europe, US, India)
-   - Video performance grid with preview functionality
-   - Comprehensive insights for all analysis sections
-
-2. **Enhanced All Dashboards** with:
-   - Data-driven insights and recommendations
-   - Executive summaries with critical alerts
-   - Platform-specific optimization strategies
-   - Consistent English-only content
-
-3. **Improved Video Preview Features**:
-   - YouTube Shorts vertical format (9:16)
-   - TikTok native embeds with error handling
-   - Instagram official embed integration
-   - Video performance analytics
+### Key Characteristics
+- **Architecture**: Static HTML files with inline CSS/JavaScript (no build process)
+- **Data**: Hardcoded within `<script>` tags in each HTML file
+- **Libraries**: ECharts 5.4.3 (primary), Chart.js (India KOL dashboard)
+- **Deployment**: Vercel static hosting
+- **Git Repositories**: 
+  - Primary: https://github.com/keevingfu/tribit2
+  - Mirror: https://github.com/keevingfu/tribit3
 
 ## Commands
 
 ### Development
-- **Run locally**: Open `index.html` in a web browser (no server required)
-- **Deploy to Vercel**: `vercel` (requires Vercel CLI)
-- **Push to GitHub**: `./push_to_github.sh` or `git push -u origin main`
+```bash
+# Run locally (no build process required)
+open index.html
+
+# Deploy to Vercel
+vercel
+
+# Git operations
+git push origin main              # Push to primary repo (tribit2)
+git push tribit3 main            # Push to mirror repo
+git push origin main && git push tribit3 main  # Push to both
+```
 
 ### Testing
-- **Browser testing**: Open individual HTML files directly in Chrome/Edge 90+, Firefox 88+, or Safari 14+
-- **Video embed testing**: Ensure valid video IDs for YouTube, TikTok, and Instagram embeds
+- Open HTML files directly in modern browsers (Chrome 90+, Firefox 88+, Safari 14+)
+- Test video embeds with valid YouTube, TikTok, and Instagram IDs
+- Verify chart rendering and data visualization
 
-## Architecture Details
+## Architecture Overview
 
-### Dashboard Categories
+### Portal System (index.html)
+- Hierarchical navigation menu with 5 main categories
+- Iframe-based content loading for dashboard switching
+- Keyboard shortcuts for quick navigation
+- Categories:
+  1. Performance Reports (weekly/trend analysis)
+  2. Self-KOC Analytics (platform-specific)
+  3. Quarterly Analysis (Q1/Q2 2025)
+  4. KOL/KOC Network (global/regional)
+  5. Advertising Campaigns (multi-platform)
 
-1. **Advertising Dashboards** (tribit-ads-*.html):
-   - `tribit-ads-overview.html` - Advertising performance overview
-   - `tribit-ads-amz-sbv.html` - Amazon SBV advertising metrics
-   - `tribit-ads-meta.html` - Meta (Facebook/Instagram) advertising
-   - `tribit-ads-shopify.html` - Shopify e-commerce metrics
-   - `tribit-ads-ytb-shorts.html` - YouTube Shorts advertising performance
+### Dashboard Structure
+```
+tribit3/
+├── index.html                    # Portal navigation
+├── tribit-selfkoc-*.html        # Self-generated content dashboards
+├── tribit-kol-*.html            # KOL performance dashboards
+├── tribit-ads-*.html            # Advertising campaign dashboards
+├── data/                        # CSV data files (not actively used)
+├── vercel.json                  # Deployment configuration
+└── push_to_github.sh           # Git push helper script
+```
 
-2. **KOL/KOC Dashboards**:
-   - `tribit-kol-overview.html` - Global KOL performance tracking
-   - `tribit-kol-india.html` - India-specific KOL metrics
-   - `tribit-selfkoc-*-q1.html` - Q1 2025 self-generated content dashboards
-   - `tribit-selfkoc-weekly-q2.html` - Q2 2025 weekly performance
+## Key Implementation Patterns
+
+### Chart Initialization (ECharts)
+```javascript
+const chart = echarts.init(document.getElementById('chartId'));
+chart.setOption({
+    // Standard configuration includes:
+    title: { text: 'Chart Title', textStyle: { color: '#fff' } },
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['Series1', 'Series2'] },
+    // Data arrays embedded directly
+});
+```
+
+### Video Embed Patterns
+- **YouTube**: `<iframe src="https://www.youtube.com/embed/{videoId}">`
+- **TikTok**: `<iframe src="https://www.tiktok.com/embed/v2/{videoId}">`
+- **Instagram**: `<blockquote class="instagram-media" data-instgrm-permalink="...">`
+
+### Common CSS Patterns
+- Glassmorphism: `backdrop-filter: blur(10px); background: rgba(255,255,255,0.1);`
+- Gradient text: `background: linear-gradient(...); -webkit-background-clip: text;`
+- Card hover: `transform: translateY(-5px); box-shadow: 0 10px 30px rgba(...);`
+- Animations: `fadeIn`, `fadeInUp`, `fadeInDown` classes
+
+## Critical Development Notes
 
 ### Data Management
-- **CSV Files** in `data/` directory:
-  - `tribit-ads-all.csv` - Consolidated advertising data
-  - `tribit-ads-brand.csv` - Brand campaign metrics
-  - `tribit-ads-selfkoc.csv` - Self-generated content metrics
-- **Current Implementation**: Data is hardcoded in `<script>` tags within HTML files
-- **Chart Data Format**: Arrays of objects with platform-specific properties
+- All data is **hardcoded** in `<script>` tags within each HTML file
+- No API integration or dynamic data loading
+- CSV files in `data/` directory exist but are not actively used
+- To update data: Edit the JavaScript arrays directly in each HTML file
 
-### Common Code Patterns
+### Platform-Specific Considerations
+- **YouTube**: Shorts use 9:16 aspect ratio, require valid video IDs
+- **TikTok**: Embeds may be blocked by some networks/browsers
+- **Instagram**: Must include `<script async src="//www.instagram.com/embed.js"></script>`
+- **All platforms**: Test embeds with real video IDs before deployment
 
-1. **Chart Initialization**:
-   ```javascript
-   const chart = echarts.init(document.getElementById('chartId'));
-   chart.setOption({
-     // ECharts configuration
-   });
-   ```
+### Performance Optimization
+- Video embeds use lazy loading
+- Charts render on page load (no dynamic updates)
+- Large datasets may impact initial load time
 
-2. **Video Embed Pattern**:
-   ```javascript
-   // YouTube: iframe with embed URL
-   // TikTok: iframe with embed/v2/ URL
-   // Instagram: blockquote with data-instgrm-permalink
-   ```
+## Dashboard Categories & Features
 
-3. **Animation Classes**:
-   - `fadeIn`, `fadeInUp`, `fadeInDown` - Entry animations
-   - Applied via CSS animation property
+### 1. Performance Reports
+- Weekly trend analysis (10-week periods)
+- Week-over-week comparison reports
+- Target achievement tracking
+- Performance heatmaps
 
-## Future Enhancement Opportunities
+### 2. Self-KOC Analytics
+- Platform-specific dashboards (YouTube, TikTok, Instagram)
+- Video preview functionality with platform-specific embeds
+- Engagement metrics and creator analytics
+- Quarterly vs weekly performance comparisons
 
-- Consolidate common styles into shared CSS file
-- Implement dynamic data loading from APIs
-- Add date range selectors for time-based filtering
-- Enhance portal navigation with search functionality
-- Consider converting to a framework-based SPA for better maintainability
-- Add export functionality for insights and reports
-- Implement real-time data updates
-- Add user authentication for personalized dashboards
-- Integrate with Tribit's backend analytics system
-- Add multi-language support beyond English
-- Implement A/B testing for content recommendations
+### 3. KOL/KOC Network
+- Global performance tracking
+- Regional analysis (India, Europe, US)
+- Creator portfolio management
+- Network growth metrics
+
+### 4. Advertising Campaigns
+- Multi-platform ad performance (Amazon SBV, Meta, YouTube Shorts)
+- Shopify e-commerce integration
+- ROI and conversion tracking
+- Campaign efficiency metrics
+
+### 5. Insights & Recommendations
+- Data-driven analysis sections in each dashboard
+- Actionable recommendations
+- Critical alerts for performance issues
+- All content in English
+
+
+
+
+## Brand Guidelines
+
+### Color Palette
+- **Tribit Brand**: Primary `#0066cc`, Secondary `#ff6600`
+- **YouTube**: `#FF0000` / `#ff4444`
+- **Instagram**: `#E1306C` / Gradient: `#833AB4, #FD1D1D, #FCAF45`
+- **TikTok**: Platform-specific colors
+- **Dark Theme**: Background `#0a0a0a`, Cards `rgba(22, 33, 62, 0.6)`
+
+### Design System
+- **Typography**: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto
+- **Effects**: Glassmorphism with `backdrop-filter: blur(10px)`
+- **Animations**: fadeIn (0.8s), fadeInUp (0.8s, 50px), fadeInDown (0.8s, -50px)
+- **Grid Layout**: Responsive 3-column to 1-column on mobile
+- **Card Hover**: `translateY(-5px)` with enhanced shadow
+
+## Quick Reference
+
+### Adding a New Dashboard
+1. Copy an existing dashboard HTML file as template
+2. Update the title and navigation in index.html
+3. Replace data arrays in `<script>` tags
+4. Modify chart configurations as needed
+5. Update insights and recommendations sections
+6. Test all interactive elements and embeds
+7. Deploy using `vercel`
+
+### Updating Data
+1. Locate the dashboard HTML file
+2. Find the `<script>` section with data arrays
+3. Update the JavaScript objects directly
+4. Test chart rendering
+5. Commit and push changes
+
+### Common Issues
+- **Charts not rendering**: Check element IDs match initialization code
+- **Video embeds broken**: Verify video IDs are valid and platforms accessible
+- **Styling issues**: Ensure CDN links are loading (check network tab)
+- **Portal navigation**: Verify iframe src paths in index.html
