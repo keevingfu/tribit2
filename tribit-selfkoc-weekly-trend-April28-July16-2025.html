@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tribit Self-KOC Weekly Trend Analysis - April 28 to July 16, 2025</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .header .date-range {
+            color: #888;
+            font-size: 1.2rem;
+        }
+        
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .summary-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .summary-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .summary-card .value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .summary-card .label {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .summary-card .trend {
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .trend-up { color: #4ade80; }
+        .trend-down { color: #f87171; }
+        
+        /* Chart Sections */
+        .section {
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: '📊';
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .chart {
+            height: 400px;
+        }
+        
+        .chart-large {
+            height: 500px;
+        }
+        
+        /* Grid layouts */
+        .two-column-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        /* Table Styles */
+        .table-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        th {
+            background: rgba(102, 126, 234, 0.2);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .positive { color: #4ade80; }
+        .negative { color: #f87171; }
+        
+        /* Insights Section */
+        .insights-container {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .insight-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .insight-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+        
+        .insight-card ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+        
+        .recommendation-box {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid #4ade80;
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 10px;
+        }
+        
+        .recommendation-title {
+            font-size: 1.2rem;
+            color: #4ade80;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .two-column-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-container {
+                padding: 15px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Tribit Self-KOC Weekly Performance Trend Analysis</h1>
+            <div class="date-range">April 28 - July 16, 2025 (10 Weeks)</div>
+        </div>
+        
+        <!-- Summary Cards -->
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="icon">📈</div>
+                <div class="value">375%</div>
+                <div class="label">Total Views Growth</div>
+                <div class="trend trend-up">↑ From 1.17M to 5.56M</div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="icon">💬</div>
+                <div class="value">568%</div>
+                <div class="label">Total Engagement Growth</div>
+                <div class="trend trend-up">↑ From 5.1K to 34.4K</div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="icon">🎯</div>
+                <div class="value">100%</div>
+                <div class="label">Creator Consistency</div>
+                <div class="trend">18/18 Every Week</div>
+            </div>
+            
+            <div class="summary-card">
+                <div class="icon">🚀</div>
+                <div class="value">191%</div>
+                <div class="label">Latest Target Achievement</div>
+                <div class="trend trend-up">↑ Best Performance</div>
+            </div>
+        </div>
+        
+        <!-- Main Trend Analysis -->
+        <div class="section">
+            <h2 class="section-title">Weekly Performance Trends</h2>
+            <div class="chart-container">
+                <div id="mainTrendChart" class="chart chart-large"></div>
+            </div>
+            <div class="insights-container" style="margin-top: 20px;">
+                <div class="insight-card">
+                    <h3>📊 Trend Analysis Insights</h3>
+                    <ul>
+                        <li><strong>Exponential Growth Phase:</strong> Views increased 4.75x from Week 1 to Week 10, with the steepest growth occurring between Week 3 and Week 4 (63.7% jump)</li>
+                        <li><strong>Target Overperformance:</strong> Starting from 98% achievement in Week 1, performance consistently exceeded targets by 50-170% from Week 2 onwards</li>
+                        <li><strong>Engagement Quality Improvement:</strong> Engagement growth (568%) outpaced view growth (375%), indicating content resonance is improving</li>
+                        <li><strong>Plateau Warning:</strong> Views remained flat between Week 8-9 (0% growth), signaling potential saturation</li>
+                    </ul>
+                </div>
+                <div class="recommendation-box" style="margin-top: 15px;">
+                    <div class="recommendation-title">Recommendations</div>
+                    <ul style="margin-left: 20px;">
+                        <li>Investigate the success factors behind Week 3-4's 63.7% growth spike and replicate strategies</li>
+                        <li>Address the Week 8-9 plateau by introducing new content formats or creator incentives</li>
+                        <li>Capitalize on high engagement rates by implementing monetization strategies</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Week-over-Week Analysis -->
+        <div class="section">
+            <h2 class="section-title">Week-over-Week Growth Analysis</h2>
+            <div class="table-container">
+                <table id="wowTable">
+                    <thead>
+                        <tr>
+                            <th>Week Period</th>
+                            <th>Views</th>
+                            <th>Views WoW %</th>
+                            <th>Engagement</th>
+                            <th>Engagement WoW %</th>
+                            <th>View Target %</th>
+                            <th>Engagement Target %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table content will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="insights-container" style="margin-top: 20px;">
+                <div class="insight-card">
+                    <h3>📈 WoW Growth Pattern Analysis</h3>
+                    <ul>
+                        <li><strong>Deceleration Trend:</strong> WoW growth rates declined from 66.2% (Week 2) to 5.0% (Week 10), following a typical S-curve adoption pattern</li>
+                        <li><strong>Engagement Resilience:</strong> Despite view growth slowing, engagement maintained double-digit growth through Week 7</li>
+                        <li><strong>Critical Inflection Points:</strong> Week 4 marked the transition from early adoption to growth phase with sustained 50%+ target overperformance</li>
+                        <li><strong>Zero Growth Anomaly:</strong> Week 9 showed 0% growth in both views and engagement, requiring immediate investigation</li>
+                    </ul>
+                </div>
+                <div class="recommendation-box" style="margin-top: 15px;">
+                    <div class="recommendation-title">Recommendations</div>
+                    <ul style="margin-left: 20px;">
+                        <li>Implement growth reactivation strategies: new creator recruitment, platform expansion, or content innovation</li>
+                        <li>Analyze Week 9's zero growth to identify and address bottlenecks (platform issues, content fatigue, or seasonal factors)</li>
+                        <li>Set more aggressive targets for Q3 2025 based on demonstrated capability to exceed current targets by 2x</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dual Chart Analysis -->
+        <div class="section">
+            <div class="two-column-grid">
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 20px; color: #fff;">Target Achievement Trends</h3>
+                    <div id="targetAchievementChart" class="chart"></div>
+                    <div class="insights-container" style="margin-top: 20px; padding: 20px;">
+                        <h4 style="color: #667eea; margin-bottom: 10px;">Target Achievement Insights</h4>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>Consistent Overachievement:</strong> Both metrics exceeded 100% target from Week 2 onwards, with engagement showing stronger performance</li>
+                            <li><strong>Peak Performance:</strong> Engagement target achievement peaked at 271% in Week 8, while views peaked at 221%</li>
+                            <li><strong>Target Adjustment Needed:</strong> Current targets are too conservative given sustained 150%+ achievement rates</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 20px; color: #fff;">Week-over-Week Growth Rates</h3>
+                    <div id="wowGrowthChart" class="chart"></div>
+                    <div class="insights-container" style="margin-top: 20px; padding: 20px;">
+                        <h4 style="color: #667eea; margin-bottom: 10px;">Growth Rate Insights</h4>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>Volatility Decrease:</strong> Growth rates stabilized from 66% volatility in early weeks to single-digit growth by Week 10</li>
+                            <li><strong>Engagement Outperformance:</strong> Engagement growth consistently exceeded view growth in 7 out of 9 measured weeks</li>
+                            <li><strong>Maturity Indicators:</strong> Single-digit growth rates in recent weeks suggest market maturity requiring new growth strategies</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Monthly Performance Comparison -->
+        <div class="section">
+            <h2 class="section-title">Monthly Performance Breakdown</h2>
+            <div class="chart-container">
+                <div id="monthlyComparisonChart" class="chart"></div>
+            </div>
+            <div class="insights-container" style="margin-top: 20px;">
+                <div class="insight-card">
+                    <h3>📅 Monthly Performance Insights</h3>
+                    <ul>
+                        <li><strong>June Dominance:</strong> June generated 23.7M views (69% of total) and 145K engagements (70% of total) with 5 reporting weeks</li>
+                        <li><strong>May Foundation:</strong> May's 3-week period established momentum with 5.6M views and 26K engagements</li>
+                        <li><strong>July Deceleration:</strong> July shows concerning signs with only 10.9M views in 2 weeks vs June's 23.7M in 5 weeks</li>
+                        <li><strong>Engagement Rate Consistency:</strong> All months maintained similar engagement rates (0.46-0.62%), indicating stable content quality</li>
+                    </ul>
+                </div>
+                <div class="recommendation-box" style="margin-top: 15px;">
+                    <div class="recommendation-title">Monthly Strategy Recommendations</div>
+                    <ul style="margin-left: 20px;">
+                        <li>Investigate July's performance drop - implement mid-month course corrections</li>
+                        <li>Replicate June's success factors: content themes, posting schedules, creator incentives</li>
+                        <li>Plan August campaigns to reverse July's deceleration trend</li>
+                        <li>Consider seasonal content strategies aligned with summer audience behavior</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Performance Heatmap -->
+        <div class="section">
+            <h2 class="section-title">Performance Intensity Heatmap</h2>
+            <div class="chart-container">
+                <div id="performanceHeatmap" class="chart"></div>
+            </div>
+            <div class="insights-container" style="margin-top: 20px;">
+                <div class="insight-card">
+                    <h3>🔥 Performance Intensity Insights</h3>
+                    <ul>
+                        <li><strong>Target Achievement Hot Zones:</strong> Weeks 3-8 show intense performance (>200% target) across both view and engagement metrics</li>
+                        <li><strong>Early Week Weakness:</strong> Week 1 shows the only sub-100% performance, indicating slow campaign start</li>
+                        <li><strong>Engagement Superiority:</strong> Engagement target achievement consistently shows higher intensity than view achievement</li>
+                        <li><strong>Late-Stage Cooling:</strong> Weeks 9-10 show reduced intensity, particularly in absolute metrics vs targets</li>
+                    </ul>
+                </div>
+                <div class="recommendation-box" style="margin-top: 15px;">
+                    <div class="recommendation-title">Heatmap-Based Recommendations</div>
+                    <ul style="margin-left: 20px;">
+                        <li>Study Weeks 3-8 "hot zone" tactics for best practice documentation</li>
+                        <li>Implement rapid-start protocols to avoid Week 1-style slow beginnings</li>
+                        <li>Create engagement-first strategies given its consistent outperformance</li>
+                        <li>Design re-energization campaigns for late-stage performance maintenance</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Insights Section -->
+        <div class="section">
+            <h2 class="section-title">Key Insights & Analysis</h2>
+            <div class="insights-container">
+                <div class="insight-grid">
+                    <div class="insight-card">
+                        <h3>📈 Growth Trajectory</h3>
+                        <ul>
+                            <li>Consistent upward trend with 375% total views growth over 10 weeks</li>
+                            <li>Engagement grew even faster at 568%, indicating improved content quality</li>
+                            <li>Monthly target increases (1.2M → 2.4M → 3.6M) were consistently exceeded</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h3>🎯 Performance Patterns</h3>
+                        <ul>
+                            <li>Week 3 (May 17-23) showed breakthrough performance at 207% of target</li>
+                            <li>June performance peaked at 271% engagement target achievement</li>
+                            <li>Slight deceleration in July suggests market saturation or seasonal effects</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h3>⚠️ Risk Indicators</h3>
+                        <ul>
+                            <li>Week-over-week growth rates declining from 66% to 5% in recent weeks</li>
+                            <li>View growth slowing faster than engagement growth</li>
+                            <li>Creator count remained static - potential bottleneck for future growth</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h3>💡 Opportunity Areas</h3>
+                        <ul>
+                            <li>Engagement rate improving suggests audience quality is increasing</li>
+                            <li>100% creator consistency shows strong team commitment</li>
+                            <li>Target overachievement provides room for more aggressive goals</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="recommendation-box">
+                    <div class="recommendation-title">Strategic Recommendations</div>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li><strong>Scale Creator Network:</strong> With 100% participation but slowing growth, expand from 18 to 25-30 active creators to maintain momentum.</li>
+                        <li><strong>Content Quality Focus:</strong> Leverage the improving engagement rates by analyzing top-performing content and replicating success patterns.</li>
+                        <li><strong>Platform Diversification:</strong> Investigate platform-specific performance to optimize content distribution strategy.</li>
+                        <li><strong>Aggressive Target Adjustment:</strong> Consider raising monthly targets by 50% given consistent overperformance.</li>
+                        <li><strong>Seasonal Planning:</strong> Prepare for potential summer slowdown with special campaigns or content series.</li>
+                        <li><strong>Engagement Optimization:</strong> Focus on converting the high view counts into even better engagement through interactive content formats.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Data preparation
+        const weeklyData = [
+            { week: 'Apr 28-May 8', views: 1170717, engagement: 5139, viewTarget: 98, engagementTarget: 86, month: 'May' },
+            { week: 'May 9-16', views: 1944937, engagement: 8882, viewTarget: 162, engagementTarget: 148, month: 'May' },
+            { week: 'May 17-23', views: 2480887, engagement: 11890, viewTarget: 207, engagementTarget: 198, month: 'May' },
+            { week: 'May 24-Jun 5', views: 4060478, engagement: 25568, viewTarget: 169, engagementTarget: 213, month: 'June' },
+            { week: 'Jun 6-13', views: 4252751, engagement: 26832, viewTarget: 177, engagementTarget: 224, month: 'June' },
+            { week: 'Jun 14-18', views: 4710432, engagement: 29182, viewTarget: 196, engagementTarget: 243, month: 'June' },
+            { week: 'Jun 19-25', views: 5080546, engagement: 30996, viewTarget: 212, engagementTarget: 258, month: 'June' },
+            { week: 'Jun 26-Jul 2', views: 5299232, engagement: 32495, viewTarget: 221, engagementTarget: 271, month: 'June' },
+            { week: 'Jul 3-10', views: 5299232, engagement: 32495, viewTarget: 147, engagementTarget: 181, month: 'July' },
+            { week: 'Jul 11-16', views: 5562454, engagement: 34350, viewTarget: 155, engagementTarget: 191, month: 'July' }
+        ];
+        
+        // Calculate week-over-week changes
+        const wowData = weeklyData.map((week, index) => {
+            if (index === 0) {
+                return { ...week, viewsWoW: 0, engagementWoW: 0 };
+            }
+            const prevWeek = weeklyData[index - 1];
+            const viewsWoW = ((week.views - prevWeek.views) / prevWeek.views * 100).toFixed(1);
+            const engagementWoW = ((week.engagement - prevWeek.engagement) / prevWeek.engagement * 100).toFixed(1);
+            return { ...week, viewsWoW, engagementWoW };
+        });
+        
+        // Initialize all charts
+        document.addEventListener('DOMContentLoaded', function() {
+            initMainTrendChart();
+            populateWoWTable();
+            initTargetAchievementChart();
+            initWoWGrowthChart();
+            initMonthlyComparisonChart();
+            initPerformanceHeatmap();
+        });
+        
+        function initMainTrendChart() {
+            const chart = echarts.init(document.getElementById('mainTrendChart'));
+            
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross'
+                    }
+                },
+                legend: {
+                    data: ['Views', 'Engagement', 'View Target %', 'Engagement Target %'],
+                    textStyle: { color: '#fff' },
+                    top: 'top'
+                },
+                grid: {
+                    left: '5%',
+                    right: '5%',
+                    bottom: '10%',
+                    top: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: weeklyData.map(w => w.week),
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { 
+                        color: '#fff',
+                        rotate: 45,
+                        interval: 0
+                    }
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: 'Views / Engagement',
+                        position: 'left',
+                        axisLine: { lineStyle: { color: '#667eea' } },
+                        axisLabel: { 
+                            color: '#fff',
+                            formatter: function(value) {
+                                return value >= 1000000 ? (value / 1000000).toFixed(1) + 'M' : 
+                                       value >= 1000 ? (value / 1000).toFixed(0) + 'K' : value;
+                            }
+                        },
+                        splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                    },
+                    {
+                        type: 'value',
+                        name: 'Target Achievement %',
+                        position: 'right',
+                        axisLine: { lineStyle: { color: '#f093fb' } },
+                        axisLabel: { 
+                            color: '#fff',
+                            formatter: '{value}%'
+                        },
+                        splitLine: { show: false }
+                    }
+                ],
+                series: [
+                    {
+                        name: 'Views',
+                        type: 'bar',
+                        data: weeklyData.map(w => w.views),
+                        itemStyle: { color: '#667eea' },
+                        yAxisIndex: 0
+                    },
+                    {
+                        name: 'Engagement',
+                        type: 'bar',
+                        data: weeklyData.map(w => w.engagement),
+                        itemStyle: { color: '#764ba2' },
+                        yAxisIndex: 0
+                    },
+                    {
+                        name: 'View Target %',
+                        type: 'line',
+                        data: weeklyData.map(w => w.viewTarget),
+                        itemStyle: { color: '#4ade80' },
+                        lineStyle: { width: 3 },
+                        yAxisIndex: 1,
+                        smooth: true
+                    },
+                    {
+                        name: 'Engagement Target %',
+                        type: 'line',
+                        data: weeklyData.map(w => w.engagementTarget),
+                        itemStyle: { color: '#f093fb' },
+                        lineStyle: { width: 3 },
+                        yAxisIndex: 1,
+                        smooth: true
+                    }
+                ]
+            };
+            
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
+        
+        function populateWoWTable() {
+            const tbody = document.querySelector('#wowTable tbody');
+            tbody.innerHTML = wowData.map(week => `
+                <tr>
+                    <td>${week.week}</td>
+                    <td>${week.views.toLocaleString()}</td>
+                    <td class="${week.viewsWoW > 0 ? 'positive' : week.viewsWoW < 0 ? 'negative' : ''}">
+                        ${week.viewsWoW > 0 ? '+' : ''}${week.viewsWoW}%
+                    </td>
+                    <td>${week.engagement.toLocaleString()}</td>
+                    <td class="${week.engagementWoW > 0 ? 'positive' : week.engagementWoW < 0 ? 'negative' : ''}">
+                        ${week.engagementWoW > 0 ? '+' : ''}${week.engagementWoW}%
+                    </td>
+                    <td class="${week.viewTarget >= 100 ? 'positive' : 'negative'}">${week.viewTarget}%</td>
+                    <td class="${week.engagementTarget >= 100 ? 'positive' : 'negative'}">${week.engagementTarget}%</td>
+                </tr>
+            `).join('');
+        }
+        
+        function initTargetAchievementChart() {
+            const chart = echarts.init(document.getElementById('targetAchievementChart'));
+            
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function(params) {
+                        return params[0].name + '<br/>' +
+                               params.map(p => `${p.seriesName}: ${p.value}%`).join('<br/>');
+                    }
+                },
+                legend: {
+                    data: ['View Target Achievement', 'Engagement Target Achievement'],
+                    textStyle: { color: '#fff' }
+                },
+                grid: {
+                    left: '10%',
+                    right: '10%',
+                    bottom: '15%',
+                    top: '15%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: weeklyData.map(w => w.week.split('-')[0]),
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { color: '#fff' }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { 
+                        color: '#fff',
+                        formatter: '{value}%'
+                    },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                series: [
+                    {
+                        name: 'View Target Achievement',
+                        type: 'line',
+                        data: weeklyData.map(w => w.viewTarget),
+                        itemStyle: { color: '#4ade80' },
+                        areaStyle: { opacity: 0.3 },
+                        smooth: true
+                    },
+                    {
+                        name: 'Engagement Target Achievement',
+                        type: 'line',
+                        data: weeklyData.map(w => w.engagementTarget),
+                        itemStyle: { color: '#f093fb' },
+                        areaStyle: { opacity: 0.3 },
+                        smooth: true
+                    }
+                ]
+            };
+            
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
+        
+        function initWoWGrowthChart() {
+            const chart = echarts.init(document.getElementById('wowGrowthChart'));
+            
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function(params) {
+                        return params[0].name + '<br/>' +
+                               params.map(p => `${p.seriesName}: ${p.value}%`).join('<br/>');
+                    }
+                },
+                legend: {
+                    data: ['Views WoW Growth', 'Engagement WoW Growth'],
+                    textStyle: { color: '#fff' }
+                },
+                grid: {
+                    left: '10%',
+                    right: '10%',
+                    bottom: '15%',
+                    top: '15%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: wowData.slice(1).map(w => w.week.split('-')[0]),
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { color: '#fff' }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { 
+                        color: '#fff',
+                        formatter: '{value}%'
+                    },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                series: [
+                    {
+                        name: 'Views WoW Growth',
+                        type: 'bar',
+                        data: wowData.slice(1).map(w => parseFloat(w.viewsWoW)),
+                        itemStyle: { 
+                            color: function(params) {
+                                return params.value > 0 ? '#4ade80' : '#f87171';
+                            }
+                        }
+                    },
+                    {
+                        name: 'Engagement WoW Growth',
+                        type: 'line',
+                        data: wowData.slice(1).map(w => parseFloat(w.engagementWoW)),
+                        itemStyle: { color: '#f093fb' },
+                        lineStyle: { width: 3 }
+                    }
+                ]
+            };
+            
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
+        
+        function initMonthlyComparisonChart() {
+            const chart = echarts.init(document.getElementById('monthlyComparisonChart'));
+            
+            // Aggregate data by month
+            const monthlyData = {
+                May: { views: 0, engagement: 0, weeks: 0 },
+                June: { views: 0, engagement: 0, weeks: 0 },
+                July: { views: 0, engagement: 0, weeks: 0 }
+            };
+            
+            weeklyData.forEach(week => {
+                monthlyData[week.month].views += week.views;
+                monthlyData[week.month].engagement += week.engagement;
+                monthlyData[week.month].weeks += 1;
+            });
+            
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function(params) {
+                        const month = params[0].name;
+                        return `${month}<br/>` +
+                               `Total Views: ${(monthlyData[month].views / 1000000).toFixed(2)}M<br/>` +
+                               `Total Engagement: ${(monthlyData[month].engagement / 1000).toFixed(1)}K<br/>` +
+                               `Weeks: ${monthlyData[month].weeks}`;
+                    }
+                },
+                grid: {
+                    left: '10%',
+                    right: '10%',
+                    bottom: '10%',
+                    top: '10%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: Object.keys(monthlyData),
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { 
+                        color: '#fff',
+                        fontSize: 14
+                    }
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: 'Views (Millions)',
+                        position: 'left',
+                        axisLine: { lineStyle: { color: '#667eea' } },
+                        axisLabel: { 
+                            color: '#fff',
+                            formatter: '{value}M'
+                        },
+                        splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                    },
+                    {
+                        type: 'value',
+                        name: 'Engagement (Thousands)',
+                        position: 'right',
+                        axisLine: { lineStyle: { color: '#f093fb' } },
+                        axisLabel: { 
+                            color: '#fff',
+                            formatter: '{value}K'
+                        },
+                        splitLine: { show: false }
+                    }
+                ],
+                series: [
+                    {
+                        name: 'Total Views',
+                        type: 'bar',
+                        data: Object.values(monthlyData).map(m => (m.views / 1000000).toFixed(2)),
+                        itemStyle: { 
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: '#667eea' },
+                                { offset: 1, color: '#764ba2' }
+                            ])
+                        },
+                        yAxisIndex: 0,
+                        barWidth: '40%'
+                    },
+                    {
+                        name: 'Total Engagement',
+                        type: 'bar',
+                        data: Object.values(monthlyData).map(m => (m.engagement / 1000).toFixed(1)),
+                        itemStyle: { 
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                { offset: 0, color: '#f093fb' },
+                                { offset: 1, color: '#ff6b6b' }
+                            ])
+                        },
+                        yAxisIndex: 1,
+                        barWidth: '40%'
+                    }
+                ]
+            };
+            
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
+        
+        function initPerformanceHeatmap() {
+            const chart = echarts.init(document.getElementById('performanceHeatmap'));
+            
+            // Prepare heatmap data
+            const metrics = ['Views', 'Engagement', 'View Target', 'Engagement Target'];
+            const heatmapData = [];
+            
+            weeklyData.forEach((week, weekIndex) => {
+                // Normalize values for heatmap (0-100 scale)
+                const viewsNorm = (week.views / 5562454) * 100;
+                const engagementNorm = (week.engagement / 34350) * 100;
+                
+                heatmapData.push([weekIndex, 0, viewsNorm.toFixed(0)]);
+                heatmapData.push([weekIndex, 1, engagementNorm.toFixed(0)]);
+                heatmapData.push([weekIndex, 2, Math.min(week.viewTarget, 100)]);
+                heatmapData.push([weekIndex, 3, Math.min(week.engagementTarget, 100)]);
+            });
+            
+            const option = {
+                tooltip: {
+                    position: 'top',
+                    formatter: function(params) {
+                        const week = weeklyData[params.value[0]];
+                        const metric = metrics[params.value[1]];
+                        return `${week.week}<br/>${metric}: ${params.value[2]}%`;
+                    }
+                },
+                grid: {
+                    left: '15%',
+                    right: '5%',
+                    bottom: '15%',
+                    top: '5%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: weeklyData.map(w => w.week.split('-')[0]),
+                    splitArea: { show: true },
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { 
+                        color: '#fff',
+                        rotate: 45
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: metrics,
+                    splitArea: { show: true },
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { color: '#fff' }
+                },
+                visualMap: {
+                    min: 0,
+                    max: 100,
+                    calculable: true,
+                    orient: 'horizontal',
+                    left: 'center',
+                    bottom: '0%',
+                    textStyle: { color: '#fff' },
+                    inRange: {
+                        color: ['#1a1a2e', '#16213e', '#0f3460', '#667eea', '#764ba2', '#f093fb']
+                    }
+                },
+                series: [{
+                    name: 'Performance Intensity',
+                    type: 'heatmap',
+                    data: heatmapData,
+                    label: {
+                        show: true,
+                        color: '#fff',
+                        fontSize: 10
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(102, 126, 234, 0.5)'
+                        }
+                    }
+                }]
+            };
+            
+            chart.setOption(option);
+            window.addEventListener('resize', () => chart.resize());
+        }
+    </script>
+</body>
+</html>

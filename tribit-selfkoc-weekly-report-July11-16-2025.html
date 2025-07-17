@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tribit Self-KOC Weekly Report - July 11-16, 2025</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .header .date-range {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: '▶';
+            color: #764ba2;
+        }
+        
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .kpi-card .metric-name {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        
+        .kpi-card .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .kpi-card .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .kpi-card .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 1s ease-out;
+        }
+        
+        .kpi-card .completion-rate {
+            font-size: 0.9rem;
+            color: #4ade80;
+            text-align: right;
+        }
+        
+        /* Charts Container */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chart-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        
+        .chart {
+            height: 350px;
+        }
+        
+        /* Platform Stats */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .platform-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .platform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .platform-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .platform-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .youtube-icon { background: #ff0000; }
+        .instagram-icon { background: linear-gradient(45deg, #833AB4, #FD1D1D, #FCAF45); }
+        .tiktok-icon { background: #000000; border: 2px solid #ff0050; }
+        
+        .platform-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        /* Video Preview Section */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .video-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .video-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .video-preview {
+            position: relative;
+            padding-bottom: 177.78%; /* 9:16 aspect ratio */
+            background: #000;
+            cursor: pointer;
+        }
+        
+        .video-preview iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .video-thumbnail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .play-button:hover {
+            background: #667eea;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .play-button::after {
+            content: '▶';
+            color: #000;
+            font-size: 1.5rem;
+            margin-left: 5px;
+        }
+        
+        .video-info {
+            padding: 20px;
+        }
+        
+        .video-platform {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .platform-youtube { background: #ff0000; }
+        .platform-instagram { background: #e1306c; }
+        .platform-tiktok { background: #000; border: 1px solid #ff0050; }
+        
+        .video-metrics {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .metric {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .metric-icon {
+            color: #667eea;
+        }
+        
+        /* Insights Section */
+        .insights-container {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .insight-item {
+            margin-bottom: 20px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .insight-item::before {
+            content: '💡';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .recommendation-box {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid #4ade80;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+        
+        .recommendation-title {
+            font-size: 1.1rem;
+            color: #4ade80;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .chart-grid,
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Tribit Self-KOC Weekly Performance Report</h1>
+            <div class="date-range">July 11 - July 16, 2025</div>
+        </div>
+        
+        <!-- KPI Overview Section -->
+        <div class="section">
+            <h2 class="section-title">Overall KPI Performance</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="metric-name">Time Progress</div>
+                    <div class="metric-value">16/28</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 87%"></div>
+                    </div>
+                    <div class="completion-rate">87% Complete</div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="metric-name">Active Creators</div>
+                    <div class="metric-value">18/18</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="completion-rate">100% Complete</div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="metric-name">Monthly Views</div>
+                    <div class="metric-value">5.56M</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="completion-rate">155% of Target</div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="metric-name">Monthly Engagement</div>
+                    <div class="metric-value">34.4K</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="completion-rate">191% of Target</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Platform Performance -->
+        <div class="section">
+            <h2 class="section-title">Platform Performance Analysis</h2>
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Content Distribution by Platform</div>
+                    <div id="contentDistributionChart" class="chart"></div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Views Distribution by Platform</div>
+                    <div id="viewsDistributionChart" class="chart"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Platform Stats Cards -->
+        <div class="section">
+            <h2 class="section-title">Platform-Specific Metrics</h2>
+            <div class="platform-grid">
+                <div class="platform-card">
+                    <div class="platform-header">
+                        <div class="platform-icon youtube-icon">▶</div>
+                        <h3>YouTube Performance</h3>
+                    </div>
+                    <div class="platform-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">243</div>
+                            <div class="stat-label">Posts</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.69M</div>
+                            <div class="stat-label">Views</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">25.1K</div>
+                            <div class="stat-label">Likes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">20</div>
+                            <div class="stat-label">Comments</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-header">
+                        <div class="platform-icon instagram-icon">📷</div>
+                        <h3>Instagram Performance</h3>
+                    </div>
+                    <div class="platform-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">144</div>
+                            <div class="stat-label">Posts</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">143.6K</div>
+                            <div class="stat-label">Views</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">553</div>
+                            <div class="stat-label">Likes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">Comments</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-header">
+                        <div class="platform-icon tiktok-icon">♪</div>
+                        <h3>TikTok Performance</h3>
+                    </div>
+                    <div class="platform-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">144</div>
+                            <div class="stat-label">Posts</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">143.6K</div>
+                            <div class="stat-label">Views</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">553</div>
+                            <div class="stat-label">Likes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">Comments</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Engagement Analysis -->
+        <div class="section">
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Engagement Rate by Platform</div>
+                    <div id="engagementRateChart" class="chart"></div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-title">Content Performance Comparison</div>
+                    <div id="performanceComparisonChart" class="chart"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Top Videos Section -->
+        <div class="section">
+            <h2 class="section-title">Top Performing Videos This Week</h2>
+            
+            <!-- YouTube Top Videos -->
+            <h3 style="color: #ff0000; margin: 30px 0 20px 0;">YouTube Top 3</h3>
+            <div class="video-grid">
+                <div class="video-card">
+                    <div class="video-preview" onclick="playYouTubeVideo(this, 'n86XoyS0zWs')">
+                        <img src="https://img.youtube.com/vi/n86XoyS0zWs/maxresdefault.jpg" alt="YouTube Video" class="video-thumbnail">
+                        <div class="play-button"></div>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-platform platform-youtube">YouTube</span>
+                        <div class="video-metrics">
+                            <div class="metric">
+                                <span class="metric-icon">👁</span>
+                                <span>24K views</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-icon">👍</span>
+                                <span>125 likes</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #888;">@bigteddybearskitina</div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-preview" onclick="playYouTubeVideo(this, '0u4XLO1VDQI')">
+                        <img src="https://img.youtube.com/vi/0u4XLO1VDQI/maxresdefault.jpg" alt="YouTube Video" class="video-thumbnail">
+                        <div class="play-button"></div>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-platform platform-youtube">YouTube</span>
+                        <div class="video-metrics">
+                            <div class="metric">
+                                <span class="metric-icon">👁</span>
+                                <span>19K views</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-icon">👍</span>
+                                <span>99 likes</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #888;">@delimiroorozc</div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-preview" onclick="playYouTubeVideo(this, '3bgdZXYMdls')">
+                        <img src="https://img.youtube.com/vi/3bgdZXYMdls/maxresdefault.jpg" alt="YouTube Video" class="video-thumbnail">
+                        <div class="play-button"></div>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-platform platform-youtube">YouTube</span>
+                        <div class="video-metrics">
+                            <div class="metric">
+                                <span class="metric-icon">👁</span>
+                                <span>18K views</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-icon">👍</span>
+                                <span>131 likes</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #888;">@delimiroorozc</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TikTok Top Videos -->
+            <h3 style="color: #ff0050; margin: 30px 0 20px 0;">TikTok Top 3</h3>
+            <div class="video-grid">
+                <div class="video-card">
+                    <div class="video-preview">
+                        <iframe src="https://www.tiktok.com/embed/v2/7525119375800683831" 
+                                allowfullscreen 
+                                scrolling="no" 
+                                style="border: none;">
+                        </iframe>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-platform platform-tiktok">TikTok</span>
+                        <div class="video-metrics">
+                            <div class="metric">
+                                <span class="metric-icon">👁</span>
+                                <span>3.4K views</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-icon">👍</span>
+                                <span>34 likes</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #888;">@bigtedd69</div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-preview">
+                        <iframe src="https://www.tiktok.com/embed/v2/7524378411423386935" 
+                                allowfullscreen 
+                                scrolling="no" 
+                                style="border: none;">
+                        </iframe>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-platform platform-tiktok">TikTok</span>
+                        <div class="video-metrics">
+                            <div class="metric">
+                                <span class="metric-icon">👁</span>
+                                <span>2.2K views</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-icon">👍</span>
+                                <span>13 likes</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #888;">@bonoh2306017</div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-preview">
+                        <iframe src="https://www.tiktok.com/embed/v2/7525136065351470349" 
+                                allowfullscreen 
+                                scrolling="no" 
+                                style="border: none;">
+                        </iframe>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-platform platform-tiktok">TikTok</span>
+                        <div class="video-metrics">
+                            <div class="metric">
+                                <span class="metric-icon">👁</span>
+                                <span>1.4K views</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-icon">👍</span>
+                                <span>33 likes</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #888;">@bonoh230601</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Instagram Top Videos -->
+            <h3 style="color: #e1306c; margin: 30px 0 20px 0;">Instagram Top 3</h3>
+            <div class="video-grid">
+                <div class="video-card">
+                    <div class="video-preview">
+                        <blockquote class="instagram-media" 
+                                    data-instgrm-permalink="https://www.instagram.com/reel/DL5Mt-mMmrd/" 
+                                    data-instgrm-version="14"
+                                    style="width: 100%; margin: 0;">
+                        </blockquote>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-platform platform-instagram">Instagram</span>
+                        <div class="video-metrics">
+                            <div class="metric">
+                                <span class="metric-icon">👁</span>
+                                <span>351 views</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-icon">👍</span>
+                                <span>3 likes</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #888;">@frankrobert4f0z</div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-preview">
+                        <blockquote class="instagram-media" 
+                                    data-instgrm-permalink="https://www.instagram.com/reel/DMDkSmgMgmG/" 
+                                    data-instgrm-version="14"
+                                    style="width: 100%; margin: 0;">
+                        </blockquote>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-platform platform-instagram">Instagram</span>
+                        <div class="video-metrics">
+                            <div class="metric">
+                                <span class="metric-icon">👁</span>
+                                <span>218 views</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-icon">👍</span>
+                                <span>0 likes</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #888;">@frankrobert4f0z</div>
+                    </div>
+                </div>
+                
+                <div class="video-card">
+                    <div class="video-preview">
+                        <blockquote class="instagram-media" 
+                                    data-instgrm-permalink="https://www.instagram.com/reel/DLz9Uzes698/" 
+                                    data-instgrm-version="14"
+                                    style="width: 100%; margin: 0;">
+                        </blockquote>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-platform platform-instagram">Instagram</span>
+                        <div class="video-metrics">
+                            <div class="metric">
+                                <span class="metric-icon">👁</span>
+                                <span>204 views</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-icon">👍</span>
+                                <span>2 likes</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #888;">@frankrobert4f0z</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Insights Section -->
+        <div class="section">
+            <h2 class="section-title">Key Insights & Recommendations</h2>
+            <div class="insights-container">
+                <div class="insight-item">
+                    <strong>Platform Dominance:</strong> YouTube accounts for 84.4% of total views with only 243 posts, showing superior reach and engagement compared to Instagram and TikTok combined.
+                </div>
+                
+                <div class="insight-item">
+                    <strong>Engagement Quality Gap:</strong> YouTube shows a healthy engagement rate with 25.1K likes, while Instagram and TikTok severely underperform with minimal comments (1 each) despite 144 posts on each platform.
+                </div>
+                
+                <div class="insight-item">
+                    <strong>Content Volume vs Performance:</strong> Instagram and TikTok have identical metrics (144 posts, 143.6K views, 553 likes), suggesting potential data synchronization issues or identical content strategy that needs differentiation.
+                </div>
+                
+                <div class="insight-item">
+                    <strong>Creator Efficiency:</strong> All 18 creators are active (100% participation), exceeding view targets by 55% and engagement targets by 91%, indicating strong team performance.
+                </div>
+                
+                <div class="recommendation-box">
+                    <div class="recommendation-title">Strategic Recommendations</div>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Prioritize YouTube Investment:</strong> Allocate more resources to YouTube content creation given its 30x better performance per post compared to other platforms.</li>
+                        <li><strong>Revamp Instagram & TikTok Strategy:</strong> Investigate why these platforms show identical metrics and develop platform-specific content strategies to improve engagement.</li>
+                        <li><strong>Engagement Crisis Response:</strong> Implement immediate measures to boost comments and interactions on Instagram/TikTok through calls-to-action, contests, or interactive content.</li>
+                        <li><strong>Content Quality Audit:</strong> Review top-performing YouTube videos to identify success factors and replicate across other platforms with platform-appropriate adaptations.</li>
+                        <li><strong>Data Validation:</strong> Verify the accuracy of Instagram and TikTok metrics as identical numbers suggest potential tracking issues.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script async src="//www.instagram.com/embed.js"></script>
+    <script>
+        // Initialize all charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            animateProgressBars();
+        });
+        
+        function initializeCharts() {
+            // Content Distribution Chart
+            const contentDistChart = echarts.init(document.getElementById('contentDistributionChart'));
+            contentDistChart.setOption({
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: {c} posts ({d}%)'
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    itemStyle: {
+                        borderRadius: 10,
+                        borderColor: '#0a0a0a',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: true,
+                        color: '#fff'
+                    },
+                    data: [
+                        { value: 243, name: 'YouTube', itemStyle: { color: '#ff0000' } },
+                        { value: 144, name: 'Instagram', itemStyle: { color: '#e1306c' } },
+                        { value: 144, name: 'TikTok', itemStyle: { color: '#000000' } }
+                    ]
+                }]
+            });
+            
+            // Views Distribution Chart
+            const viewsDistChart = echarts.init(document.getElementById('viewsDistributionChart'));
+            viewsDistChart.setOption({
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function(params) {
+                        return params.name + ': ' + (params.value / 1000000).toFixed(2) + 'M views';
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    itemStyle: {
+                        borderRadius: 10,
+                        borderColor: '#0a0a0a',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: true,
+                        color: '#fff',
+                        formatter: function(params) {
+                            return params.name + '\n' + (params.value / 1000000).toFixed(2) + 'M';
+                        }
+                    },
+                    data: [
+                        { value: 4694594, name: 'YouTube', itemStyle: { color: '#ff0000' } },
+                        { value: 143590, name: 'Instagram', itemStyle: { color: '#e1306c' } },
+                        { value: 143590, name: 'TikTok', itemStyle: { color: '#000000' } }
+                    ]
+                }]
+            });
+            
+            // Engagement Rate Chart
+            const engagementChart = echarts.init(document.getElementById('engagementRateChart'));
+            engagementChart.setOption({
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: '{b}: {c}%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['YouTube', 'Instagram', 'TikTok'],
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { color: '#fff' }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { 
+                        color: '#fff',
+                        formatter: '{value}%'
+                    },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                series: [{
+                    type: 'bar',
+                    data: [
+                        { value: 0.54, itemStyle: { color: '#ff0000' } },
+                        { value: 0.39, itemStyle: { color: '#e1306c' } },
+                        { value: 0.39, itemStyle: { color: '#000000' } }
+                    ],
+                    barWidth: '60%',
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#fff',
+                        formatter: '{c}%'
+                    }
+                }],
+                grid: {
+                    left: '10%',
+                    right: '10%',
+                    bottom: '10%',
+                    top: '10%'
+                }
+            });
+            
+            // Performance Comparison Chart
+            const performanceChart = echarts.init(document.getElementById('performanceComparisonChart'));
+            performanceChart.setOption({
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    data: ['Posts', 'Views (K)', 'Engagement (K)'],
+                    textStyle: { color: '#fff' }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['YouTube', 'Instagram', 'TikTok'],
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { color: '#fff' }
+                },
+                yAxis: {
+                    type: 'log',
+                    axisLine: { lineStyle: { color: '#666' } },
+                    axisLabel: { color: '#fff' },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                series: [
+                    {
+                        name: 'Posts',
+                        type: 'bar',
+                        data: [243, 144, 144],
+                        itemStyle: { color: '#667eea' }
+                    },
+                    {
+                        name: 'Views (K)',
+                        type: 'bar',
+                        data: [4694.6, 143.6, 143.6],
+                        itemStyle: { color: '#764ba2' }
+                    },
+                    {
+                        name: 'Engagement (K)',
+                        type: 'bar',
+                        data: [25.169, 0.554, 0.554],
+                        itemStyle: { color: '#f093fb' }
+                    }
+                ],
+                grid: {
+                    left: '10%',
+                    right: '10%',
+                    bottom: '10%',
+                    top: '15%'
+                }
+            });
+            
+            // Make charts responsive
+            window.addEventListener('resize', function() {
+                contentDistChart.resize();
+                viewsDistChart.resize();
+                engagementChart.resize();
+                performanceChart.resize();
+            });
+        }
+        
+        function animateProgressBars() {
+            const progressFills = document.querySelectorAll('.progress-fill');
+            setTimeout(() => {
+                progressFills.forEach(fill => {
+                    fill.style.width = fill.style.width;
+                });
+            }, 100);
+        }
+        
+        function playYouTubeVideo(element, videoId) {
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            iframe.style.position = 'absolute';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            
+            element.innerHTML = '';
+            element.appendChild(iframe);
+        }
+    </script>
+</body>
+</html>
