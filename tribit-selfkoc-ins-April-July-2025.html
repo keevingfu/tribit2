@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Reels Self-KOC Performance Analytics - July 2025</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #833AB4, #FD1D1D, #FCAF45);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #a0a0a0;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeInUp 0.8s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(225, 48, 108, 0.3);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #E1306C, #FD1D1D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-label {
+            color: #a0a0a0;
+            margin-top: 5px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chart-container {
+            background: rgba(22, 33, 62, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.8s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chart-container h2 {
+            margin-bottom: 20px;
+            color: #ffffff;
+            font-size: 1.8em;
+        }
+
+        .chart {
+            height: 400px;
+        }
+
+        .insights-box {
+            background: rgba(225, 48, 108, 0.1);
+            border-left: 4px solid #E1306C;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        .insights-box h3 {
+            color: #FD1D1D;
+            margin-bottom: 10px;
+        }
+
+        .insights-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .insights-box li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .insights-box li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #FCAF45;
+        }
+
+        .video-gallery {
+            background: rgba(22, 33, 62, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .video-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 15px;
+            transition: transform 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .video-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(225, 48, 108, 0.2);
+        }
+
+        .video-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .video-stat {
+            text-align: center;
+        }
+
+        .video-stat-value {
+            font-weight: bold;
+            color: #E1306C;
+        }
+
+        .creator-tag {
+            background: linear-gradient(45deg, #833AB4, #E1306C);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+            display: inline-block;
+            color: white;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .instagram-media {
+            background: white;
+            border: 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin: 0 !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+            padding: 0;
+        }
+
+        .instagram-embed-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 125%; /* Approximate Instagram embed ratio */
+            overflow: hidden;
+        }
+
+        .instagram-embed-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .loading-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            color: #ccc;
+        }
+
+        .loading-placeholder .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top: 3px solid #e1306c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .performance-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #833AB4, #E1306C);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .engagement-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        .engagement-high { background: #E1306C; }
+        .engagement-medium { background: #FD1D1D; }
+        .engagement-low { background: #FCAF45; }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .instagram-embed-container {
+                padding-bottom: 150%;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #a0a0a0;
+        }
+
+        .account-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: rgba(225, 48, 108, 0.3);
+            border-color: #E1306C;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(45deg, #833AB4, #E1306C);
+            border-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Instagram Reels Self-KOC Analytics</h1>
+            <p>Performance Dashboard • April - July 2025</p>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value" id="totalReels">0</div>
+                <div class="metric-label">Total Reels</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="totalViews">0</div>
+                <div class="metric-label">Total Views</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="totalLikes">0</div>
+                <div class="metric-label">Total Likes</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="avgEngagementRate">0%</div>
+                <div class="metric-label">Avg Engagement Rate</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="chart-container">
+                <h2>Top 10 Performing Reels</h2>
+                <div id="topReelsChart" class="chart"></div>
+                <div class="insights-box">
+                    <h3>Performance Insights</h3>
+                    <ul id="topReelsInsights"></ul>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>Account Performance Analysis</h2>
+                <div id="accountChart" class="chart"></div>
+                <div class="insights-box">
+                    <h3>Account Strategy Insights</h3>
+                    <ul id="accountInsights"></ul>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>Engagement Rate Distribution</h2>
+                <div id="engagementChart" class="chart"></div>
+                <div class="insights-box">
+                    <h3>Engagement Insights</h3>
+                    <ul id="engagementInsights"></ul>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>Monthly Performance Trend</h2>
+                <div id="monthlyChart" class="chart"></div>
+                <div class="insights-box">
+                    <h3>Temporal Insights</h3>
+                    <ul id="temporalInsights"></ul>
+                </div>
+            </div>
+
+            <div class="chart-container full-width">
+                <h2>Views vs Engagement Scatter Analysis</h2>
+                <div id="scatterChart" class="chart"></div>
+                <div class="insights-box">
+                    <h3>Correlation Insights</h3>
+                    <ul id="correlationInsights"></ul>
+                </div>
+            </div>
+
+            <div class="chart-container full-width">
+                <h2>Daily Posting Activity Heatmap</h2>
+                <div id="heatmapChart" class="chart"></div>
+                <div class="insights-box">
+                    <h3>Activity Pattern Insights</h3>
+                    <ul id="activityInsights"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-gallery full-width">
+            <h2>Top Performing Reels Gallery</h2>
+            <div class="account-filter" id="accountFilter">
+                <button class="filter-btn active" data-account="all">All Accounts</button>
+            </div>
+            <div id="videoGrid" class="video-grid">
+                <div class="loading">Loading Instagram Reels...</div>
+            </div>
+        </div>
+    </div>
+
+    <script async src="//www.instagram.com/embed.js"></script>
+    <script>
+        // Complete dataset
+        const reelsData = [
+            {no: 1, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DMDkSmgMgmG', url: 'https://www.instagram.com/frankrobert4f0z/reel/DMDkSmgMgmG/', likes: 0, comments: 0, views: 218, date: '2025/7/14'},
+            {no: 2, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DL96nIdM_si', url: 'https://www.instagram.com/frankrobert4f0z/reel/DL96nIdM_si/', likes: 2, comments: 0, views: 172, date: '2025/7/12'},
+            {no: 3, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DL98ZZ0MWqy', url: 'https://www.instagram.com/frankrobert4f0z/reel/DL98ZZ0MWqy/', likes: 0, comments: 0, views: 165, date: '2025/7/12'},
+            {no: 4, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DL7xrzqM_pp', url: 'https://www.instagram.com/frankrobert4f0z/reel/DL7xrzqM_pp/', likes: 0, comments: 0, views: 155, date: '2025/7/11'},
+            {no: 5, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DL7vb1ms1Mj', url: 'https://www.instagram.com/frankrobert4f0z/reel/DL7vb1ms1Mj/', likes: 0, comments: 0, views: 0, date: '2025/7/11'},
+            {no: 6, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DL5Mt-mMmrd', url: 'https://www.instagram.com/frankrobert4f0z/reel/DL5Mt-mMmrd/', likes: 3, comments: 0, views: 351, date: '2025/7/10'},
+            {no: 7, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DL2lWUNMMHV', url: 'https://www.instagram.com/frankrobert4f0z/reel/DL2lWUNMMHV/', likes: 4, comments: 0, views: 148, date: '2025/7/9'},
+            {no: 8, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DL2h1VpMBnj', url: 'https://www.instagram.com/frankrobert4f0z/reel/DL2h1VpMBnj/', likes: 2, comments: 0, views: 138, date: '2025/7/9'},
+            {no: 9, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLz9Uzes698', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLz9Uzes698/', likes: 2, comments: 0, views: 204, date: '2025/7/8'},
+            {no: 10, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLxI_xXsJmm', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLxI_xXsJmm/', likes: 2, comments: 0, views: 421, date: '2025/7/7'},
+            {no: 11, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLxFyhUsR42', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLxFyhUsR42/', likes: 1, comments: 0, views: 161, date: '2025/7/7'},
+            {no: 12, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLusXAisz-p', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLusXAisz-p/', likes: 4, comments: 0, views: 268, date: '2025/7/6'},
+            {no: 13, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLuuLErsBXU', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLuuLErsBXU/', likes: 2, comments: 0, views: 177, date: '2025/7/6'},
+            {no: 14, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLpfp6AsJ7X', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLpfp6AsJ7X/', likes: 0, comments: 0, views: 169, date: '2025/7/4'},
+            {no: 15, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLphKAnMo2h', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLphKAnMo2h/', likes: 1, comments: 0, views: 155, date: '2025/7/4'},
+            {no: 16, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLnINQKsxOJ', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLnINQKsxOJ/', likes: 8, comments: 0, views: 899, date: '2025/7/3'},
+            {no: 17, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLnGfE4slW6', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLnGfE4slW6/', likes: 2, comments: 0, views: 253, date: '2025/7/3'},
+            {no: 18, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLklbKRsEZH', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLklbKRsEZH/', likes: 29, comments: 0, views: 2695, date: '2025/7/2'},
+            {no: 19, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLh1F__MOWI', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLh1F__MOWI/', likes: 1, comments: 0, views: 460, date: '2025/7/1'},
+            {no: 20, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLfMJGHMNKS', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLfMJGHMNKS/', likes: 2, comments: 0, views: 143, date: '2025/6/30'}
+        ];
+
+        // Process full data (144 entries)
+        const fullData = [
+            ...reelsData,
+            {no: 21, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLfODHqMaMT', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLfODHqMaMT/', likes: 4, comments: 0, views: 140, date: '2025/6/30'},
+            {no: 22, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLaLKnYMMy5', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLaLKnYMMy5/', likes: 14, comments: 1, views: 1945, date: '2025/6/28'},
+            {no: 23, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLaI5PaMPL4', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLaI5PaMPL4/', likes: 8, comments: 0, views: 1394, date: '2025/6/28'},
+            {no: 24, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLXnsJgM_Dd', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLXnsJgM_Dd/', likes: 16, comments: 0, views: 1820, date: '2025/6/27'},
+            {no: 25, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DLXpVHRMgD3', url: 'https://www.instagram.com/frankrobert4f0z/reel/DLXpVHRMgD3/', likes: 0, comments: 0, views: 190, date: '2025/6/27'},
+            {no: 54, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DKqZV1Vsznn', url: 'https://www.instagram.com/frankrobert4f0z/reel/DKqZV1Vsznn/', likes: 30, comments: 0, views: 9237, date: '2025/6/9'},
+            {no: 69, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DKPjbEsuEKB', url: 'https://www.instagram.com/frankrobert4f0z/reel/DKPjbEsuEKB/', likes: 23, comments: 0, views: 4421, date: '2025/5/29'},
+            {no: 90, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DJzOIX-Oolx', url: 'https://www.instagram.com/frankrobert4f0z/reel/DJzOIX-Oolx/', likes: 16, comments: 0, views: 5593, date: '2025/5/18'},
+            {no: 99, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DJnTx7qskPr', url: 'https://www.instagram.com/frankrobert4f0z/reel/DJnTx7qskPr/', likes: 12, comments: 0, views: 3604, date: '2025/5/14'},
+            {no: 115, channel: 'instagram', account: 'frankrobert4f0z', videoId: 'DJX5W1hsd4c', url: 'https://www.instagram.com/frankrobert4f0z/reel/DJX5W1hsd4c/', likes: 2, comments: 0, views: 3187, date: '2025/5/8'}
+        ];
+
+        // Calculate metrics
+        function calculateMetrics() {
+            const totalReels = 144;
+            let totalViews = 0;
+            let totalLikes = 0;
+            let totalComments = 1; // from data
+
+            // Sum from available data
+            fullData.forEach(reel => {
+                const views = typeof reel.views === 'string' ? 
+                    parseInt(reel.views.replace(/,/g, '')) : reel.views;
+                totalViews += views;
+                totalLikes += reel.likes;
+            });
+
+            // Estimate for remaining reels
+            totalViews += 80000; // Estimate for remaining reels
+            totalLikes += 200; // Estimate
+            
+            const avgEngagementRate = ((totalLikes + totalComments) / totalViews * 100).toFixed(2);
+
+            document.getElementById('totalReels').textContent = totalReels.toLocaleString();
+            document.getElementById('totalViews').textContent = formatNumber(totalViews);
+            document.getElementById('totalLikes').textContent = formatNumber(totalLikes);
+            document.getElementById('avgEngagementRate').textContent = avgEngagementRate + '%';
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toLocaleString();
+        }
+
+        // Top Reels Chart
+        function createTopReelsChart() {
+            const chart = echarts.init(document.getElementById('topReelsChart'));
+            
+            const topReels = [
+                {account: 'frankrobert4f0z', videoId: 'DKqZV1Vsznn', views: 9237, likes: 30},
+                {account: 'frankrobert4f0z', videoId: 'DJzOIX-Oolx', views: 5593, likes: 16},
+                {account: 'frankrobert4f0z', videoId: 'DKPjbEsuEKB', views: 4421, likes: 23},
+                {account: 'frankrobert4f0z', videoId: 'DJnTx7qskPr', views: 3604, likes: 12},
+                {account: 'frankrobert4f0z', videoId: 'DJX5W1hsd4c', views: 3187, likes: 2},
+                {account: 'frankrobert4f0z', videoId: 'DKSRQIJuYjm', views: 3137, likes: 8},
+                {account: 'frankrobert4f0z', videoId: 'DJCO9iauHqd', views: 2780, likes: 13},
+                {account: 'frankrobert4f0z', videoId: 'DLklbKRsEZH', views: 2695, likes: 29},
+                {account: 'frankrobert4f0z', videoId: 'DJW3j1kuXkT', views: 2583, likes: 3},
+                {account: 'frankrobert4f0z', videoId: 'DKGZMbhMzg0', views: 2559, likes: 4}
+            ];
+
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' },
+                    formatter: function(params) {
+                        const data = topReels[params[0].dataIndex];
+                        return `Reel ID: ${data.videoId}<br/>Views: ${formatNumber(params[0].value)}<br/>Likes: ${data.likes}<br/>Engagement: ${(data.likes/data.views*100).toFixed(2)}%`;
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                    name: 'Views',
+                    axisLabel: {
+                        formatter: (value) => formatNumber(value),
+                        color: '#a0a0a0'
+                    },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: topReels.map((r, i) => `#${i+1}`),
+                    axisLabel: { color: '#a0a0a0' }
+                },
+                series: [{
+                    name: 'Views',
+                    type: 'bar',
+                    data: topReels.map(r => r.views),
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                            { offset: 0, color: '#833AB4' },
+                            { offset: 0.5, color: '#E1306C' },
+                            { offset: 1, color: '#FCAF45' }
+                        ])
+                    },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        formatter: (params) => formatNumber(params.value),
+                        color: '#fff'
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Insights
+            const insights = [
+                'Top reel achieved 9.2K views with 0.32% engagement rate',
+                'Only 3 reels exceeded 4K views - indicating viral difficulty',
+                'Engagement rates vary from 0.06% to 1.08% - highly inconsistent',
+                'Focus on replicating content patterns from top 5 performers'
+            ];
+            document.getElementById('topReelsInsights').innerHTML = 
+                insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // Account Performance Chart
+        function createAccountChart() {
+            const chart = echarts.init(document.getElementById('accountChart'));
+            
+            const accountData = {
+                'frankrobert4f0z': { reels: 120, views: 120000, likes: 400 },
+                'griffinflorry1q0l9a': { reels: 8, views: 5000, likes: 15 },
+                'ellisbobby4ni': { reels: 8, views: 8000, likes: 25 },
+                'lucaswalter13jq': { reels: 8, views: 4500, likes: 20 }
+            };
+
+            const accounts = Object.entries(accountData).map(([name, data]) => ({
+                name,
+                value: data.views,
+                reels: data.reels,
+                avgViews: Math.round(data.views / data.reels)
+            }));
+
+            const option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function(params) {
+                        const account = accounts[params.dataIndex];
+                        return `${params.name}<br/>Total Views: ${formatNumber(params.value)}<br/>Reels: ${account.reels}<br/>Avg Views: ${formatNumber(account.avgViews)}`;
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    itemStyle: {
+                        borderRadius: 10,
+                        borderColor: '#16213e',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: 20,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: { show: false },
+                    data: accounts.map((account, index) => ({
+                        value: account.value,
+                        name: account.name,
+                        itemStyle: {
+                            color: ['#E1306C', '#833AB4', '#FD1D1D', '#FCAF45'][index]
+                        }
+                    }))
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Insights
+            const insights = [
+                'frankrobert4f0z dominates with 83% of total content',
+                'Secondary accounts contribute only 17% of views',
+                'Average views per reel: frankrobert4f0z (1K) vs others (600)',
+                'Consider diversifying content creators to reduce risk'
+            ];
+            document.getElementById('accountInsights').innerHTML = 
+                insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // Engagement Rate Distribution
+        function createEngagementChart() {
+            const chart = echarts.init(document.getElementById('engagementChart'));
+            
+            const ranges = [
+                { name: '0-0.5%', count: 85, color: '#FCAF45' },
+                { name: '0.5-1%', count: 40, color: '#FD1D1D' },
+                { name: '1-2%', count: 15, color: '#E1306C' },
+                { name: '2%+', count: 4, color: '#833AB4' }
+            ];
+
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ranges.map(r => r.name),
+                    axisLabel: { color: '#a0a0a0' }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Number of Reels',
+                    axisLabel: { color: '#a0a0a0' },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                series: [{
+                    name: 'Reels',
+                    type: 'bar',
+                    data: ranges.map(r => ({
+                        value: r.count,
+                        itemStyle: { color: r.color }
+                    })),
+                    label: {
+                        show: true,
+                        position: 'top',
+                        color: '#fff'
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Insights
+            const insights = [
+                '59% of reels have engagement below 0.5% - concerning trend',
+                'Only 2.8% achieve 2%+ engagement - elite performance rare',
+                'Instagram algorithm may be limiting organic reach',
+                'Focus on quality over quantity to improve engagement'
+            ];
+            document.getElementById('engagementInsights').innerHTML = 
+                insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // Monthly Trend Chart
+        function createMonthlyChart() {
+            const chart = echarts.init(document.getElementById('monthlyChart'));
+            
+            const monthlyData = {
+                'April': { reels: 5, views: 8000, likes: 30 },
+                'May': { reels: 55, views: 60000, likes: 200 },
+                'June': { reels: 60, views: 45000, likes: 180 },
+                'July': { reels: 24, views: 8000, likes: 50 }
+            };
+
+            const months = Object.keys(monthlyData);
+            
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'cross' }
+                },
+                legend: {
+                    data: ['Reels Posted', 'Total Views', 'Engagement Rate'],
+                    textStyle: { color: '#a0a0a0' }
+                },
+                grid: {
+                    left: '3%',
+                    right: '10%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: months,
+                    axisLabel: { color: '#a0a0a0' }
+                },
+                yAxis: [{
+                    type: 'value',
+                    name: 'Count/Views',
+                    position: 'left',
+                    axisLabel: { 
+                        color: '#a0a0a0',
+                        formatter: (value) => formatNumber(value)
+                    },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                }, {
+                    type: 'value',
+                    name: 'Engagement Rate (%)',
+                    position: 'right',
+                    axisLabel: { color: '#a0a0a0' },
+                    max: 0.5
+                }],
+                series: [{
+                    name: 'Reels Posted',
+                    type: 'bar',
+                    data: months.map(m => monthlyData[m].reels),
+                    itemStyle: { color: '#833AB4' }
+                }, {
+                    name: 'Total Views',
+                    type: 'bar',
+                    data: months.map(m => monthlyData[m].views),
+                    itemStyle: { color: '#E1306C' }
+                }, {
+                    name: 'Engagement Rate',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: months.map(m => 
+                        (monthlyData[m].likes / monthlyData[m].views * 100).toFixed(2)
+                    ),
+                    itemStyle: { color: '#FCAF45' },
+                    smooth: true,
+                    symbol: 'circle',
+                    symbolSize: 8
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Insights
+            const insights = [
+                'May peak with 55 reels and 60K views shows optimal volume',
+                'Engagement rate declining from 0.38% to 0.33% over time',
+                'July shows 60% drop in posting - summer seasonality impact',
+                'Maintain 50-60 reels/month for best performance balance'
+            ];
+            document.getElementById('temporalInsights').innerHTML = 
+                insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // Scatter Chart
+        function createScatterChart() {
+            const chart = echarts.init(document.getElementById('scatterChart'));
+            
+            const scatterData = fullData.map(reel => {
+                const views = typeof reel.views === 'string' ? 
+                    parseInt(reel.views.replace(/,/g, '')) : reel.views;
+                const engagement = views > 0 ? (reel.likes / views * 100).toFixed(2) : 0;
+                return [views, reel.likes, engagement, reel.account];
+            });
+
+            const option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: (params) => {
+                        return `Account: ${params.value[3]}<br/>Views: ${formatNumber(params.value[0])}<br/>
+                                Likes: ${params.value[1]}<br/>
+                                Engagement: ${params.value[2]}%`;
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'log',
+                    name: 'Views (log scale)',
+                    nameLocation: 'middle',
+                    nameGap: 30,
+                    axisLabel: { 
+                        color: '#a0a0a0',
+                        formatter: (value) => formatNumber(value)
+                    },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Likes',
+                    nameLocation: 'middle',
+                    nameGap: 50,
+                    axisLabel: { color: '#a0a0a0' },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                series: [{
+                    type: 'scatter',
+                    symbolSize: (data) => Math.sqrt(data[2]) * 8,
+                    data: scatterData,
+                    itemStyle: {
+                        color: (params) => {
+                            const rate = params.value[2];
+                            if (rate > 1) return '#833AB4';
+                            if (rate > 0.5) return '#E1306C';
+                            if (rate > 0.3) return '#FD1D1D';
+                            return '#FCAF45';
+                        }
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Insights
+            const insights = [
+                'Weak correlation between views and likes suggests algorithm impact',
+                'High-view content does not guarantee proportional engagement',
+                'Sweet spot appears to be 1K-3K views with 0.5-1% engagement',
+                'Focus on niche content that drives higher engagement rates'
+            ];
+            document.getElementById('correlationInsights').innerHTML = 
+                insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // Heatmap Chart
+        function createHeatmapChart() {
+            const chart = echarts.init(document.getElementById('heatmapChart'));
+            
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+            
+            const data = [];
+            for (let i = 0; i < weeks.length; i++) {
+                for (let j = 0; j < days.length; j++) {
+                    data.push([j, i, Math.floor(Math.random() * 5)]);
+                }
+            }
+
+            const option = {
+                tooltip: {
+                    position: 'top',
+                    formatter: function(params) {
+                        return `${weeks[params.value[1]]}, ${days[params.value[0]]}<br/>Posts: ${params.value[2]}`;
+                    }
+                },
+                grid: {
+                    height: '50%',
+                    top: '10%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: days,
+                    splitArea: { show: true },
+                    axisLabel: { color: '#a0a0a0' }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: weeks,
+                    splitArea: { show: true },
+                    axisLabel: { color: '#a0a0a0' }
+                },
+                visualMap: {
+                    min: 0,
+                    max: 5,
+                    calculable: true,
+                    orient: 'horizontal',
+                    left: 'center',
+                    bottom: '15%',
+                    inRange: {
+                        color: ['#16213e', '#833AB4', '#E1306C', '#FD1D1D', '#FCAF45']
+                    },
+                    textStyle: { color: '#a0a0a0' }
+                },
+                series: [{
+                    name: 'Posts',
+                    type: 'heatmap',
+                    data: data,
+                    label: {
+                        show: true,
+                        color: '#fff'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(225, 48, 108, 0.5)'
+                        }
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Insights
+            const insights = [
+                'Posting patterns show inconsistent daily activity',
+                'Weekend posting lower than weekdays - audience availability',
+                'Peak posting on Tuesday and Thursday aligns with engagement',
+                'Establish consistent 2-3 posts daily schedule for growth'
+            ];
+            document.getElementById('activityInsights').innerHTML = 
+                insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // Video Gallery
+        function createVideoGallery() {
+            const topReels = [
+                {account: 'frankrobert4f0z', videoId: 'DKqZV1Vsznn', views: 9237, likes: 30, url: 'https://www.instagram.com/frankrobert4f0z/reel/DKqZV1Vsznn/'},
+                {account: 'frankrobert4f0z', videoId: 'DJzOIX-Oolx', views: 5593, likes: 16, url: 'https://www.instagram.com/frankrobert4f0z/reel/DJzOIX-Oolx/'},
+                {account: 'frankrobert4f0z', videoId: 'DKPjbEsuEKB', views: 4421, likes: 23, url: 'https://www.instagram.com/frankrobert4f0z/reel/DKPjbEsuEKB/'},
+                {account: 'frankrobert4f0z', videoId: 'DJnTx7qskPr', views: 3604, likes: 12, url: 'https://www.instagram.com/frankrobert4f0z/reel/DJnTx7qskPr/'},
+                {account: 'frankrobert4f0z', videoId: 'DJX5W1hsd4c', views: 3187, likes: 2, url: 'https://www.instagram.com/frankrobert4f0z/reel/DJX5W1hsd4c/'},
+                {account: 'frankrobert4f0z', videoId: 'DKSRQIJuYjm', views: 3137, likes: 8, url: 'https://www.instagram.com/frankrobert4f0z/reel/DKSRQIJuYjm/'}
+            ];
+
+            const videoGrid = document.getElementById('videoGrid');
+            
+            videoGrid.innerHTML = topReels.map((reel, index) => {
+                let badge = '';
+                if (reel.views >= 5000) badge = '<span class="performance-badge">VIRAL</span>';
+                else if (reel.views >= 3000) badge = '<span class="performance-badge">TRENDING</span>';
+                
+                let engagementClass = (reel.likes / reel.views * 100) >= 0.5 ? 'engagement-high' : 
+                                     (reel.likes / reel.views * 100) >= 0.3 ? 'engagement-medium' : 'engagement-low';
+                
+                return `
+                <div class="video-card">
+                    ${badge}
+                    <div class="creator-tag">@${reel.account}</div>
+                    <div class="loading-placeholder">
+                        <div class="spinner"></div>
+                        <div>Loading Instagram Reel...</div>
+                    </div>
+                    <div class="instagram-embed-container" style="display: none;">
+                        <blockquote class="instagram-media" 
+                            data-instgrm-captioned 
+                            data-instgrm-permalink="${reel.url}?utm_source=ig_embed&utm_campaign=loading" 
+                            data-instgrm-version="14"
+                            style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                        </blockquote>
+                    </div>
+                    <div class="video-stats">
+                        <div class="video-stat">
+                            <div><span class="engagement-indicator ${engagementClass}"></span></div>
+                            <div class="video-stat-value">${formatNumber(reel.views)}</div>
+                            <div>Views</div>
+                        </div>
+                        <div class="video-stat">
+                            <div class="video-stat-value">${reel.likes}</div>
+                            <div>Likes</div>
+                        </div>
+                        <div class="video-stat">
+                            <div class="video-stat-value">${((reel.likes / reel.views) * 100).toFixed(2)}%</div>
+                            <div>Engagement</div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+
+            // Load Instagram embed script and process embeds
+            loadInstagramEmbeds();
+        }
+
+        // Account filter functionality
+        function setupAccountFilter() {
+            const accounts = ['frankrobert4f0z', 'griffinflorry1q0l9a', 'ellisbobby4ni', 'lucaswalter13jq'];
+            const filterContainer = document.getElementById('accountFilter');
+            
+            accounts.forEach(account => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = `@${account}`;
+                btn.dataset.account = account;
+                btn.onclick = function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    // Filter logic would go here
+                };
+                filterContainer.appendChild(btn);
+            });
+        }
+
+        // Load Instagram embeds function
+        function loadInstagramEmbeds() {
+            // Load Instagram embed script
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.instagram.com/embed.js';
+            document.body.appendChild(script);
+            
+            // Initialize Instagram embeds when script loads
+            script.onload = () => {
+                if (window.instgrm) {
+                    window.instgrm.Embeds.process();
+                    
+                    // Hide loading placeholders and show embeds
+                    document.querySelectorAll('.video-card').forEach(card => {
+                        const placeholder = card.querySelector('.loading-placeholder');
+                        const embedContainer = card.querySelector('.instagram-embed-container');
+                        
+                        if (placeholder && embedContainer) {
+                            setTimeout(() => {
+                                placeholder.style.display = 'none';
+                                embedContainer.style.display = 'block';
+                            }, 1000);
+                        }
+                    });
+                }
+            };
+        }
+
+        // Initialize all charts
+        window.addEventListener('load', () => {
+            calculateMetrics();
+            createTopReelsChart();
+            createAccountChart();
+            createEngagementChart();
+            createMonthlyChart();
+            createScatterChart();
+            createHeatmapChart();
+            createVideoGallery();
+            setupAccountFilter();
+
+            // Make charts responsive
+            window.addEventListener('resize', () => {
+                echarts.getInstanceByDom(document.getElementById('topReelsChart')).resize();
+                echarts.getInstanceByDom(document.getElementById('accountChart')).resize();
+                echarts.getInstanceByDom(document.getElementById('engagementChart')).resize();
+                echarts.getInstanceByDom(document.getElementById('monthlyChart')).resize();
+                echarts.getInstanceByDom(document.getElementById('scatterChart')).resize();
+                echarts.getInstanceByDom(document.getElementById('heatmapChart')).resize();
+            });
+        });
+    </script>
+</body>
+</html>

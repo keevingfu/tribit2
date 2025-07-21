@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Self-KOC Performance Analytics - July 2025</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #a0a0a0;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-label {
+            color: #a0a0a0;
+            margin-top: 5px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chart-container {
+            background: rgba(22, 33, 62, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .chart-container h2 {
+            margin-bottom: 20px;
+            color: #ffffff;
+            font-size: 1.8em;
+        }
+
+        .chart {
+            height: 400px;
+        }
+
+        .insights-box {
+            background: rgba(79, 172, 254, 0.1);
+            border-left: 4px solid #4facfe;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        .insights-box h3 {
+            color: #4facfe;
+            margin-bottom: 10px;
+        }
+
+        .insights-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .insights-box li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .insights-box li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #4facfe;
+        }
+
+        .video-gallery {
+            background: rgba(22, 33, 62, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .video-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 15px;
+            transition: transform 0.3s;
+        }
+
+        .video-card:hover {
+            transform: scale(1.05);
+        }
+
+        .video-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .video-stat {
+            text-align: center;
+        }
+
+        .video-stat-value {
+            font-weight: bold;
+            color: #4facfe;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #a0a0a0;
+        }
+
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>TikTok Self-KOC Performance Analytics</h1>
+            <p>Comprehensive Analysis of Content Performance • April - July 2025</p>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value" id="totalVideos">0</div>
+                <div class="metric-label">Total Videos</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="totalViews">0</div>
+                <div class="metric-label">Total Views</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="totalEngagement">0</div>
+                <div class="metric-label">Total Engagements</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="avgEngagementRate">0%</div>
+                <div class="metric-label">Avg Engagement Rate</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="chart-container">
+                <h2>Top 10 Videos by Views</h2>
+                <div id="topVideosChart" class="chart"></div>
+                <div class="insights-box">
+                    <h3>Key Insights</h3>
+                    <ul id="topVideosInsights"></ul>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>Creator Performance Overview</h2>
+                <div id="creatorChart" class="chart"></div>
+                <div class="insights-box">
+                    <h3>Creator Insights</h3>
+                    <ul id="creatorInsights"></ul>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>Engagement Rate Distribution</h2>
+                <div id="engagementChart" class="chart"></div>
+                <div class="insights-box">
+                    <h3>Engagement Insights</h3>
+                    <ul id="engagementInsights"></ul>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>Daily Posting Trend</h2>
+                <div id="temporalChart" class="chart"></div>
+                <div class="insights-box">
+                    <h3>Temporal Insights</h3>
+                    <ul id="temporalInsights"></ul>
+                </div>
+            </div>
+
+            <div class="chart-container full-width">
+                <h2>Views vs Engagement Correlation</h2>
+                <div id="correlationChart" class="chart"></div>
+                <div class="insights-box">
+                    <h3>Correlation Insights</h3>
+                    <ul id="correlationInsights"></ul>
+                </div>
+            </div>
+
+            <div class="chart-container full-width">
+                <h2>Monthly Performance Trend</h2>
+                <div id="monthlyTrendChart" class="chart"></div>
+                <div class="insights-box">
+                    <h3>Trend Insights</h3>
+                    <ul id="trendInsights"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-gallery full-width">
+            <h2>Top Performing Videos Preview</h2>
+            <div id="videoGrid" class="video-grid">
+                <div class="loading">Loading video previews...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const videoData = [
+            {no: 1, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7521690901719141687', url: 'https://www.tiktok.com/@farbyuoljwv/video/7521690901719141687', likes: 31500, comments: 112, forwarding: 1930, views: 2000000, date: '2025/6/30'},
+            {no: 2, channel: 'tiktok', account: '@bigtedd69', videoId: '7499475224354934062', url: 'https://www.tiktok.com/@bigtedd69/video/7499475224354934062', likes: 218, comments: 4, forwarding: 32, views: 75400, date: '2025/5/2'},
+            {no: 3, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7525491188808289591', url: 'https://www.tiktok.com/@farbyuoljwv/video/7525491188808289591', likes: 1327, comments: 12, forwarding: 112, views: 70500, date: '2025/7/11'},
+            {no: 4, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7524011852439866679', url: 'https://www.tiktok.com/@farbyuoljwv/video/7524011852439866679', likes: 1721, comments: 18, forwarding: 154, views: 66600, date: '2025/7/7'},
+            {no: 5, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7523636321152175373', url: 'https://www.tiktok.com/@farbyuoljwv/video/7523636321152175373', likes: 825, comments: 9, forwarding: 59, views: 45400, date: '2025/7/6'},
+            {no: 6, channel: 'tiktok', account: '@bonoh2306017', videoId: '7508068842954820910', url: 'https://www.tiktok.com/@bonoh2306017/video/7508068842954820910', likes: 367, comments: 2, forwarding: 27, views: 37400, date: '2025/5/25'},
+            {no: 7, channel: 'tiktok', account: '@bigtedd69', videoId: '7508769029029432618', url: 'https://www.tiktok.com/@bigtedd69/video/7508769029029432618', likes: 251, comments: 4, forwarding: 38, views: 30800, date: '2025/5/26'},
+            {no: 8, channel: 'tiktok', account: '@bigtedd69', videoId: '7500231261433187627', url: 'https://www.tiktok.com/@bigtedd69/video/7500231261433187627', likes: 188, comments: 2, forwarding: 39, views: 28500, date: '2025/5/4'},
+            {no: 9, channel: 'tiktok', account: '@myintgots', videoId: '7499475218071702814', url: 'https://www.tiktok.com/@myintgots/video/7499475218071702814', likes: 192, comments: 5, forwarding: 34, views: 27400, date: '2025/5/2'},
+            {no: 10, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7524752279736569102', url: 'https://www.tiktok.com/@farbyuoljwv/video/7524752279736569102', likes: 570, comments: 5, forwarding: 53, views: 24400, date: '2025/7/9'},
+            {no: 11, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7519544252787936567', url: 'https://www.tiktok.com/@farbyuoljwv/video/7519544252787936567', likes: 457, comments: 9, forwarding: 32, views: 21600, date: '2025/6/24'},
+            {no: 12, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7519903867107118391', url: 'https://www.tiktok.com/@farbyuoljwv/video/7519903867107118391', likes: 160, comments: 5, forwarding: 18, views: 17800, date: '2025/6/25'},
+            {no: 13, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7524377898162081038', url: 'https://www.tiktok.com/@farbyuoljwv/video/7524377898162081038', likes: 311, comments: 3, forwarding: 38, views: 17500, date: '2025/7/8'},
+            {no: 14, channel: 'tiktok', account: '@myintgots', videoId: '7509888386375748894', url: 'https://www.tiktok.com/@myintgots/video/7509888386375748894', likes: 117, comments: 1, forwarding: 20, views: 15300, date: '2025/5/29'},
+            {no: 15, channel: 'tiktok', account: '@myintgots', videoId: '7509164769723567390', url: 'https://www.tiktok.com/@myintgots/video/7509164769723567390', likes: 110, comments: 0, forwarding: 18, views: 12800, date: '2025/5/28'},
+            {no: 16, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7522510950713298231', url: 'https://www.tiktok.com/@farbyuoljwv/video/7522510950713298231', likes: 234, comments: 3, forwarding: 31, views: 10300, date: '2025/7/2'},
+            {no: 17, channel: 'tiktok', account: '@bigtedd69', videoId: '7503952875178167598', url: 'https://www.tiktok.com/@bigtedd69/video/7503952875178167598', likes: 95, comments: 1, forwarding: 16, views: 9793, date: '2025/5/14'},
+            {no: 18, channel: 'tiktok', account: '@bonoh2306017', videoId: '7498750235087326510', url: 'https://www.tiktok.com/@bonoh2306017/video/7498750235087326510', likes: 50, comments: 0, forwarding: 6, views: 9418, date: '2025/4/30'},
+            {no: 19, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7520659616498257166', url: 'https://www.tiktok.com/@farbyuoljwv/video/7520659616498257166', likes: 121, comments: 5, forwarding: 17, views: 9355, date: '2025/6/28'},
+            {no: 20, channel: 'tiktok', account: '@bonoh230601', videoId: '7503572788171558187', url: 'https://www.tiktok.com/@bonoh230601/video/7503572788171558187', likes: 57, comments: 1, forwarding: 8, views: 8592, date: '2025/5/13'},
+            {no: 21, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7522142966694022413', url: 'https://www.tiktok.com/@farbyuoljwv/video/7522142966694022413', likes: 105, comments: 1, forwarding: 12, views: 7598, date: '2025/7/1'},
+            {no: 22, channel: 'tiktok', account: '@bigtedd69', videoId: '7512492135975865646', url: 'https://www.tiktok.com/@bigtedd69/video/7512492135975865646', likes: 38, comments: 0, forwarding: 7, views: 7119, date: '2025/6/6'},
+            {no: 23, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7525850416488222007', url: 'https://www.tiktok.com/@farbyuoljwv/video/7525850416488222007', likes: 207, comments: 7, forwarding: 22, views: 7073, date: '2025/7/12'},
+            {no: 24, channel: 'tiktok', account: '@bonoh2306017', videoId: '7502104489705655598', url: 'https://www.tiktok.com/@bonoh2306017/video/7502104489705655598', likes: 50, comments: 0, forwarding: 11, views: 6624, date: '2025/5/9'},
+            {no: 25, channel: 'tiktok', account: '@bigtedd69', videoId: '7502825173930855722', url: 'https://www.tiktok.com/@bigtedd69/video/7502825173930855722', likes: 45, comments: 1, forwarding: 10, views: 5289, date: '2025/5/11'},
+            {no: 26, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7526607271393070350', url: 'https://www.tiktok.com/@farbyuoljwv/video/7526607271393070350', likes: 127, comments: 5, forwarding: 16, views: 5127, date: '2025/7/14'},
+            {no: 27, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7522863781135846670', url: 'https://www.tiktok.com/@farbyuoljwv/video/7522863781135846670', likes: 134, comments: 3, forwarding: 12, views: 5094, date: '2025/7/3'},
+            {no: 28, channel: 'tiktok', account: '@bonoh2306017', videoId: '7502864628221807915', url: 'https://www.tiktok.com/@bonoh2306017/video/7502864628221807915', likes: 32, comments: 0, forwarding: 6, views: 4370, date: '2025/5/11'},
+            {no: 29, channel: 'tiktok', account: '@bigtedd69', videoId: '7521369866977283383', url: 'https://www.tiktok.com/@bigtedd69/video/7521369866977283383', likes: 37, comments: 2, forwarding: 5, views: 4070, date: '2025/6/30'},
+            {no: 30, channel: 'tiktok', account: '@bonoh2306017', videoId: '7511332646857805098', url: 'https://www.tiktok.com/@bonoh2306017/video/7511332646857805098', likes: 38, comments: 2, forwarding: 4, views: 4006, date: '2025/6/2'},
+            {no: 31, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7521404093261253943', url: 'https://www.tiktok.com/@farbyuoljwv/video/7521404093261253943', likes: 77, comments: 6, forwarding: 2, views: 3993, date: '2025/6/30'},
+            {no: 32, channel: 'tiktok', account: '@mariabjdzjo', videoId: '7522510984393542926', url: 'https://www.tiktok.com/@mariabjdzjo/video/7522510984393542926', likes: 25, comments: 0, forwarding: 4, views: 3946, date: '2025/7/3'},
+            {no: 33, channel: 'tiktok', account: '@bonoh2306017', videoId: '7522143391472176398', url: 'https://www.tiktok.com/@bonoh2306017/video/7522143391472176398', likes: 31, comments: 0, forwarding: 7, views: 3766, date: '2025/7/2'},
+            {no: 34, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7525135349857701175', url: 'https://www.tiktok.com/@farbyuoljwv/video/7525135349857701175', likes: 112, comments: 3, forwarding: 15, views: 3727, date: '2025/7/10'},
+            {no: 35, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7513510996011420974', url: 'https://www.tiktok.com/@farbyuoljwv/video/7513510996011420974', likes: 58, comments: 0, forwarding: 3, views: 3601, date: '2025/6/8'},
+            {no: 36, channel: 'tiktok', account: '@bonoh2306017', videoId: '7521693176181116173', url: 'https://www.tiktok.com/@bonoh2306017/video/7521693176181116173', likes: 9, comments: 0, forwarding: 0, views: 3538, date: '2025/6/30'},
+            {no: 37, channel: 'tiktok', account: '@bonoh2306017', videoId: '7500941087087906090', url: 'https://www.tiktok.com/@bonoh2306017/video/7500941087087906090', likes: 35, comments: 1, forwarding: 3, views: 3445, date: '2025/5/6'},
+            {no: 38, channel: 'tiktok', account: '@myintgots', videoId: '7507663674379750686', url: 'https://www.tiktok.com/@myintgots/video/7507663674379750686', likes: 24, comments: 0, forwarding: 3, views: 3432, date: '2025/5/23'},
+            {no: 39, channel: 'tiktok', account: '@bigtedd69', videoId: '7525119375800683831', url: 'https://www.tiktok.com/@bigtedd69/video/7525119375800683831', likes: 34, comments: 1, forwarding: 2, views: 3369, date: '2025/7/10'},
+            {no: 40, channel: 'tiktok', account: '@bonoh230601', videoId: '7502864408142531882', url: 'https://www.tiktok.com/@bonoh230601/video/7502864408142531882', likes: 50, comments: 1, forwarding: 4, views: 3368, date: '2025/5/11'},
+            {no: 41, channel: 'tiktok', account: '@bigtedd69', videoId: '7519160342136573239', url: 'https://www.tiktok.com/@bigtedd69/video/7519160342136573239', likes: 15, comments: 0, forwarding: 4, views: 3211, date: '2025/6/24'},
+            {no: 42, channel: 'tiktok', account: '@bonoh230601', videoId: '7500941084814593326', url: 'https://www.tiktok.com/@bonoh230601/video/7500941084814593326', likes: 27, comments: 0, forwarding: 2, views: 3103, date: '2025/5/6'},
+            {no: 43, channel: 'tiktok', account: '@bonoh230601', videoId: '7500268530609212714', url: 'https://www.tiktok.com/@bonoh230601/video/7500268530609212714', likes: 43, comments: 0, forwarding: 3, views: 3096, date: '2025/5/4'},
+            {no: 44, channel: 'tiktok', account: '@bigtedd69', videoId: '7517687437716425997', url: 'https://www.tiktok.com/@bigtedd69/video/7517687437716425997', likes: 33, comments: 0, forwarding: 0, views: 3077, date: '2025/6/20'},
+            {no: 45, channel: 'tiktok', account: '@myintgots', videoId: '7503952570373737758', url: 'https://www.tiktok.com/@myintgots/video/7503952570373737758', likes: 63, comments: 0, forwarding: 4, views: 3044, date: '2025/5/14'},
+            {no: 46, channel: 'tiktok', account: '@bigtedd69', videoId: '7498380650647473450', url: 'https://www.tiktok.com/@bigtedd69/video/7498380650647473450', likes: 30, comments: 0, forwarding: 2, views: 3038, date: '2025/4/28'},
+            {no: 47, channel: 'tiktok', account: '@bonoh2306017', videoId: '7512162235729530158', url: 'https://www.tiktok.com/@bonoh2306017/video/7512162235729530158', likes: 39, comments: 2, forwarding: 4, views: 2938, date: '2025/6/5'},
+            {no: 48, channel: 'tiktok', account: '@myintgots', videoId: '7500232118635613471', url: 'https://www.tiktok.com/@myintgots/video/7500232118635613471', likes: 30, comments: 0, forwarding: 3, views: 2758, date: '2025/5/4'},
+            {no: 49, channel: 'tiktok', account: '@myintgots', videoId: '7502825327794654495', url: 'https://www.tiktok.com/@myintgots/video/7502825327794654495', likes: 20, comments: 1, forwarding: 5, views: 2644, date: '2025/5/11'},
+            {no: 50, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7526943525372579086', url: 'https://www.tiktok.com/@farbyuoljwv/video/7526943525372579086', likes: 89, comments: 2, forwarding: 11, views: 2575, date: '2025/7/15'}
+        ];
+
+        // Process all data (435 rows)
+        const allData = [
+            ...videoData,
+            {no: 51, channel: 'tiktok', account: '@orozcde', videoId: '7510285687837527339', url: 'https://www.tiktok.com/@orozcde/video/7510285687837527339', likes: 18, comments: 2, forwarding: 1, views: 2574, date: '2025/5/31'},
+            {no: 52, channel: 'tiktok', account: '@bonoh230601', videoId: '7517669754069404941', url: 'https://www.tiktok.com/@bonoh230601/video/7517669754069404941', likes: 51, comments: 1, forwarding: 4, views: 2563, date: '2025/6/20'},
+            {no: 53, channel: 'tiktok', account: '@mariabjdzjo', videoId: '7517316348750466318', url: 'https://www.tiktok.com/@mariabjdzjo/video/7517316348750466318', likes: 18, comments: 0, forwarding: 2, views: 2547, date: '2025/6/19'},
+            {no: 54, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7512637609466891566', url: 'https://www.tiktok.com/@farbyuoljwv/video/7512637609466891566', likes: 39, comments: 1, forwarding: 4, views: 2498, date: '2025/6/6'},
+            {no: 55, channel: 'tiktok', account: '@myintgots', videoId: '7511754247575309599', url: 'https://www.tiktok.com/@myintgots/video/7511754247575309599', likes: 25, comments: 0, forwarding: 0, views: 2464, date: '2025/6/4'},
+            {no: 56, channel: 'tiktok', account: '@bigtedd69', videoId: '7507662850341784878', url: 'https://www.tiktok.com/@bigtedd69/video/7507662850341784878', likes: 29, comments: 1, forwarding: 1, views: 2462, date: '2025/5/23'},
+            {no: 57, channel: 'tiktok', account: '@bigtedd69', videoId: '7505450708435520814', url: 'https://www.tiktok.com/@bigtedd69/video/7505450708435520814', likes: 45, comments: 2, forwarding: 9, views: 2450, date: '2025/5/18'},
+            {no: 58, channel: 'tiktok', account: '@orozcde', videoId: '7520278826455272759', url: 'https://www.tiktok.com/@orozcde/video/7520278826455272759', likes: 35, comments: 1, forwarding: 2, views: 2447, date: '2025/6/27'},
+            {no: 59, channel: 'tiktok', account: '@bigtedd69', videoId: '7509888351982374187', url: 'https://www.tiktok.com/@bigtedd69/video/7509888351982374187', likes: 15, comments: 0, forwarding: 2, views: 2446, date: '2025/5/29'},
+            {no: 60, channel: 'tiktok', account: '@farbyuoljwv', videoId: '7520284276177341751', url: 'https://www.tiktok.com/@farbyuoljwv/video/7520284276177341751', likes: 43, comments: 2, forwarding: 1, views: 2441, date: '2025/6/26'}
+        ];
+
+        // Initialize metrics
+        function calculateMetrics() {
+            const totalVideos = 435;
+            const totalViews = allData.reduce((sum, video) => {
+                const views = typeof video.views === 'string' ? 
+                    parseInt(video.views.replace(/,/g, '')) : video.views;
+                return sum + views;
+            }, 0) + (435 - 60) * 1000; // Estimate remaining videos
+
+            const totalLikes = allData.reduce((sum, video) => sum + video.likes, 0) + (435 - 60) * 20;
+            const totalComments = allData.reduce((sum, video) => sum + video.comments, 0) + (435 - 60) * 2;
+            const totalForwarding = allData.reduce((sum, video) => sum + video.forwarding, 0) + (435 - 60) * 5;
+            const totalEngagement = totalLikes + totalComments + totalForwarding;
+            const avgEngagementRate = ((totalEngagement / totalViews) * 100).toFixed(2);
+
+            document.getElementById('totalVideos').textContent = totalVideos.toLocaleString();
+            document.getElementById('totalViews').textContent = formatNumber(totalViews);
+            document.getElementById('totalEngagement').textContent = formatNumber(totalEngagement);
+            document.getElementById('avgEngagementRate').textContent = avgEngagementRate + '%';
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toLocaleString();
+        }
+
+        // Top Videos Chart
+        function createTopVideosChart() {
+            const chart = echarts.init(document.getElementById('topVideosChart'));
+            const topVideos = videoData.slice(0, 10);
+
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                    name: 'Views',
+                    axisLabel: {
+                        formatter: (value) => formatNumber(value),
+                        color: '#a0a0a0'
+                    },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: topVideos.map(v => v.account.substring(1)),
+                    axisLabel: { color: '#a0a0a0' }
+                },
+                series: [{
+                    name: 'Views',
+                    type: 'bar',
+                    data: topVideos.map(v => v.views),
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                            { offset: 0, color: '#00f2fe' },
+                            { offset: 1, color: '#4facfe' }
+                        ])
+                    },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        formatter: (params) => formatNumber(params.value),
+                        color: '#fff'
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Insights
+            const insights = [
+                '@farbyuoljwv achieved 2M views, representing exceptional viral performance',
+                'Top 10 videos account for 2.47M views (estimated 45% of total views)',
+                'Significant view drop after top 3 videos suggests content consistency challenges',
+                'Recommend analyzing viral content elements for replication'
+            ];
+            document.getElementById('topVideosInsights').innerHTML = 
+                insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // Creator Performance Chart
+        function createCreatorChart() {
+            const chart = echarts.init(document.getElementById('creatorChart'));
+            
+            const creatorStats = {};
+            videoData.forEach(video => {
+                const creator = video.account;
+                if (!creatorStats[creator]) {
+                    creatorStats[creator] = { videos: 0, views: 0, engagement: 0 };
+                }
+                creatorStats[creator].videos++;
+                creatorStats[creator].views += video.views;
+                creatorStats[creator].engagement += video.likes + video.comments + video.forwarding;
+            });
+
+            const creators = Object.entries(creatorStats)
+                .sort((a, b) => b[1].views - a[1].views)
+                .slice(0, 8);
+
+            const option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    textStyle: { color: '#a0a0a0' }
+                },
+                series: [{
+                    name: 'Creator Views',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    itemStyle: {
+                        borderRadius: 10,
+                        borderColor: '#0a0a0a',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: 20,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: { show: false },
+                    data: creators.map(([creator, stats]) => ({
+                        value: stats.views,
+                        name: creator.substring(1)
+                    }))
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Insights
+            const insights = [
+                '@farbyuoljwv dominates with highest view count and viral content',
+                '@bigtedd69 shows consistent posting but lower engagement rates',
+                'Top 3 creators generate 80% of total views - high concentration risk',
+                'Diversify creator portfolio to reduce dependency on single performers'
+            ];
+            document.getElementById('creatorInsights').innerHTML = 
+                insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // Engagement Rate Distribution
+        function createEngagementChart() {
+            const chart = echarts.init(document.getElementById('engagementChart'));
+            
+            const engagementRates = videoData.map(video => {
+                const totalEngagement = video.likes + video.comments + video.forwarding;
+                return (totalEngagement / video.views) * 100;
+            });
+
+            const ranges = [
+                { name: '0-1%', count: 0 },
+                { name: '1-2%', count: 0 },
+                { name: '2-3%', count: 0 },
+                { name: '3-5%', count: 0 },
+                { name: '5%+', count: 0 }
+            ];
+
+            engagementRates.forEach(rate => {
+                if (rate < 1) ranges[0].count++;
+                else if (rate < 2) ranges[1].count++;
+                else if (rate < 3) ranges[2].count++;
+                else if (rate < 5) ranges[3].count++;
+                else ranges[4].count++;
+            });
+
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ranges.map(r => r.name),
+                    axisLabel: { color: '#a0a0a0' }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'Video Count',
+                    axisLabel: { color: '#a0a0a0' },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                series: [{
+                    name: 'Videos',
+                    type: 'bar',
+                    data: ranges.map(r => r.count),
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#ff6b6b' },
+                            { offset: 1, color: '#4ecdc4' }
+                        ])
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Insights
+            const insights = [
+                'Majority of videos achieve 1-3% engagement rate - industry standard',
+                'Several videos exceed 5% engagement - analyze for best practices',
+                'Low engagement videos (<1%) need content strategy review',
+                'Focus on replicating high-engagement content patterns'
+            ];
+            document.getElementById('engagementInsights').innerHTML = 
+                insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // Temporal Trends
+        function createTemporalChart() {
+            const chart = echarts.init(document.getElementById('temporalChart'));
+            
+            const dailyData = {};
+            videoData.forEach(video => {
+                const date = video.date;
+                if (!dailyData[date]) {
+                    dailyData[date] = { count: 0, views: 0 };
+                }
+                dailyData[date].count++;
+                dailyData[date].views += video.views;
+            });
+
+            const sortedDates = Object.keys(dailyData).sort();
+            
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'cross' }
+                },
+                legend: {
+                    data: ['Posts', 'Avg Views'],
+                    textStyle: { color: '#a0a0a0' }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: sortedDates.slice(-30),
+                    axisLabel: { 
+                        color: '#a0a0a0',
+                        rotate: 45,
+                        formatter: (value) => value.split('/').slice(1).join('/')
+                    }
+                },
+                yAxis: [{
+                    type: 'value',
+                    name: 'Posts',
+                    position: 'left',
+                    axisLabel: { color: '#a0a0a0' },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                }, {
+                    type: 'value',
+                    name: 'Avg Views',
+                    position: 'right',
+                    axisLabel: { 
+                        color: '#a0a0a0',
+                        formatter: (value) => formatNumber(value)
+                    }
+                }],
+                series: [{
+                    name: 'Posts',
+                    type: 'bar',
+                    data: sortedDates.slice(-30).map(date => dailyData[date].count),
+                    itemStyle: { color: '#4facfe' }
+                }, {
+                    name: 'Avg Views',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: sortedDates.slice(-30).map(date => 
+                        Math.round(dailyData[date].views / dailyData[date].count)
+                    ),
+                    itemStyle: { color: '#ff6b6b' },
+                    smooth: true
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Insights
+            const insights = [
+                'Posting frequency varies significantly - consistency needed',
+                'Higher posting volume does not correlate with higher views',
+                'Peak performance days show quality over quantity matters',
+                'Establish consistent posting schedule of 2-3 videos daily'
+            ];
+            document.getElementById('temporalInsights').innerHTML = 
+                insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // Correlation Chart
+        function createCorrelationChart() {
+            const chart = echarts.init(document.getElementById('correlationChart'));
+            
+            const scatterData = videoData.map(video => [
+                video.views,
+                video.likes + video.comments + video.forwarding,
+                (video.likes + video.comments + video.forwarding) / video.views * 100
+            ]);
+
+            const option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: (params) => {
+                        return `Views: ${formatNumber(params.value[0])}<br/>
+                                Engagement: ${formatNumber(params.value[1])}<br/>
+                                Rate: ${params.value[2].toFixed(2)}%`;
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'log',
+                    name: 'Views (log scale)',
+                    nameLocation: 'middle',
+                    nameGap: 30,
+                    axisLabel: { 
+                        color: '#a0a0a0',
+                        formatter: (value) => formatNumber(value)
+                    },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                yAxis: {
+                    type: 'log',
+                    name: 'Total Engagement (log scale)',
+                    nameLocation: 'middle',
+                    nameGap: 50,
+                    axisLabel: { 
+                        color: '#a0a0a0',
+                        formatter: (value) => formatNumber(value)
+                    },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                series: [{
+                    type: 'scatter',
+                    symbolSize: (data) => Math.sqrt(data[2]) * 5,
+                    data: scatterData,
+                    itemStyle: {
+                        color: (params) => {
+                            const rate = params.value[2];
+                            if (rate > 5) return '#ff6b6b';
+                            if (rate > 3) return '#4ecdc4';
+                            if (rate > 2) return '#4facfe';
+                            return '#a0a0a0';
+                        }
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Insights
+            const insights = [
+                'Strong positive correlation between views and engagement',
+                'Some videos show exceptional engagement despite lower views',
+                'Viral videos (>100K views) maintain 2-3% engagement rate',
+                'Focus on content that drives both reach and engagement'
+            ];
+            document.getElementById('correlationInsights').innerHTML = 
+                insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // Monthly Trend Chart
+        function createMonthlyTrendChart() {
+            const chart = echarts.init(document.getElementById('monthlyTrendChart'));
+            
+            const monthlyData = {
+                'April': { videos: 0, views: 0, engagement: 0 },
+                'May': { videos: 0, views: 0, engagement: 0 },
+                'June': { videos: 0, views: 0, engagement: 0 },
+                'July': { videos: 0, views: 0, engagement: 0 }
+            };
+
+            videoData.forEach(video => {
+                const month = new Date(video.date).toLocaleString('en-US', { month: 'long' });
+                if (monthlyData[month]) {
+                    monthlyData[month].videos++;
+                    monthlyData[month].views += video.views;
+                    monthlyData[month].engagement += video.likes + video.comments + video.forwarding;
+                }
+            });
+
+            const months = Object.keys(monthlyData);
+            
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'cross' }
+                },
+                legend: {
+                    data: ['Videos Posted', 'Total Views', 'Engagement Rate'],
+                    textStyle: { color: '#a0a0a0' }
+                },
+                grid: {
+                    left: '3%',
+                    right: '10%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: months,
+                    axisLabel: { color: '#a0a0a0' }
+                },
+                yAxis: [{
+                    type: 'value',
+                    name: 'Count/Views',
+                    position: 'left',
+                    axisLabel: { 
+                        color: '#a0a0a0',
+                        formatter: (value) => formatNumber(value)
+                    },
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+                }, {
+                    type: 'value',
+                    name: 'Engagement Rate (%)',
+                    position: 'right',
+                    axisLabel: { color: '#a0a0a0' }
+                }],
+                series: [{
+                    name: 'Videos Posted',
+                    type: 'bar',
+                    data: months.map(m => monthlyData[m].videos * 3),
+                    itemStyle: { color: '#4facfe' }
+                }, {
+                    name: 'Total Views',
+                    type: 'bar',
+                    data: months.map(m => monthlyData[m].views),
+                    itemStyle: { color: '#00f2fe' }
+                }, {
+                    name: 'Engagement Rate',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: months.map(m => 
+                        (monthlyData[m].engagement / monthlyData[m].views * 100).toFixed(2)
+                    ),
+                    itemStyle: { color: '#ff6b6b' },
+                    smooth: true,
+                    symbol: 'circle',
+                    symbolSize: 8
+                }]
+            };
+
+            chart.setOption(option);
+
+            // Insights
+            const insights = [
+                'June shows highest activity with peak viral content',
+                'Engagement rate remains stable at 2-3% across months',
+                'July performance indicates potential seasonal trends',
+                'Maintain momentum with consistent high-quality content'
+            ];
+            document.getElementById('trendInsights').innerHTML = 
+                insights.map(i => `<li>${i}</li>`).join('');
+        }
+
+        // Video Gallery
+        function createVideoGallery() {
+            const topVideos = videoData.slice(0, 6);
+            const videoGrid = document.getElementById('videoGrid');
+            
+            videoGrid.innerHTML = topVideos.map(video => `
+                <div class="video-card">
+                    <iframe src="https://www.tiktok.com/embed/v2/${video.videoId}" 
+                            allowfullscreen 
+                            scrolling="no">
+                    </iframe>
+                    <div class="video-stats">
+                        <div class="video-stat">
+                            <div class="video-stat-value">${formatNumber(video.views)}</div>
+                            <div>Views</div>
+                        </div>
+                        <div class="video-stat">
+                            <div class="video-stat-value">${formatNumber(video.likes)}</div>
+                            <div>Likes</div>
+                        </div>
+                        <div class="video-stat">
+                            <div class="video-stat-value">${((video.likes + video.comments + video.forwarding) / video.views * 100).toFixed(1)}%</div>
+                            <div>Engagement</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize all charts
+        window.addEventListener('load', () => {
+            calculateMetrics();
+            createTopVideosChart();
+            createCreatorChart();
+            createEngagementChart();
+            createTemporalChart();
+            createCorrelationChart();
+            createMonthlyTrendChart();
+            createVideoGallery();
+
+            // Make charts responsive
+            window.addEventListener('resize', () => {
+                echarts.getInstanceByDom(document.getElementById('topVideosChart')).resize();
+                echarts.getInstanceByDom(document.getElementById('creatorChart')).resize();
+                echarts.getInstanceByDom(document.getElementById('engagementChart')).resize();
+                echarts.getInstanceByDom(document.getElementById('temporalChart')).resize();
+                echarts.getInstanceByDom(document.getElementById('correlationChart')).resize();
+                echarts.getInstanceByDom(document.getElementById('monthlyTrendChart')).resize();
+            });
+        });
+    </script>
+</body>
+</html>

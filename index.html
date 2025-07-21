@@ -99,13 +99,58 @@
         }
         
         .nav-submenu {
-            max-height: 500px;
+            max-height: 2000px;
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
         
         .nav-section.collapsed .nav-submenu {
             max-height: 0;
+        }
+        
+        /* Category Styles */
+        .nav-category {
+            margin-bottom: 2px;
+        }
+        
+        .nav-category-title {
+            padding: 10px 20px 10px 40px;
+            color: #888;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            user-select: none;
+        }
+        
+        .nav-category-title:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: #aaa;
+        }
+        
+        .nav-category-title::after {
+            content: '▶';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.65rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-category.expanded .nav-category-title::after {
+            transform: translateY(-50%) rotate(90deg);
+        }
+        
+        .nav-category-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .nav-category.expanded .nav-category-items {
+            max-height: 500px;
         }
         
         .nav-item {
@@ -262,97 +307,111 @@
         <div class="main-container">
             <!-- Sidebar Navigation -->
             <nav class="sidebar">
-                <!-- Performance Reports -->
-                <div class="nav-section">
-                    <div class="nav-section-title">
-                        <span class="nav-item-icon">📊</span>
-                        Performance Reports
-                    </div>
-                    <div class="nav-submenu">
-                        <a class="nav-item" data-page="tribit-selfkoc-weekly-trend-April28-July16-2025.html">
-                            <span class="nav-item-icon">📈</span>
-                            10-Week Trend Analysis
-                        </a>
-                        <a class="nav-item" data-page="tribit-selfkoc-weekly-report-July11-16-2025.html">
-                            <span class="nav-item-icon">🗓️</span>
-                            Weekly Report (Jul 11-16)
-                        </a>
-                        <a class="nav-item" data-page="tribit-selfkoc_weekly_report-July3-10-2025.html">
-                            <span class="nav-item-icon">🗓️</span>
-                            Weekly Report (Jul 3-10)
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Self-KOC Analytics -->
+                <!-- Self-KOC -->
                 <div class="nav-section">
                     <div class="nav-section-title">
                         <span class="nav-item-icon">📱</span>
-                        Self-KOC Analytics
+                        Self-KOC
                     </div>
                     <div class="nav-submenu">
-                        <a class="nav-item" data-page="tribit-selfkoc_week_overview.html">
-                            <span class="nav-item-icon">🎯</span>
-                            Performance Overview
+                        <!-- Overview -->
+                        <a class="nav-item" data-page="tribit-selfkoc-overview-april-july-2025.html">
+                            <span class="nav-item-icon">🌟</span>
+                            Self-KOC Overview
                         </a>
-                        <a class="nav-item" data-page="tribit-selfkoc_week_content.html">
-                            <span class="nav-item-icon">🎬</span>
-                            Content Performance
-                        </a>
-                        <a class="nav-item" data-page="tribit-selfkoc_week_youtube.html">
-                            <span class="nav-item-icon">▶️</span>
-                            YouTube Shorts
-                        </a>
-                        <a class="nav-item" data-page="tribit-selfkoc_week_tiktok.html">
-                            <span class="nav-item-icon">🎵</span>
-                            TikTok Videos
-                        </a>
-                        <a class="nav-item" data-page="tribit-selfkoc_week_instagram.html">
-                            <span class="nav-item-icon">📷</span>
-                            Instagram Reels
-                        </a>
+                        
+                        <!-- Platform + Quarter -->
+                        <div class="nav-category">
+                            <div class="nav-category-title">Platform + Quarter</div>
+                            <div class="nav-category-items">
+                                <a class="nav-item" data-page="tribit-selfkoc-overview-q1.html">
+                                    <span class="nav-item-icon">🎯</span>
+                                    Q1 2025 Multi-Platform
+                                </a>
+                                <a class="nav-item" data-page="tribit-selfkoc-tk-q1.html">
+                                    <span class="nav-item-icon">🎵</span>
+                                    TikTok Q1 2025
+                                </a>
+                                <a class="nav-item" data-page="tribit-selfkoc-ytb-q1.html">
+                                    <span class="nav-item-icon">▶️</span>
+                                    YouTube Q1 2025
+                                </a>
+                                <a class="nav-item" data-page="tribit-selfkoc-ins-q1.html">
+                                    <span class="nav-item-icon">📷</span>
+                                    Instagram Q1 2025
+                                </a>
+                                <a class="nav-item" data-page="tribit-selfkoc-weekly-q2.html">
+                                    <span class="nav-item-icon">📋</span>
+                                    Q2 2025 Weekly Tracking
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Platform + Monthly -->
+                        <div class="nav-category">
+                            <div class="nav-category-title">Platform + Monthly (Apr-Jul 2025)</div>
+                            <div class="nav-category-items">
+                                <a class="nav-item" data-page="tribit-selfkoc-tk-April-July-2025.html">
+                                    <span class="nav-item-icon">🎵</span>
+                                    TikTok Apr-Jul 2025
+                                </a>
+                                <a class="nav-item" data-page="tribit-selfkoc-ytb-April-july-2025.html">
+                                    <span class="nav-item-icon">▶️</span>
+                                    YouTube Apr-Jul 2025
+                                </a>
+                                <a class="nav-item" data-page="tribit-selfkoc-ins-April-July-2025.html">
+                                    <span class="nav-item-icon">📷</span>
+                                    Instagram Apr-Jul 2025
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Platform + Weekly -->
+                        <div class="nav-category">
+                            <div class="nav-category-title">Platform + Weekly</div>
+                            <div class="nav-category-items">
+                                <a class="nav-item" data-page="tribit-selfkoc_week_tiktok.html">
+                                    <span class="nav-item-icon">🎵</span>
+                                    TikTok Weekly
+                                </a>
+                                <a class="nav-item" data-page="tribit-selfkoc_week_youtube.html">
+                                    <span class="nav-item-icon">▶️</span>
+                                    YouTube Weekly
+                                </a>
+                                <a class="nav-item" data-page="tribit-selfkoc_week_instagram.html">
+                                    <span class="nav-item-icon">📷</span>
+                                    Instagram Weekly
+                                </a>
+                                <a class="nav-item" data-page="tribit-selfkoc_week_content.html">
+                                    <span class="nav-item-icon">🎬</span>
+                                    Content Performance Weekly
+                                </a>
+                                <a class="nav-item" data-page="tribit-selfkoc-weekly-trend-April28-July16-2025.html">
+                                    <span class="nav-item-icon">📈</span>
+                                    10-Week Trend Analysis
+                                </a>
+                                <a class="nav-item" data-page="tribit-selfkoc-weekly-report-July11-16-2025.html">
+                                    <span class="nav-item-icon">🗓️</span>
+                                    Weekly Report (Jul 11-16)
+                                </a>
+                                <a class="nav-item" data-page="tribit-selfkoc_weekly_report-July3-10-2025.html">
+                                    <span class="nav-item-icon">🗓️</span>
+                                    Weekly Report (Jul 3-10)
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Quarterly Analysis -->
+                <!-- Global-KOL -->
                 <div class="nav-section">
                     <div class="nav-section-title">
-                        <span class="nav-item-icon">📅</span>
-                        Quarterly Analysis
-                    </div>
-                    <div class="nav-submenu">
-                        <a class="nav-item" data-page="tribit-selfkoc-overview-q1.html">
-                            <span class="nav-item-icon">🎯</span>
-                            Q1 2025 Overview
-                        </a>
-                        <a class="nav-item" data-page="tribit-selfkoc-ytb-q1.html">
-                            <span class="nav-item-icon">📺</span>
-                            Q1 YouTube Performance
-                        </a>
-                        <a class="nav-item" data-page="tribit-selfkoc-tk-q1.html">
-                            <span class="nav-item-icon">🎤</span>
-                            Q1 TikTok Performance
-                        </a>
-                        <a class="nav-item" data-page="tribit-selfkoc-ins-q1.html">
-                            <span class="nav-item-icon">📸</span>
-                            Q1 Instagram Performance
-                        </a>
-                        <a class="nav-item" data-page="tribit-selfkoc-weekly-q2.html">
-                            <span class="nav-item-icon">📋</span>
-                            Q2 2025 Weekly Tracking
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- KOL/KOC Network -->
-                <div class="nav-section">
-                    <div class="nav-section-title">
-                        <span class="nav-item-icon">👥</span>
-                        KOL/KOC Network
+                        <span class="nav-item-icon">🌍</span>
+                        Global-KOL
                     </div>
                     <div class="nav-submenu">
                         <a class="nav-item" data-page="tribit-kol-overview.html">
-                            <span class="nav-item-icon">🌍</span>
+                            <span class="nav-item-icon">🌐</span>
                             Global KOL Dashboard
                         </a>
                         <a class="nav-item" data-page="tribit_kol_india.html">
@@ -432,6 +491,28 @@
             });
         });
         
+        // Handle category title clicks
+        const navCategories = document.querySelectorAll('.nav-category');
+        const navCategoryTitles = document.querySelectorAll('.nav-category-title');
+        
+        navCategoryTitles.forEach(title => {
+            title.addEventListener('click', () => {
+                const category = title.parentElement;
+                const section = category.closest('.nav-section');
+                
+                // Collapse all other categories in the same section
+                const siblingCategories = section.querySelectorAll('.nav-category');
+                siblingCategories.forEach(sibling => {
+                    if (sibling !== category) {
+                        sibling.classList.remove('expanded');
+                    }
+                });
+                
+                // Toggle current category
+                category.classList.toggle('expanded');
+            });
+        });
+        
         // Handle navigation item clicks
         navItems.forEach(item => {
             item.addEventListener('click', (e) => {
@@ -487,6 +568,11 @@
                 if (index > 0) {
                     section.classList.add('collapsed');
                 }
+            });
+            
+            // Collapse all categories by default
+            navCategories.forEach(category => {
+                category.classList.remove('expanded');
             });
         });
         

@@ -443,9 +443,49 @@
             border: none;
         }
         
-        .instagram-embed {
+        .instagram-media {
+            background: white;
+            border: 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin: 0 !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+            padding: 0;
+        }
+
+        .instagram-embed-container {
+            position: relative;
             width: 100%;
-            max-width: 500px;
+            padding-bottom: 125%; /* Approximate Instagram embed ratio */
+            overflow: hidden;
+        }
+
+        .instagram-embed-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .loading-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            color: #ccc;
+        }
+
+        .loading-placeholder .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top: 3px solid #e1306c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
         }
         
         .video-loading {
@@ -602,6 +642,17 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .instagram-embed-container {
+                padding-bottom: 150%;
             }
         }
         
@@ -1396,14 +1447,18 @@
                     videoHTML = `
                         <div class="video-card">
                             <div class="video-preview instagram">
-                                <div class="video-loading">
-                                    <div class="loading-spinner"></div>
-                                    <p>Loading Instagram...</p>
+                                <div class="loading-placeholder">
+                                    <div class="spinner"></div>
+                                    <div>Loading Instagram Reel...</div>
                                 </div>
-                                <blockquote class="instagram-media instagram-embed" 
-                                    data-instgrm-permalink="https://www.instagram.com/${video.account}/reel/${video.postId}/" 
-                                    data-instgrm-version="14">
-                                </blockquote>
+                                <div class="instagram-embed-container" style="display: none;">
+                                    <blockquote class="instagram-media" 
+                                        data-instgrm-captioned 
+                                        data-instgrm-permalink="https://www.instagram.com/${video.account}/reel/${video.postId}/?utm_source=ig_embed&utm_campaign=loading" 
+                                        data-instgrm-version="14"
+                                        style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+                                    </blockquote>
+                                </div>
                             </div>
                             <div class="video-info">
                                 <div class="video-creator">@${video.account} • Instagram</div>
@@ -1424,10 +1479,30 @@
                 videoGrid.innerHTML += videoHTML;
             });
             
-            // Process Instagram embeds
-            if (window.instgrm) {
-                window.instgrm.Embeds.process();
-            }
+            // Load Instagram embed script and process embeds
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.instagram.com/embed.js';
+            document.body.appendChild(script);
+            
+            script.onload = () => {
+                if (window.instgrm) {
+                    window.instgrm.Embeds.process();
+                    
+                    // Hide loading placeholders and show embeds
+                    document.querySelectorAll('.video-preview.instagram').forEach(preview => {
+                        const placeholder = preview.querySelector('.loading-placeholder');
+                        const embedContainer = preview.querySelector('.instagram-embed-container');
+                        
+                        if (placeholder && embedContainer) {
+                            setTimeout(() => {
+                                placeholder.style.display = 'none';
+                                embedContainer.style.display = 'block';
+                            }, 1000);
+                        }
+                    });
+                }
+            };
         }
         
         // Function to show platform data
